@@ -37,14 +37,11 @@
         .custom-scroll::-webkit-scrollbar-track { background: transparent; }
         .custom-scroll::-webkit-scrollbar-thumb { background: rgba(99, 102, 241, 0.2); border-radius: 10px; }
         
-        .sticky-col-rank { position: sticky; left: 0; z-index: 20; background-color: #161B26; }
-        .sticky-col-name { position: sticky; left: 24px; z-index: 20; background-color: #161B26; }
-        .mate-sticky-name { position: sticky; left: 0; z-index: 20; background-color: #161B26; }
+        .sticky-col-rank { position: sticky; left: 0; z-index: 20; background-color: #161B26; width: 28px; min-width: 28px; text-align: center; }
+        .sticky-col-name { position: sticky; left: 28px; z-index: 20; background-color: #161B26; padding: 6px 8px; }
+        .mate-sticky-name { position: sticky; left: 28px; z-index: 20; background-color: #161B26; padding: 6px 8px; }
 
         .standard-name-col {
-            max-width: 120px;
-            overflow: hidden;
-            text-overflow: ellipsis;
             white-space: nowrap;
         }
 
@@ -62,9 +59,10 @@
         }
 
         @media (max-width: 639px) {
-            .standard-name-col { max-width: 80px !important; }
+            .standard-name-col { max-width: 60px !important; overflow: hidden; text-overflow: ellipsis; }
             .ultra-truncate-name { max-width: 45px !important; }
-            .standard-mark-col { font-size: 8.5px !important; padding: 4px 1px !important; }
+            .standard-mark-col { font-size: 8.5px !important; padding: 2px 1px !important; }
+            .mate-sticky-name { padding: 2px 4px !important; }
         }
 
         @media (min-width: 640px) {
@@ -151,7 +149,7 @@
                 
                 <div class="glass-card rounded-2xl overflow-hidden">
                     <div class="overflow-x-auto overflow-y-auto custom-scroll pb-1 max-h-[600px]">
-                        <table class="w-full text-left border-collapse min-w-[800px]">
+                        <table class="w-full text-left border-collapse">
                             <thead id="table-head"></thead>
                             <tbody id="table-body" class="divide-y divide-white/5 text-[10px] sm:text-[11px]"></tbody>
                         </table>
@@ -166,7 +164,7 @@
                         <h2 class="text-sm font-bold uppercase tracking-widest text-slate-400">Student Performance Trends</h2>
                     </div>
                     <div class="relative">
-                        <select id="trend-subject-select" onchange="renderStudentTrendAnalysis()" class="appearance-none bg-[#161B26] border border-white/10 text-indigo-300 text-xs font-bold rounded-xl px-4 py-2 pr-8 focus:outline-none focus:border-indigo-500 transition-colors uppercase tracking-wide">
+                        <select id="trend-subject-select" onchange="debouncedRenderStudentTrend()" class="appearance-none bg-[#161B26] border border-white/10 text-indigo-300 text-xs font-bold rounded-xl px-4 py-2 pr-8 focus:outline-none focus:border-indigo-500 transition-colors uppercase tracking-wide">
                             <!-- Options injected by JS -->
                         </select>
                         <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-slate-400">
@@ -177,7 +175,7 @@
 
                 <div class="glass-card rounded-2xl overflow-hidden shadow-2xl mb-12">
                     <div class="overflow-x-auto overflow-y-auto custom-scroll pb-1 max-h-[600px]">
-                        <table class="w-full text-left border-collapse min-w-[800px]">
+                        <table class="w-full text-left border-collapse">
                             <thead id="mate-head"></thead>
                             <tbody id="mate-body" class="divide-y divide-white/5 text-[10px] sm:text-[11px]"></tbody>
                         </table>
@@ -189,8 +187,8 @@
                         <div class="w-1.5 h-6 bg-teal-500 rounded-full"></div>
                         <h2 class="text-sm font-bold uppercase tracking-widest text-slate-400">Individual Student Analysis</h2>
                     </div>
-                    <div class="relative">
-                        <select id="student-select" onchange="renderStudentLineAnalysis()" class="appearance-none bg-[#161B26] border border-white/10 text-indigo-300 text-xs font-bold rounded-xl px-4 py-2 pr-8 focus:outline-none focus:border-indigo-500 transition-colors uppercase tracking-wide max-w-[200px] sm:max-w-xs">
+                    <div class="relative w-full sm:w-auto">
+                        <select id="student-select" onchange="debouncedRenderStudentLine()" class="appearance-none bg-[#161B26] border border-white/10 text-indigo-300 text-xs font-bold rounded-xl px-4 py-2 pr-8 focus:outline-none focus:border-indigo-500 transition-colors uppercase tracking-wide w-full sm:w-auto min-w-[250px]">
                             <!-- Options injected by JS -->
                         </select>
                         <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-slate-400">
@@ -199,12 +197,12 @@
                     </div>
                 </div>
 
-                <div class="glass-card rounded-2xl p-4 sm:p-6 shadow-2xl">
+                <div class="glass-card rounded-2xl p-1 sm:p-6 shadow-2xl">
                     <div class="relative h-[450px] w-full mb-6">
                         <canvas id="studentLineChart"></canvas>
                     </div>
                     <!-- Custom Legend Container -->
-                    <div id="custom-legend-container" class="border-t border-white/10 pt-4 flex flex-col gap-4"></div>
+                    <div id="custom-legend-container" class="border-t border-white/10 pt-4 px-3 flex flex-col gap-4"></div>
                 </div>
             </section>
             <!-- Subject Performance Analysis Section -->
@@ -264,9 +262,57 @@
         let activeSession = 1;
         let activeView = 'results';
 
+        // ===== PERFORMANCE OPTIMIZATION: Data Caching System =====
         // Cache for O(1) lookup: scoreLookup[CanonicalName][ExamID] = Score
         const scoreLookup = {};
+        
+        // Data cache to avoid redundant filtering
+        const dataCache = {
+            byExam: {},
+            byForm: {},
+            byStudent: {}
+        };
+        
+        // Helper functions for cached data access
+        function getExamData(examId) {
+            if (!dataCache.byExam[examId]) {
+                dataCache.byExam[examId] = rawData.filter(d => d.EXAM === examId);
+            }
+            return dataCache.byExam[examId];
+        }
+        
+        function getFormData(form) {
+            if (!dataCache.byForm[form]) {
+                dataCache.byForm[form] = rawData.filter(d => d.EXAM && d.EXAM.startsWith(form));
+            }
+            return dataCache.byForm[form];
+        }
+        
+        function getStudentData(studentName) {
+            if (!dataCache.byStudent[studentName]) {
+                dataCache.byStudent[studentName] = rawData.filter(d => d.NAMA.trim() === studentName);
+            }
+            return dataCache.byStudent[studentName];
+        }
+        
+        // Initialize cache on page load
+        function initializeCache() {
+            const exams = [...new Set(rawData.map(d => d.EXAM))];
+            exams.forEach(exam => getExamData(exam));
+            ['F1', 'F2'].forEach(form => getFormData(form));
+        }
+        
+        // ===== PERFORMANCE OPTIMIZATION: Grade Style Memoization =====
+        const gradeStyleCache = new Map();
+        const subjectGradeStyleCache = new Map();
 
+        // ===== PERFORMANCE OPTIMIZATION: Lazy Chart Loading =====
+        let chartsRendered = {
+            subjects: false,
+            studentLine: false,
+            studentTrend: false
+        };
+        
         function changeView(view) {
             activeView = view;
             
@@ -290,25 +336,68 @@
                     }
                 }
             });
+            
+            // ===== LAZY LOAD CHARTS =====
+            if (view === 'subjects' && !chartsRendered.subjects) {
+                requestAnimationFrame(() => {
+                    renderSubjectAnalysis();
+                    chartsRendered.subjects = true;
+                });
+            }
+            
+            if (view === 'mate' && !chartsRendered.studentLine) {
+                requestAnimationFrame(() => {
+                    renderStudentLineAnalysis();
+                    chartsRendered.studentLine = true;
+                });
+            }
         }
 
+        // ===== PERFORMANCE OPTIMIZATION: Debounce Utility =====
+        function debounce(func, wait) {
+            let timeout;
+            return function executedFunction(...args) {
+                const later = () => {
+                    clearTimeout(timeout);
+                    func(...args);
+                };
+                clearTimeout(timeout);
+                timeout = setTimeout(later, wait);
+            };
+        }
+        
         function getGradeStyle(score) {
-            if (score === 'TH' || score === '-') return { color: '#64748b', weight: 'font-normal' };
-            const s = parseFloat(score);
-            if (isNaN(s)) return { color: '#94a3b8', weight: 'font-normal' };
-
-            let hue;
-            let weight = 'font-medium';
-
-            if (s > 39) {
-                hue = 45 + ((s - 40) / 60) * 95;
-                if (s >= 80) weight = 'font-bold';
-            } else {
-                hue = 0;
-                weight = 'font-black';
+            // Check cache first
+            if (gradeStyleCache.has(score)) {
+                return gradeStyleCache.get(score);
             }
+            
+            let result;
+            if (score === 'TH' || score === '-') {
+                result = { color: '#64748b', weight: 'font-normal' };
+            } else {
+                const s = parseFloat(score);
+                if (isNaN(s)) {
+                    result = { color: '#94a3b8', weight: 'font-normal' };
+                } else {
+                    let hue;
+                    let weight = 'font-medium';
 
-            return { color: `hsl(${hue}, 90%, 60%)`, weight };
+                    if (s > 39) {
+                        hue = 45 + ((s - 40) / 60) * 95;
+                        if (s >= 80) weight = 'font-bold';
+                    } else {
+                        hue = 0;
+                        weight = 'font-black';
+                    }
+
+                    result = { color: `hsl(${hue}, 90%, 60%)`, weight };
+                }
+            }
+            
+            // Cache the result
+            gradeStyleCache.set(score, result);
+            return result;
         }
 
         function render() {
@@ -324,7 +413,7 @@
             }).join('');
 
             const fileId = activeForm + '-' + activeSession;
-            const sessionData = rawData.filter(d => d.EXAM === fileId);
+            const sessionData = getExamData(fileId); // Use cached data
             
             document.getElementById('data-meta').textContent = sessionData.length + ' student records for ' + fileId;
             document.getElementById('table-title').textContent = 'Class results table (' + fileId + ')';
@@ -341,8 +430,10 @@
             const head = document.getElementById('table-head');
             head.innerHTML = `
                 <tr class="bg-white/[0.02] text-[8px] font-bold uppercase tracking-widest text-slate-400">
-                    <th class="px-2 py-2 sticky-col-rank border-b border-white/5 w-[32px]">BIL</th>
-                    <th class="sticky-col-name border-b border-white/5 standard-name-col" style="padding: 12px 8px;">NAMA</th>
+                    <th class="px-2 py-2 sticky-col-rank border-b border-white/5">BIL</th>
+                    <th class="sticky-col-name border-b border-white/5">
+                         <div class="standard-name-col">NAMA</div>
+                    </th>
                     ${subjects.map(s => '<th class="px-1 py-2 text-center border-b border-white/5">' + s + '</th>').join('')}
                     <th class="px-2 py-2 text-center border-b border-white/5 bg-indigo-500/10 text-indigo-300">JUMLAH</th>
                     <th class="px-2 py-2 text-center border-b border-white/5 bg-indigo-500/10 text-indigo-300">PERATUS</th>
@@ -353,7 +444,9 @@
             body.innerHTML = sessionData.map(row => `
                 <tr class="hover:bg-white/5 transition-colors group">
                     <td class="px-2 py-1.5 font-bold text-slate-500 sticky-col-rank group-hover:bg-[#1C2230] border-b border-white/5 standard-mark-col">${row.BIL}</td>
-                    <td class="font-medium uppercase text-slate-300 sticky-col-name group-hover:bg-[#1C2230] border-b border-white/5 standard-name-col cursor-pointer" style="padding: 8px 12px;" onclick="revealName('${row.NAMA}')" title="${row.NAMA}">${row.NAMA}</td>
+                    <td class="font-medium uppercase text-slate-300 sticky-col-name group-hover:bg-[#1C2230] border-b border-white/5 cursor-pointer" onclick="revealName('${row.NAMA}')" title="${row.NAMA}">
+                        <div class="standard-name-col">${row.NAMA}</div>
+                    </td>
                     ${subjects.map(s => {
                         const val = row[s] || '-';
                         const styleObj = getGradeStyle(val);
@@ -456,7 +549,10 @@
 
             head.innerHTML = `
                 <tr class="bg-white/[0.02] text-[8px] font-bold uppercase tracking-widest text-slate-400">
-                    <th class="sticky-col-name border-b border-white/5 standard-name-col" style="padding: 12px 8px;">NAME</th>
+                    <th class="sticky-col-rank border-b border-white/5">BIL</th>
+                    <th class="sticky-col-name border-b border-white/5">
+                        <div class="standard-name-col">NAMA</div>
+                    </th>
                     ${allExams.map(exId => {
                         return '<th class="text-center border-b border-white/5 bg-amber-500/5 standard-mark-col">' + exId + '</th>';
                     }).join('')}
@@ -464,7 +560,7 @@
                 </tr>
             `;
 
-            body.innerHTML = studentTotals.map(student => {
+            body.innerHTML = studentTotals.map((student, idx) => {
                 const canonicalName = student.canonicalName;
                 const results = allExams.map(exId => {
                     // O(1) Lookup
@@ -476,7 +572,10 @@
 
                 return `
                     <tr class="hover:bg-white/5 transition-colors group">
-                        <td class="font-medium uppercase text-slate-300 mate-sticky-name group-hover:bg-[#1C2230] border-b border-white/5 standard-name-col cursor-pointer" style="padding: 8px 12px;" onclick="revealName('${canonicalName}')" title="${canonicalName}">${canonicalName}</td>
+                        <td class="sticky-col-rank font-bold text-slate-500 group-hover:bg-[#1C2230] border-b border-white/5 standard-mark-col">${idx + 1}</td>
+                        <td class="font-medium uppercase text-slate-300 mate-sticky-name group-hover:bg-[#1C2230] border-b border-white/5 cursor-pointer" onclick="revealName('${canonicalName}')" title="${canonicalName}">
+                            <div class="standard-name-col">${canonicalName}</div>
+                        </td>
                         ${results}
                         <td class="font-bold text-indigo-300 bg-indigo-500/5 border-b border-white/5 standard-mark-col">${student.totalScore.toLocaleString()}</td>
                     </tr>
@@ -485,12 +584,30 @@
         }
 
         function getSubjectGradeStyle(score) {
-            if (score === '-') return { color: '#64748b', weight: 'font-normal' };
-            const s = parseFloat(score);
-            if (isNaN(s)) return { color: '#94a3b8', weight: 'font-normal' };
-            if (s >= 80) return { color: '#4ade80', weight: 'font-bold' }; // Green
-            if (s >= 70) return { color: '#fbbf24', weight: 'font-bold' }; // Yellow/Amber
-            return { color: '#f87171', weight: 'font-black' }; // Red
+            // Check cache first
+            if (subjectGradeStyleCache.has(score)) {
+                return subjectGradeStyleCache.get(score);
+            }
+            
+            let result;
+            if (score === '-') {
+                result = { color: '#64748b', weight: 'font-normal' };
+            } else {
+                const s = parseFloat(score);
+                if (isNaN(s)) {
+                    result = { color: '#94a3b8', weight: 'font-normal' };
+                } else if (s >= 80) {
+                    result = { color: '#4ade80', weight: 'font-bold' }; // Green
+                } else if (s >= 70) {
+                    result = { color: '#fbbf24', weight: 'font-bold' }; // Yellow/Amber
+                } else {
+                    result = { color: '#f87171', weight: 'font-black' }; // Red
+                }
+            }
+            
+            // Cache the result
+            subjectGradeStyleCache.set(score, result);
+            return result;
         }
 
         function renderStudentLineAnalysis() {
@@ -515,7 +632,7 @@
             const datasets = [];
 
             // OPTIMIZATION: Pre-fetch student records to avoid O(N) scanner in nested loops
-            const studentRecords = rawData.filter(d => d.NAMA.trim() === activeStudent);
+            const studentRecords = getStudentData(activeStudent); // Use cached data
             
             // Generate Colors using HSL for distinctness across many subjects
             const getSubjectColor = (index, total) => {
@@ -821,7 +938,7 @@
                             }
                         }
                     },
-                    animation: { duration: 800, easing: 'easeOutQuart' }
+                    animation: { duration: 0 }  // PHASE 2: Disabled for faster rendering
                 }
             };
         }
@@ -923,7 +1040,7 @@
             );
 
             // 2. F1 Chart
-            const f1DataRaw = rawData.filter(d => d.EXAM && d.EXAM.startsWith('F1'));
+            const f1DataRaw = getFormData('F1'); // Use cached data
             const f1Stats = calculateAvg(allSubjects, f1DataRaw);
             destroyChart('f1Chart');
             new Chart(
@@ -932,7 +1049,7 @@
             );
 
             // 3. F2 Chart
-            const f2DataRaw = rawData.filter(d => d.EXAM && d.EXAM.startsWith('F2'));
+            const f2DataRaw = getFormData('F2'); // Use cached data
             const f2Stats = calculateAvg(allSubjects, f2DataRaw);
             destroyChart('f2Chart');
             new Chart(
@@ -952,7 +1069,7 @@
                 const trendPoints = [];
 
                 allExams.forEach(exId => {
-                    const sessionData = rawData.filter(d => d.EXAM === exId);
+                    const sessionData = getExamData(exId); // Use cached data
                     const scores = sessionData.map(d => parseFloat(d[sub])).filter(s => !isNaN(s));
                     if (scores.length > 0) {
                         const avg = scores.reduce((a, b) => a + b, 0) / scores.length;
@@ -1013,26 +1130,50 @@
             }, 3000);
         }
 
+        // ===== PERFORMANCE OPTIMIZATION: Debounced Render Functions =====
+        const debouncedRenderStudentTrend = debounce(renderStudentTrendAnalysis, 150);
+        const debouncedRenderStudentLine = debounce(renderStudentLineAnalysis, 150);
+        
         document.addEventListener('DOMContentLoaded', () => {
+            // ===== PERFORMANCE: Initialize cache first =====
+            const perfStart = performance.now();
+            
+            try {
+                initializeCache();
+                console.log(`Cache initialized in ${(performance.now() - perfStart).toFixed(2)}ms`);
+            } catch(e) { console.error('Cache init error:', e); }
+            
             // Step-by-step render to prevent UI thread freeze
             setTimeout(() => {
+                const renderStart = performance.now();
                 try {
                     render();
+                    console.log(`Initial render: ${(performance.now() - renderStart).toFixed(2)}ms`);
                 } catch(e) { console.error(e); }
                 
                 setTimeout(() => {
-                    try { renderStudentTrendAnalysis(); } catch(e) { console.error(e); }
+                    const trendStart = performance.now();
+                    try { 
+                        renderStudentTrendAnalysis();
+                        chartsRendered.studentTrend = true;
+                        console.log(`Student trend: ${(performance.now() - trendStart).toFixed(2)}ms`);
+                    } catch(e) { console.error(e); }
                     
                     setTimeout(() => {
-                        try { renderStudentLineAnalysis(); } catch(e) { console.error(e); }
+                        // DON'T render student line chart yet - lazy load it
+                        // It will render when user switches to 'mate' view
                         
                         setTimeout(() => {
-                            try { renderSubjectAnalysis(); } catch(e) { console.error(e); }
+                            // DON'T render subject analysis yet - lazy load it
+                            // It will render when user switches to 'subjects' view
                             
-                            // Fade in after all done
+                            // Fade in after essential renders done
                             document.getElementById('loader').classList.add('opacity-0');
                             document.getElementById('main-content').classList.remove('opacity-0');
                             setTimeout(() => document.getElementById('loader').classList.add('hidden'), 300);
+                            
+                            const totalTime = performance.now() - perfStart;
+                            console.log(`✅ Dashboard loaded in ${totalTime.toFixed(2)}ms`);
                             
                         }, 50);
                     }, 50);

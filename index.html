@@ -691,14 +691,63 @@
                         plugins: {
                             legend: { display: false }, // Custom Legend
                             tooltip: {
-                                backgroundColor: 'rgba(28, 34, 48, 0.9)',
-                                titleColor: '#e2e8f0',
-                                bodyColor: '#cbd5e1',
-                                borderColor: 'rgba(99, 102, 241, 0.2)',
-                                borderWidth: 1,
-                                padding: 10,
-                                displayColors: true,
-                                usePointStyle: true,
+                                enabled: false,  // Disable default tooltip, use custom
+                                external: function(context) {
+                                    // Custom tooltip with close button for mobile
+                                    let tooltipEl = document.getElementById('chartjs-tooltip');
+                                    
+                                    if (!tooltipEl) {
+                                        tooltipEl = document.createElement('div');
+                                        tooltipEl.id = 'chartjs-tooltip';
+                                        tooltipEl.innerHTML = '<div class="tooltip-content"></div>';
+                                        document.body.appendChild(tooltipEl);
+                                    }
+                                    
+                                    const tooltipModel = context.tooltip;
+                                    if (tooltipModel.opacity === 0) {
+                                        tooltipEl.style.opacity = 0;
+                                        return;
+                                    }
+                                    
+                                    // Build tooltip content
+                                    if (tooltipModel.body) {
+                                        const titleLines = tooltipModel.title || [];
+                                        const bodyLines = tooltipModel.body.map(b => b.lines);
+                                        
+                                        let innerHtml = '<div style="background: rgba(28, 34, 48, 0.95); border: 1px solid rgba(99, 102, 241, 0.3); border-radius: 12px; padding: 12px; box-shadow: 0 10px 40px rgba(0,0,0,0.5); min-width: 200px; position: relative;">';
+                                        
+                                        // Close button (visible on mobile)
+                                        innerHtml += '<button onclick="this.closest(' + "'" + '#chartjs-tooltip' + "'" + ').style.opacity=0" style="position: absolute; top: 8px; right: 8px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); border-radius: 6px; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; cursor: pointer; color: #e2e8f0; font-size: 16px; line-height: 1; padding: 0;" class="tooltip-close-btn">×</button>';
+                                        
+                                        // Title
+                                        titleLines.forEach(title => {
+                                            innerHtml += '<div style="color: #e2e8f0; font-weight: bold; margin-bottom: 8px; font-size: 12px; padding-right: 20px;">' + title + '</div>';
+                                        });
+                                        
+                                        // Body
+                                        bodyLines.forEach((body, i) => {
+                                            const colors = tooltipModel.labelColors[i];
+                                            innerHtml += '<div style="display: flex; align-items: center; gap: 8px; margin: 4px 0;">';
+                                            innerHtml += '<span style="width: 12px; height: 12px; border-radius: 50%; background: ' + colors.backgroundColor + ';"></span>';
+                                            innerHtml += '<span style="color: #cbd5e1; font-size: 11px;">' + body + '</span>';
+                                            innerHtml += '</div>';
+                                        });
+                                        
+                                        innerHtml += '</div>';
+                                        tooltipEl.querySelector('.tooltip-content').innerHTML = innerHtml;
+                                    }
+                                    
+                                    const position = context.chart.canvas.getBoundingClientRect();
+                                    
+                                    // Position tooltip
+                                    tooltipEl.style.opacity = 1;
+                                    tooltipEl.style.position = 'absolute';
+                                    tooltipEl.style.left = position.left + window.pageXOffset + tooltipModel.caretX + 'px';
+                                    tooltipEl.style.top = position.top + window.pageYOffset + tooltipModel.caretY + 'px';
+                                    tooltipEl.style.pointerEvents = 'auto';
+                                    tooltipEl.style.transition = 'opacity 0.2s ease';
+                                    tooltipEl.style.zIndex = '1000';
+                                }
                             },
                             datalabels: {
                                 display: (ctx) => ctx.dataIndex === ctx.dataset.data.length - 1,

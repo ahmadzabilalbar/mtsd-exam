@@ -220,19 +220,19 @@
 
         <!-- View Selector (Navigation) -->
         <div
-            class="flex items-center gap-1 p-1 bg-white/5 rounded-lg w-full max-w-4xl mx-auto mb-4 sm:mb-6 overflow-x-auto no-scrollbar flex-nowrap whitespace-nowrap">
+            class="flex items-center gap-0.5 p-0.5 bg-white/5 rounded-lg w-full max-w-4xl mx-auto mb-4 sm:mb-6 overflow-x-auto no-scrollbar flex-nowrap whitespace-nowrap">
             <button onclick="changeView('results')" id="view-results"
-                class="flex-1 min-w-max px-3 py-1.5 text-[9px] sm:text-xs font-bold uppercase tracking-wider rounded-lg transition-all duration-300 bg-indigo-600 text-white shadow-lg">Class
+                class="flex-1 min-w-max px-2 sm:px-3 py-1.5 text-[9px] sm:text-xs font-bold uppercase tracking-wider rounded-lg transition-all duration-300 bg-indigo-600 text-white shadow-lg">Class
                 Results</button>
             <button onclick="changeView('subjects')" id="view-subjects"
-                class="flex-1 min-w-max px-3 py-1.5 text-[9px] sm:text-xs font-bold uppercase tracking-wider rounded-lg transition-all duration-300 text-slate-400 hover:text-slate-200">Subjects</button>
+                class="flex-1 min-w-max px-2 sm:px-3 py-1.5 text-[9px] sm:text-xs font-bold uppercase tracking-wider rounded-lg transition-all duration-300 text-slate-400 hover:text-slate-200">Subjects</button>
             <button onclick="changeView('mate')" id="view-mate"
-                class="flex-1 min-w-max px-3 py-1.5 text-[9px] sm:text-xs font-bold uppercase tracking-wider rounded-lg transition-all duration-300 text-slate-400 hover:text-slate-200">Trends</button>
+                class="flex-1 min-w-max px-2 sm:px-3 py-1.5 text-[9px] sm:text-xs font-bold uppercase tracking-wider rounded-lg transition-all duration-300 text-slate-400 hover:text-slate-200">Trends</button>
             <button onclick="changeView('analysis')" id="view-analysis"
-                class="flex-1 min-w-max px-3 py-1.5 text-[9px] sm:text-xs font-bold uppercase tracking-wider rounded-lg transition-all duration-300 text-slate-400 hover:text-slate-200">Deep
+                class="flex-1 min-w-max px-2 sm:px-3 py-1.5 text-[9px] sm:text-xs font-bold uppercase tracking-wider rounded-lg transition-all duration-300 text-slate-400 hover:text-slate-200">Deep
                 Dive</button>
             <button onclick="changeView('simulator')" id="view-simulator"
-                class="flex-1 min-w-max px-3 py-1.5 text-[9px] sm:text-xs font-bold uppercase tracking-wider rounded-lg transition-all duration-300 text-slate-400 hover:text-slate-200">What-If</button>
+                class="flex-1 min-w-max px-2 sm:px-3 py-1.5 text-[9px] sm:text-xs font-bold uppercase tracking-wider rounded-lg transition-all duration-300 text-slate-400 hover:text-slate-200">What-If</button>
         </div>
 
         <main id="main-content" class="w-full space-y-4 sm:space-y-8 opacity-0 transition-opacity duration-500">
@@ -379,6 +379,12 @@
                             class="flex-1 sm:flex-initial px-3 py-1.5 text-[8px] font-bold rounded-lg transition-all duration-300 border border-white/10 text-slate-400 hover:text-indigo-300 uppercase tracking-widest flex items-center justify-center gap-2">
                             <span id="label-toggle-icon" class="w-1.5 h-1.5 rounded-full bg-slate-500"></span>
                             Marks
+                        </button>
+
+                        <button onclick="toggleCompareAverages()" id="btn-toggle-averages"
+                            class="flex-1 sm:flex-initial px-3 py-1.5 text-[8px] font-bold rounded-lg transition-all duration-300 border border-white/10 text-slate-400 hover:text-indigo-300 uppercase tracking-widest flex items-center justify-center gap-2">
+                            <span id="avg-toggle-icon" class="w-1.5 h-1.5 rounded-full bg-slate-500"></span>
+                            Compare Class
                         </button>
 
                         <div class="relative flex-1 sm:flex-initial min-w-[150px]">
@@ -636,6 +642,41 @@
         let activeSession = 1;
         let activeView = 'results';
         let showDataLabels = false;
+        let showCompareAverages = false;
+
+        function syncAverageLines(chart) {
+            if (!chart) return;
+            chart.data.datasets.forEach((ds, idx) => {
+                if (ds.isAvgLine) {
+                    const parentIdx = chart.data.datasets.findIndex(p => p.label === ds.parentLabel);
+                    if (parentIdx !== -1) {
+                        const isParentVisible = chart.isDatasetVisible(parentIdx);
+                        chart.setDatasetVisibility(idx, showCompareAverages && isParentVisible);
+                    }
+                }
+            });
+            chart.update('none'); // Update without animation for performance
+        }
+
+        function toggleCompareAverages() {
+            showCompareAverages = !showCompareAverages;
+            const btn = document.getElementById('btn-toggle-averages');
+            const icon = document.getElementById('avg-toggle-icon');
+
+            if (showCompareAverages) {
+                btn.classList.add('border-indigo-500/50', 'text-indigo-300', 'bg-indigo-500/10');
+                btn.classList.remove('text-slate-400');
+                icon.classList.add('bg-indigo-500');
+                icon.classList.remove('bg-slate-500');
+            } else {
+                btn.classList.remove('border-indigo-500/50', 'text-indigo-300', 'bg-indigo-500/10');
+                btn.classList.add('text-slate-400');
+                icon.classList.remove('bg-indigo-500');
+                icon.classList.add('bg-slate-500');
+            }
+
+            syncAverageLines(chartInstances['studentLineChart']);
+        }
 
         function toggleDataLabels() {
             showDataLabels = !showDataLabels;
@@ -1540,8 +1581,10 @@
 
             relevantSubjects.forEach((subObj, index) => {
                 const subCode = subObj.SINGKATAN;
-                const dataPoints = allExams.map(exId => {
-                    // Fast lookup in small subset
+                const color = getSubjectColor(index, relevantSubjects.length);
+
+                // 1. Student's Performance Line
+                const studentDataPoints = allExams.map(exId => {
                     const record = studentRecords.find(d => d.EXAM === exId);
                     if (record && record[subCode]) {
                         return parseFloat(record[subCode]) || null;
@@ -1549,20 +1592,84 @@
                     return null;
                 });
 
-                // Add dataset (even if empty? ChartJS handles nulls. Let's include everything for the legend)
+                const isTeras = subObj.KATEGORI === 'Subjek Teras';
+
                 datasets.push({
-                    label: subCode, // Shortform
-                    data: dataPoints,
-                    borderColor: getSubjectColor(index, relevantSubjects.length),
-                    backgroundColor: getSubjectColor(index, relevantSubjects.length),
+                    label: subCode,
+                    data: studentDataPoints,
+                    borderColor: color,
+                    backgroundColor: color,
                     borderWidth: 2,
                     tension: 0.3,
                     pointRadius: 3,
                     pointHoverRadius: 5,
                     fill: false,
-                    // Store meta for grouping
-                    category: subObj.KATEGORI || 'Lain-lain'
+                    category: subObj.KATEGORI || 'Lain-lain',
+                    hidden: !isTeras // Default hide everything except Subjek Teras
                 });
+
+                // 2. Subject Class Average Line (Dotted, Thinner)
+                const avgPoints = allExams.map(exId => {
+                    const batch = getExamData(exId);
+                    const scores = batch.map(d => parseFloat(d[subCode])).filter(s => !isNaN(s));
+                    return scores.length > 0 ? parseFloat((scores.reduce((a, b) => a + b, 0) / scores.length).toFixed(1)) : null;
+                });
+
+                datasets.push({
+                    label: subCode + ' (Avg)',
+                    data: avgPoints,
+                    borderColor: color,
+                    backgroundColor: color,
+                    borderWidth: 1,
+                    borderDash: [4, 4],
+                    tension: 0.3,
+                    pointRadius: 0,
+                    fill: false,
+                    category: subObj.KATEGORI || 'Lain-lain',
+                    isAvgLine: true,
+                    parentLabel: subCode,
+                    hidden: true // Start hidden
+                });
+            });
+
+            // 2b. Add Performance Reference lines
+            const studentAvgPoints = allExams.map(exId => {
+                const record = studentRecords.find(d => d.EXAM === exId);
+                return record && record.PURATA ? parseFloat(record.PURATA) : null;
+            });
+
+            const classAvgPoints = allExams.map(exId => {
+                const batch = getExamData(exId);
+                const puratas = batch.map(d => parseFloat(d.PURATA)).filter(p => !isNaN(p));
+                return puratas.length > 0 ? parseFloat((puratas.reduce((a, b) => a + b, 0) / puratas.length).toFixed(1)) : null;
+            });
+
+            datasets.push({
+                label: 'STUDENT AVG (%)',
+                data: studentAvgPoints,
+                borderColor: '#6366f1',
+                backgroundColor: 'rgba(99, 102, 241, 0.1)',
+                borderWidth: 4,
+                tension: 0.3,
+                pointRadius: 4,
+                fill: false,
+                category: 'Performance Reference',
+                zIndex: 50,
+                hidden: true
+            });
+
+            datasets.push({
+                label: 'CLASS AVG (%)',
+                data: classAvgPoints,
+                borderColor: 'rgba(255, 255, 255, 0.4)',
+                backgroundColor: 'rgba(255, 255, 255, 0.05)',
+                borderWidth: 2,
+                borderDash: [5, 5],
+                tension: 0.3,
+                pointRadius: 0,
+                fill: false,
+                category: 'Performance Reference',
+                hidden: true
             });
 
             // 3. Render Chart
@@ -1688,6 +1795,9 @@
             // Save instance for destruction later
             chartInstances['studentLineChart'] = newChart;
 
+            // INITIAL SYNC of averages based on current toggle state
+            syncAverageLines(newChart);
+
             // 4. Render Custom Legend
             const legendContainer = document.getElementById('custom-legend-container');
             legendContainer.innerHTML = '';
@@ -1695,9 +1805,10 @@
             // Group Datasets
             const groups = {};
             // Define preferred order
-            const order = ['Subjek Teras', 'Subjek Agama', 'Lain-lain'];
+            const order = ['Performance Reference', 'Subjek Teras', 'Subjek Agama', 'Lain-lain'];
 
             datasets.forEach((ds, i) => {
+                if (ds.isAvgLine) return; // SKIP AVERAGE PILLS
                 const cat = ds.category;
                 if (!groups[cat]) groups[cat] = [];
                 groups[cat].push({ ...ds, datasetIndex: i });
@@ -1759,7 +1870,8 @@
                             }
                         }
                     });
-                    newChart.update();
+
+                    syncAverageLines(newChart);
                     updateToggleAllText();
                 };
                 headerDiv.appendChild(toggleBtn);
@@ -1779,13 +1891,27 @@
                     pill.style.backgroundColor = 'rgba(255,255,255,0.05)';
                     pill.style.color = '#e2e8f0';
 
+                    // INITIAL VISIBILITY STATE SYNC
+                    if (item.hidden) {
+                        pill.style.opacity = '0.5';
+                    }
+
                     // Indicator Dot
                     const dot = document.createElement('div');
                     dot.className = 'w-2 h-2 rounded-full';
-                    dot.style.backgroundColor = item.borderColor;
+                    dot.style.backgroundColor = item.hidden ? '#475569' : item.borderColor;
 
                     pill.appendChild(dot);
                     pill.appendChild(document.createTextNode(item.label));
+
+                    // ADD TOOLTIP EXPLANATIONS for Performance Reference
+                    if (item.label === 'STUDENT AVG (%)') {
+                        pill.title = "Represents this student's overall average across all subjects for each session.";
+                        pill.innerHTML += ' <span class="ml-1 opacity-40">ⓘ</span>';
+                    } else if (item.label === 'CLASS AVG (%)') {
+                        pill.title = "Represents the aggregate average of ALL students in the class for each session.";
+                        pill.innerHTML += ' <span class="ml-1 opacity-40">ⓘ</span>';
+                    }
 
                     // Click Handler - Read state from Chart to handle external updates
                     pill.onclick = () => {
@@ -1793,8 +1919,10 @@
                         const currentlyHidden = (meta.hidden === true);
                         const newHidden = !currentlyHidden;
 
-                        newChart.setDatasetVisibility(item.datasetIndex, !newHidden); // setVisibility takes 'isVisible' boolean
-                        newChart.update();
+                        newChart.setDatasetVisibility(item.datasetIndex, !newHidden);
+
+                        // SYNC AVERAGE LINE VISIBILITY
+                        syncAverageLines(newChart);
 
                         // Update UI
                         if (newHidden) {

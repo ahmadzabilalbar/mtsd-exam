@@ -185,16 +185,19 @@
 
         <main id="main-content" class="space-y-8 opacity-0 transition-opacity duration-500">
             <!-- View Selector (Report Switcher) -->
-            <div class="flex flex-wrap justify-center gap-2 p-1 bg-white/5 rounded-2xl w-full max-w-3xl mx-auto">
+            <div class="flex flex-wrap justify-center gap-2 p-1 bg-white/5 rounded-2xl w-full max-w-5xl mx-auto">
                 <button onclick="changeView('results')" id="view-results"
                     class="flex-1 px-3 py-2.5 text-[10px] sm:text-xs font-bold uppercase tracking-wider rounded-xl transition-all duration-300 bg-indigo-600 text-white shadow-lg">Class
                     Results</button>
                 <button onclick="changeView('mate')" id="view-mate"
-                    class="flex-1 px-3 py-2.5 text-[10px] sm:text-xs font-bold uppercase tracking-wider rounded-xl transition-all duration-300 text-slate-400 hover:text-slate-200">Student
-                    Trends</button>
+                    class="flex-1 px-3 py-2.5 text-[10px] sm:text-xs font-bold uppercase tracking-wider rounded-xl transition-all duration-300 text-slate-400 hover:text-slate-200">Trends</button>
                 <button onclick="changeView('subjects')" id="view-subjects"
-                    class="flex-1 px-3 py-2.5 text-[10px] sm:text-xs font-bold uppercase tracking-wider rounded-xl transition-all duration-300 text-slate-400 hover:text-slate-200">Subject
-                    Analysis</button>
+                    class="flex-1 px-3 py-2.5 text-[10px] sm:text-xs font-bold uppercase tracking-wider rounded-xl transition-all duration-300 text-slate-400 hover:text-slate-200">Subjects</button>
+                <button onclick="changeView('analysis')" id="view-analysis"
+                    class="flex-1 px-3 py-2.5 text-[10px] sm:text-xs font-bold uppercase tracking-wider rounded-xl transition-all duration-300 text-slate-400 hover:text-slate-200">Deep
+                    Dive</button>
+                <button onclick="changeView('simulator')" id="view-simulator"
+                    class="flex-1 px-3 py-2.5 text-[10px] sm:text-xs font-bold uppercase tracking-wider rounded-xl transition-all duration-300 text-slate-400 hover:text-slate-200">What-If</button>
             </div>
 
             <!-- Session Navigation (Tab Selector) -->
@@ -324,6 +327,102 @@
                     </div>
                 </div>
             </section>
+
+            <!-- Specialized Analysis Section -->
+            <section id="section-analysis" class="pb-12 hidden">
+                <div class="flex flex-col sm:flex-row sm:items-center gap-4 mb-8 justify-between">
+                    <div class="flex items-center gap-3">
+                        <div class="w-1.5 h-6 bg-indigo-500 rounded-full"></div>
+                        <h2 class="text-sm font-bold uppercase tracking-widest text-slate-400">Deep Dive Analysis</h2>
+                    </div>
+
+                    <div class="flex flex-wrap items-center gap-3 w-full sm:w-auto">
+                        <div class="relative flex-1 sm:flex-initial min-w-[150px]">
+                            <select id="analysis-student-select" onchange="renderSpecializedAnalysis()"
+                                class="appearance-none bg-[#161B26] border border-white/10 text-slate-200 text-xs font-bold rounded-xl px-4 py-2.5 pr-8 focus:outline-none focus:border-indigo-500 transition-colors uppercase tracking-wide w-full">
+                            </select>
+                            <div
+                                class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-slate-500">
+                                <svg class="fill-current h-4 w-4" viewBox="0 0 20 20">
+                                    <path
+                                        d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
+                                </svg>
+                            </div>
+                        </div>
+
+                        <div class="relative flex-1 sm:flex-initial min-w-[150px]">
+                            <select id="analysis-subject-select" onchange="renderSpecializedAnalysis()"
+                                class="appearance-none bg-[#161B26] border border-white/10 text-indigo-300 text-xs font-bold rounded-xl px-4 py-2.5 pr-8 focus:outline-none focus:border-indigo-500 transition-colors uppercase tracking-wide w-full">
+                            </select>
+                            <div
+                                class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-slate-500">
+                                <svg class="fill-current h-4 w-4" viewBox="0 0 20 20">
+                                    <path
+                                        d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Analysis Summary Cards -->
+                <div id="analysis-stats" class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+                    <!-- Cards injected by JS -->
+                </div>
+
+                <!-- Comparison Chart -->
+                <div class="glass-card rounded-2xl p-4 sm:p-8 mb-8 shadow-2xl relative">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
+                        <div>
+                            <h3 class="text-sm font-black text-white uppercase tracking-widest">Performance Comparison
+                            </h3>
+                            <p class="text-[10px] text-slate-400 mt-1 uppercase font-bold tracking-wider">Student vs
+                                Class Benchmarks</p>
+                        </div>
+                        <div class="flex items-center gap-4 text-[9px] font-bold uppercase tracking-widest">
+                            <div class="flex items-center gap-1.5"><span
+                                    class="w-2 h-2 rounded-full bg-indigo-500"></span> <span
+                                    class="text-slate-300">Student</span></div>
+                            <div class="flex items-center gap-1.5"><span
+                                    class="w-2 h-2 rounded-full border border-indigo-500/50"></span> <span
+                                    class="text-slate-500">Avg</span></div>
+                            <div class="flex items-center gap-1.5"><span
+                                    class="w-2 h-2 rounded-full bg-emerald-500"></span> <span
+                                    class="text-emerald-500/70">Highest</span></div>
+                        </div>
+                    </div>
+                    <div class="relative h-[400px] w-full">
+                        <canvas id="analysisChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- History Table -->
+                <div class="glass-card rounded-2xl overflow-hidden shadow-2xl">
+                    <div class="px-6 py-4 border-b border-white/5 flex items-center justify-between">
+                        <h3 class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Detailed History
+                        </h3>
+                        <span
+                            class="text-[9px] font-bold text-indigo-400 uppercase tracking-wider px-2 py-1 bg-indigo-500/10 rounded-lg">Performance
+                            Logs</span>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left border-collapse">
+                            <thead>
+                                <tr
+                                    class="bg-white/[0.02] text-[8px] font-black uppercase tracking-widest text-slate-500">
+                                    <th class="px-6 py-4 border-b border-white/5">Exam Cycle</th>
+                                    <th class="px-6 py-4 border-b border-white/5 text-center">Score</th>
+                                    <th class="px-6 py-4 border-b border-white/5 text-center">Grade</th>
+                                    <th class="px-6 py-4 border-b border-white/5 text-center">Gap to Avg</th>
+                                </tr>
+                            </thead>
+                            <tbody id="analysis-history-body" class="divide-y divide-white/5">
+                                <!-- Rows injected by JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
             <!-- Subject Performance Analysis Section -->
             <section id="section-subjects" class="pb-12 hidden">
                 <div class="flex items-center gap-3 mb-6">
@@ -372,6 +471,93 @@
 
                 <div id="subject-charts-container" class="grid grid-cols-1 md:grid-cols-2 gap-8">
                     <!-- Dynamic Subject Charts Injected Here -->
+                </div>
+            </section>
+
+            <!-- Scenario Simulator Section -->
+            <section id="section-simulator" class="pb-12 hidden">
+                <div class="flex flex-col sm:flex-row sm:items-center gap-4 mb-8 justify-between">
+                    <div class="flex items-center gap-3">
+                        <div class="w-1.5 h-6 bg-rose-500 rounded-full animate-pulse"></div>
+                        <h2 class="text-sm font-bold uppercase tracking-widest text-slate-400">What-If Scenario
+                            Simulator</h2>
+                    </div>
+
+                    <div class="relative w-full sm:w-auto min-w-[300px]">
+                        <select id="sim-student-select" onchange="renderSimulatorWorkspace()"
+                            class="appearance-none bg-[#161B26] border border-white/10 text-indigo-300 text-xs font-bold rounded-xl px-4 py-2.5 pr-8 focus:outline-none focus:border-rose-500 transition-colors uppercase tracking-wide w-full">
+                        </select>
+                        <div
+                            class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-slate-500">
+                            <svg class="fill-current h-4 w-4" viewBox="0 0 20 20">
+                                <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+                    <!-- Left: Workspace -->
+                    <div class="lg:col-span-8 space-y-6">
+                        <div class="glass-card rounded-2xl p-6 shadow-2xl border-white/5">
+                            <div class="flex items-center justify-between mb-6 pb-4 border-b border-white/5">
+                                <h3 class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Adjust Marks
+                                </h3>
+                                <button onclick="resetSimulation()"
+                                    class="text-[9px] font-bold text-rose-400 uppercase tracking-widest hover:text-rose-300 transition-colors">Reset
+                                    Scores</button>
+                            </div>
+                            <div id="sim-inputs-grid" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+                                <!-- Inputs injected by JS -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right: Results Dashboard -->
+                    <div class="lg:col-span-4 space-y-6">
+                        <div
+                            class="glass-card rounded-2xl p-8 bg-indigo-500/5 border-indigo-500/20 shadow-2xl sticky top-8">
+                            <div class="text-center mb-8">
+                                <div class="text-[10px] font-black text-indigo-400 uppercase tracking-[0.2em] mb-2">
+                                    Simulated Standing</div>
+                                <div id="sim-rank-display"
+                                    class="text-6xl font-black text-white italic tracking-tighter">
+                                    #--
+                                </div>
+                                <div id="sim-rank-diff" class="text-[10px] font-bold mt-2 uppercase tracking-widest">
+                                    --
+                                </div>
+                            </div>
+
+                            <div class="space-y-4">
+                                <div class="bg-white/5 rounded-xl p-4 flex justify-between items-center">
+                                    <span class="text-[9px] font-black text-slate-400 uppercase tracking-widest">New
+                                        Total</span>
+                                    <span id="sim-total-display" class="text-lg font-black text-white">0</span>
+                                </div>
+                                <div class="bg-white/5 rounded-xl p-4 flex justify-between items-center">
+                                    <span class="text-[9px] font-black text-slate-400 uppercase tracking-widest">New
+                                        Average</span>
+                                    <span id="sim-avg-display" class="text-lg font-black text-indigo-400">0.0%</span>
+                                </div>
+                                <div id="sim-grade-container"
+                                    class="bg-white/5 rounded-xl p-4 flex justify-between items-center">
+                                    <span
+                                        class="text-[9px] font-black text-slate-400 uppercase tracking-widest">Predicted
+                                        Status</span>
+                                    <span id="sim-status-display"
+                                        class="text-[10px] font-black px-2 py-0.5 rounded-lg border">--</span>
+                                </div>
+                            </div>
+
+                            <div class="mt-8 pt-6 border-t border-white/5 text-center">
+                                <p class="text-[9px] text-slate-500 italic leading-relaxed">
+                                    *Ranking is calculated relative to the static performance of other students in this
+                                    session.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </section>
         </main>
@@ -501,12 +687,14 @@
             document.getElementById('section-results').classList.toggle('hidden', view !== 'results');
             document.getElementById('section-mate').classList.toggle('hidden', view !== 'mate');
             document.getElementById('section-subjects').classList.toggle('hidden', view !== 'subjects');
+            document.getElementById('section-analysis').classList.toggle('hidden', view !== 'analysis');
+            document.getElementById('section-simulator').classList.toggle('hidden', view !== 'simulator');
 
-            // Toggle Session Selector (only for results)
-            document.getElementById('session-selector-container').classList.toggle('hidden', view !== 'results');
+            // Toggle Session Selector
+            document.getElementById('session-selector-container').classList.toggle('hidden', view !== 'results' && view !== 'subjects' && view !== 'simulator');
 
             // Update Tab Buttons
-            const views = ['results', 'mate', 'subjects'];
+            const views = ['results', 'mate', 'subjects', 'analysis', 'simulator'];
             views.forEach(v => {
                 const btn = document.getElementById('view-' + v);
                 if (btn) {
@@ -530,6 +718,18 @@
                 requestAnimationFrame(() => {
                     renderStudentLineAnalysis();
                     chartsRendered.studentLine = true;
+                });
+            }
+
+            if (view === 'analysis') {
+                requestAnimationFrame(() => {
+                    renderSpecializedAnalysis();
+                });
+            }
+
+            if (view === 'simulator') {
+                requestAnimationFrame(() => {
+                    renderSimulator();
                 });
             }
         }
@@ -641,7 +841,306 @@
                 </tr>
             `).join('');
 
-            // Optimization: Static tables are now rendered once on init
+            // Handle specialized analysis if active
+            if (activeView === 'analysis') renderSpecializedAnalysis();
+            if (activeView === 'simulator') renderSimulator();
+        }
+
+        function renderSimulator() {
+            const studentSelect = document.getElementById('sim-student-select');
+            const fileId = activeForm + '-' + activeSession;
+            const sessionData = getExamData(fileId);
+
+            // 1. Update Student Dropdown Based on Current Session
+            const currentSelected = studentSelect.value;
+            studentSelect.innerHTML = sessionData.map(d =>
+                `<option value="${d.NAMA}" ${d.NAMA === currentSelected ? 'selected' : ''}>${d.NAMA}</option>`
+            ).join('');
+
+            if (!studentSelect.value && sessionData.length > 0) {
+                studentSelect.value = sessionData[0].NAMA;
+            }
+
+            renderSimulatorWorkspace();
+        }
+
+        function renderSimulatorWorkspace() {
+            const studentName = document.getElementById('sim-student-select').value;
+            const fileId = activeForm + '-' + activeSession;
+            const sessionData = getExamData(fileId);
+            const studentData = sessionData.find(d => d.NAMA === studentName);
+
+            if (!studentData) return;
+
+            const academicSubjects = ['BM', 'BI', 'SEJ', 'GEO', 'BA', 'PI', 'MATE', 'SNS', 'RBT', 'HQ', 'MQ', 'FEQ', 'HAD', 'TAU', 'TAF'];
+            const container = document.getElementById('sim-inputs-grid');
+
+            container.innerHTML = academicSubjects.map(sub => `
+                <div class="space-y-1.5">
+                    <label class="text-[9px] font-black text-slate-500 uppercase tracking-widest ml-1">${sub}</label>
+                    <input type="number" 
+                        id="sim-input-${sub}" 
+                        value="${parseFloat(studentData[sub]) || 0}" 
+                        min="0" max="100" 
+                        oninput="runSimulation()"
+                        class="w-full bg-[#1C2230] border border-white/10 rounded-xl px-3 py-2 text-xs font-bold text-white focus:outline-none focus:border-rose-500/50 transition-all"
+                    >
+                </div>
+            `).join('');
+
+            runSimulation();
+        }
+
+        function resetSimulation() {
+            renderSimulatorWorkspace();
+        }
+
+        function runSimulation() {
+            const studentName = document.getElementById('sim-student-select').value;
+            const fileId = activeForm + '-' + activeSession;
+            const allStudents = getExamData(fileId);
+
+            const academicSubjects = ['BM', 'BI', 'SEJ', 'GEO', 'BA', 'PI', 'MATE', 'SNS', 'RBT', 'HQ', 'MQ', 'FEQ', 'HAD', 'TAU', 'TAF'];
+
+            // 1. Calculate New Total for the Selected Student
+            let newTotal = 0;
+            academicSubjects.forEach(sub => {
+                const val = parseFloat(document.getElementById('sim-input-' + sub).value) || 0;
+                newTotal += val;
+            });
+
+            // 2. Fetch others' totals
+            const othersTotals = allStudents
+                .filter(s => s.NAMA !== studentName)
+                .map(s => parseFloat(s.JUMLAH) || 0);
+
+            // 3. Calculate New Rank
+            const newRank = othersTotals.filter(t => t > newTotal).length + 1;
+            const originalStudent = allStudents.find(s => s.NAMA === studentName);
+            const originalRank = allStudents.indexOf(originalStudent) + 1;
+            const totalStudents = allStudents.length;
+
+            // 4. Update UI
+            const rankDisplay = document.getElementById('sim-rank-display');
+            const rankDiff = document.getElementById('sim-rank-diff');
+
+            rankDisplay.textContent = '#' + newRank;
+
+            if (newRank < originalRank) {
+                rankDiff.textContent = `Improved by ${originalRank - newRank} positions`;
+                rankDiff.className = "text-[10px] font-bold mt-2 uppercase tracking-widest text-emerald-400";
+                rankDisplay.className = "text-6xl font-black text-emerald-400 italic tracking-tighter transition-all duration-300";
+            } else if (newRank > originalRank) {
+                rankDiff.textContent = `Dropped by ${newRank - originalRank} positions`;
+                rankDiff.className = "text-[10px] font-bold mt-2 uppercase tracking-widest text-rose-400";
+                rankDisplay.className = "text-6xl font-black text-rose-400 italic tracking-tighter transition-all duration-300";
+            } else {
+                rankDiff.textContent = "Same as current rank";
+                rankDiff.className = "text-[10px] font-bold mt-2 uppercase tracking-widest text-slate-500";
+                rankDisplay.className = "text-6xl font-black text-white italic tracking-tighter transition-all duration-300";
+            }
+
+            document.getElementById('sim-total-display').textContent = newTotal.toLocaleString();
+            const newAvg = (newTotal / academicSubjects.length).toFixed(1);
+            document.getElementById('sim-avg-display').textContent = newAvg + '%';
+
+            // Grade Prediction
+            const statusDisplay = document.getElementById('sim-status-display');
+            if (newAvg >= 80) {
+                statusDisplay.textContent = 'DISTINCTION';
+                statusDisplay.className = "text-[10px] font-black px-2 py-0.5 rounded-lg border border-emerald-500 text-emerald-400 bg-emerald-500/10";
+            } else if (newAvg >= 60) {
+                statusDisplay.textContent = 'PASS';
+                statusDisplay.className = "text-[10px] font-black px-2 py-0.5 rounded-lg border border-indigo-500 text-indigo-400 bg-indigo-500/10";
+            } else {
+                statusDisplay.textContent = 'CRITICAL';
+                statusDisplay.className = "text-[10px] font-black px-2 py-0.5 rounded-lg border border-rose-500 text-rose-400 bg-rose-500/10";
+            }
+        }
+
+        function renderSpecializedAnalysis() {
+            const studentSelect = document.getElementById('analysis-student-select');
+            const subjectSelect = document.getElementById('analysis-subject-select');
+
+            // 1. Initialize Dropdowns if empty
+            if (studentSelect.options.length === 0) {
+                const names = [...new Set(rawData.map(d => d.NAMA.trim()))].sort();
+                names.forEach(n => {
+                    const opt = document.createElement('option');
+                    opt.value = n;
+                    opt.textContent = n;
+                    studentSelect.appendChild(opt);
+                });
+
+                const academicSubjects = ['BM', 'BI', 'SEJ', 'GEO', 'BA', 'PI', 'MATE', 'SNS', 'RBT', 'HQ', 'MQ', 'FEQ', 'HAD', 'TAU', 'TAF'];
+                academicSubjects.sort((a, b) => (subjectMap[a] || a).localeCompare(subjectMap[b] || b));
+                academicSubjects.forEach(sub => {
+                    const opt = document.createElement('option');
+                    opt.value = sub;
+                    opt.textContent = subjectMap[sub] || sub;
+                    if (sub === 'MATE') opt.selected = true;
+                    subjectSelect.appendChild(opt);
+                });
+            }
+
+            const activeStudent = studentSelect.value;
+            const activeSub = subjectSelect.value;
+            if (!activeStudent || !activeSub) return;
+
+            const allExams = [...new Set(rawData.map(d => d.EXAM))].sort();
+
+            // 2. Performance Data Extraction
+            const studentTrace = [];
+            const avgTrace = [];
+            const maxTrace = [];
+            const tableRows = [];
+
+            let totalForAvg = 0;
+            let countForAvg = 0;
+            let highest = 0;
+            let latest = null;
+            let previous = null;
+
+            allExams.forEach(exId => {
+                const examBatch = getExamData(exId);
+                const scores = examBatch.map(d => parseFloat(d[activeSub])).filter(s => !isNaN(s));
+
+                const currentAvg = scores.length > 0 ? scores.reduce((a, b) => a + b, 0) / scores.length : 0;
+                const currentMax = scores.length > 0 ? Math.max(...scores) : 0;
+
+                const studentRow = examBatch.find(d => d.NAMA.trim() === activeStudent);
+                const studentScore = studentRow ? parseFloat(studentRow[activeSub]) : NaN;
+
+                studentTrace.push(isNaN(studentScore) ? null : studentScore);
+                avgTrace.push(currentAvg.toFixed(1));
+                maxTrace.push(currentMax);
+
+                if (!isNaN(studentScore)) {
+                    totalForAvg += studentScore;
+                    countForAvg++;
+                    if (studentScore > highest) highest = studentScore;
+                    previous = latest;
+                    latest = studentScore;
+
+                    const gap = studentScore - currentAvg;
+                    const gradeStyle = getGradeStyle(studentScore);
+
+                    tableRows.push(`
+                        <tr class="hover:bg-white/5 transition-colors group">
+                            <td class="px-6 py-4 text-[10px] font-bold text-slate-300 tracking-wide">${exId}</td>
+                            <td class="px-6 py-4 text-center font-black text-white">${studentScore}</td>
+                            <td class="px-6 py-4 text-center">
+                                <span class="px-2 py-0.5 rounded-md text-[9px] font-black ${gradeStyle.weight}" style="color: ${gradeStyle.color}; border: 1px solid ${gradeStyle.color}20; background: ${gradeStyle.color}05">
+                                    ${studentScore < 40 ? 'G' : studentScore < 50 ? 'E' : studentScore < 60 ? 'D' : studentScore < 70 ? 'C' : studentScore < 80 ? 'B' : 'A'}
+                                </span>
+                            </td>
+                            <td class="px-6 py-4 text-center font-bold text-[9px] ${gap >= 0 ? 'text-emerald-400' : 'text-rose-400'}">
+                                ${gap >= 0 ? '+' : ''}${gap.toFixed(1)}
+                            </td>
+                        </tr>
+                    `);
+                }
+            });
+
+            // 3. Render Stats Cards
+            const avg = countForAvg > 0 ? (totalForAvg / countForAvg).toFixed(1) : '-';
+            const growth = (latest !== null && previous !== null) ? (latest - previous).toFixed(1) : '-';
+
+            document.getElementById('analysis-stats').innerHTML = `
+                <div class="glass-card p-4 rounded-2xl border-white/5">
+                    <p class="text-[9px] font-black text-slate-500 uppercase tracking-widest mb-1">Subject Average</p>
+                    <div class="flex items-baseline gap-2">
+                        <span class="text-xl font-black text-white">${avg}</span>
+                    </div>
+                </div>
+                <div class="glass-card p-4 rounded-2xl border-white/5">
+                    <p class="text-[9px] font-black text-slate-500 uppercase tracking-widest mb-1">Latest Score</p>
+                    <div class="flex items-baseline gap-2">
+                        <span class="text-xl font-black text-indigo-400">${latest || '-'}</span>
+                    </div>
+                </div>
+                <div class="glass-card p-4 rounded-2xl border-white/5">
+                    <p class="text-[9px] font-black text-slate-500 uppercase tracking-widest mb-1">Personal Best</p>
+                    <div class="flex items-baseline gap-2">
+                        <span class="text-xl font-black text-emerald-400">${highest || '-'}</span>
+                    </div>
+                </div>
+                <div class="glass-card p-4 rounded-2xl border-white/5">
+                    <p class="text-[9px] font-black text-slate-500 uppercase tracking-widest mb-1">Cycle Growth</p>
+                    <div class="flex items-baseline gap-2">
+                        <span class="text-xl font-black ${parseFloat(growth) >= 0 ? 'text-emerald-400' : 'text-rose-400'}">${growth > 0 ? '+' : ''}${growth}</span>
+                    </div>
+                </div>
+            `;
+
+            document.getElementById('analysis-history-body').innerHTML = tableRows.reverse().join('');
+
+            // 4. Comparison Chart
+            destroyChart('analysisChart');
+            new Chart(document.getElementById('analysisChart').getContext('2d'), {
+                type: 'line',
+                data: {
+                    labels: allExams,
+                    datasets: [
+                        {
+                            label: 'Student',
+                            data: studentTrace,
+                            borderColor: '#6366f1',
+                            backgroundColor: 'rgba(99, 102, 241, 0.1)',
+                            borderWidth: 3,
+                            fill: true,
+                            tension: 0.4,
+                            pointRadius: 6,
+                            pointBackgroundColor: '#6366f1',
+                            pointBorderColor: '#fff',
+                            pointBorderWidth: 2,
+                            zIndex: 10
+                        },
+                        {
+                            label: 'Class Avg',
+                            data: avgTrace,
+                            borderColor: 'rgba(255, 255, 255, 0.2)',
+                            borderDash: [5, 5],
+                            borderWidth: 2,
+                            fill: false,
+                            tension: 0.4,
+                            pointRadius: 0
+                        },
+                        {
+                            label: 'Top Score',
+                            data: maxTrace,
+                            borderColor: 'rgba(16, 185, 129, 0.3)',
+                            borderWidth: 1,
+                            fill: false,
+                            tension: 0.4,
+                            pointRadius: 0
+                        }
+                    ]
+                },
+                plugins: [ChartDataLabels],
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    interaction: { mode: 'index', intersect: false },
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: { enabled: true, backgroundColor: 'rgba(28, 34, 48, 0.98)', titleColor: '#fff', bodyColor: '#cbd5e1' },
+                        datalabels: {
+                            display: (ctx) => showDataLabels && ctx.datasetIndex === 0,
+                            color: '#fff',
+                            backgroundColor: '#6366f1',
+                            borderRadius: 4,
+                            font: { weight: 'bold', size: 10 },
+                            offset: 8,
+                            align: 'top'
+                        }
+                    },
+                    scales: {
+                        y: { beginAtZero: true, max: 100, grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#64748b' } },
+                        x: { grid: { display: false }, ticks: { color: '#64748b', font: { size: 9 } } }
+                    }
+                }
+            });
         }
 
         function changeForm(form) {

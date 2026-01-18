@@ -1119,8 +1119,8 @@
                     studentSelect.appendChild(opt);
                 });
 
-                const academicSubjects = ['BM', 'BI', 'SEJ', 'GEO', 'BA', 'PI', 'MATE', 'SNS', 'RBT', 'HQ', 'MQ', 'FEQ', 'HAD', 'TAU', 'TAF'];
-                academicSubjects.sort((a, b) => (subjectMap[a] || a).localeCompare(subjectMap[b] || b));
+                // Populating Subjects from dynamic subjectsData
+                const sortedSubjects = [...subjectsData].sort((a, b) => (a['NAMA PENUH'] || a.SINGKATAN).localeCompare(b['NAMA PENUH'] || b.SINGKATAN));
 
                 // Add Overall Performance option at the top
                 const overallOpt = document.createElement('option');
@@ -1129,10 +1129,10 @@
                 overallOpt.selected = true; // Set as default
                 subjectSelect.appendChild(overallOpt);
 
-                academicSubjects.forEach(sub => {
+                sortedSubjects.forEach(subObj => {
                     const opt = document.createElement('option');
-                    opt.value = sub;
-                    opt.textContent = subjectMap[sub] || sub;
+                    opt.value = subObj.SINGKATAN;
+                    opt.textContent = subObj['NAMA PENUH'] || subObj.SINGKATAN;
                     subjectSelect.appendChild(opt);
                 });
             }
@@ -1169,7 +1169,7 @@
                 const currentAvg = scores.length > 0 ? scores.reduce((a, b) => a + b, 0) / scores.length : 0;
                 const currentMax = scores.length > 0 ? Math.max(...scores) : 0;
 
-                const studentRow = examBatch.find(d => d.NAMA.trim() === activeStudent);
+                const studentRow = examBatch.find(d => d.NAMA.trim().toUpperCase() === activeStudent.toUpperCase());
                 const studentScore = studentRow ? parseFloat(studentRow[activeSub]) : NaN;
 
                 studentTrace.push(isNaN(studentScore) ? null : studentScore);
@@ -1238,7 +1238,7 @@
 
             // 4. Comparison Chart
             destroyChart('analysisChart');
-            new Chart(document.getElementById('analysisChart').getContext('2d'), {
+            chartInstances['analysisChart'] = new Chart(document.getElementById('analysisChart').getContext('2d'), {
                 type: 'line',
                 data: {
                     labels: allExams,

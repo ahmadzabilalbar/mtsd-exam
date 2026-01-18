@@ -60,14 +60,7 @@
             text-align: center;
         }
 
-        .sticky-col-name {
-            position: sticky;
-            left: 28px;
-            z-index: 20;
-            background-color: #161B26;
-            padding: 6px 8px;
-        }
-
+        .sticky-col-name,
         .mate-sticky-name {
             position: sticky;
             left: 28px;
@@ -81,61 +74,39 @@
             font-size: 9.5px;
         }
 
-        .ultra-truncate-name {
-            white-space: nowrap;
-            font-size: 9.5px;
-        }
-
         .standard-mark-col {
             font-size: 11px;
-            padding: 4px 2px !important;
+            padding: 4px 6px !important;
             text-align: center;
+            min-width: 45px;
         }
 
         @media (max-width: 639px) {
             .standard-name-col {
-                font-size: 8px !important;
-            }
-
-            .ultra-truncate-name {
-                font-size: 8px !important;
+                font-size: 8.5px !important;
             }
 
             .standard-mark-col {
-                font-size: 8.5px !important;
-                padding: 2px 1px !important;
+                font-size: 9px !important;
+                padding: 4px 2px !important;
+                min-width: 35px;
             }
 
+            .sticky-col-rank,
+            .sticky-col-name,
             .mate-sticky-name {
-                padding: 2px 4px !important;
+                background-color: #1C2230 !important;
             }
         }
 
-        @media (min-width: 640px) {
+        @media (min-width: 1024px) {
 
             .sticky-col-rank,
             .sticky-col-name,
             .mate-sticky-name {
                 position: static;
-                background-color: transparent;
+                background-color: transparent !important;
             }
-        }
-
-        /* Name Reveal Toast */
-        #name-reveal-toast {
-            position: fixed;
-            bottom: 24px;
-            left: 50%;
-            transform: translateX(-50%) translateY(100px);
-            z-index: 100;
-            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.3s;
-            opacity: 0;
-            pointer-events: none;
-        }
-
-        #name-reveal-toast.show {
-            transform: translateX(-50%) translateY(0);
-            opacity: 1;
         }
     </style>
 </head>
@@ -149,15 +120,7 @@
         </div>
     </div>
 
-    <!-- Name Reveal Toast Component -->
-    <div id="name-reveal-toast">
-        <div class="glass-card px-6 py-3 rounded-2xl shadow-2xl border-indigo-500/30 bg-[#1C2230]/90">
-            <div class="flex items-center gap-3">
-                <div class="w-2 h-2 bg-indigo-500 rounded-full animate-pulse"></div>
-                <span id="name-reveal-content" class="text-xs font-bold tracking-wide uppercase text-indigo-100"></span>
-            </div>
-        </div>
-    </div>
+
 
     <div class="max-w-7xl mx-auto px-4 py-8 sm:py-12">
         <header class="mb-10 text-center sm:text-left flex flex-col sm:flex-row sm:items-end justify-between gap-6">
@@ -275,8 +238,8 @@
                                 <span class="text-[9px] text-red-400 uppercase font-black ml-1">Critical Cases</span>
                             </div>
                         </div>
-                        <div id="below-avg-list-new" class="flex flex-wrap gap-2">
-                            <!-- Student individual tags injected here -->
+                        <div id="below-avg-list-new" class="overflow-x-auto">
+                            <!-- Student list table injected here -->
                         </div>
                     </div>
                 </div>
@@ -601,7 +564,7 @@
             body.innerHTML = sessionData.map(row => `
                 <tr class="hover:bg-white/5 transition-colors group">
                     <td class="px-2 py-1.5 font-bold text-slate-500 sticky-col-rank group-hover:bg-[#1C2230] border-b border-white/5 standard-mark-col">${row.BIL}</td>
-                    <td class="font-medium uppercase text-slate-300 sticky-col-name group-hover:bg-[#1C2230] border-b border-white/5 cursor-pointer" onclick="revealName('${row.NAMA}')" title="${row.NAMA}">
+                    <td class="font-medium uppercase text-slate-300 sticky-col-name group-hover:bg-[#1C2230] border-b border-white/5">
                         <div class="standard-name-col">${row.NAMA}</div>
                     </td>
                     ${subjects.map(s => {
@@ -730,7 +693,7 @@
                 return `
                     <tr class="hover:bg-white/5 transition-colors group">
                         <td class="sticky-col-rank font-bold text-slate-500 group-hover:bg-[#1C2230] border-b border-white/5 standard-mark-col">${idx + 1}</td>
-                        <td class="font-medium uppercase text-slate-300 mate-sticky-name group-hover:bg-[#1C2230] border-b border-white/5 cursor-pointer" onclick="revealName('${canonicalName}')" title="${canonicalName}">
+                        <td class="font-medium uppercase text-slate-300 mate-sticky-name group-hover:bg-[#1C2230] border-b border-white/5">
                             <div class="standard-name-col">${canonicalName}</div>
                         </td>
                         ${results}
@@ -768,11 +731,15 @@
                     meta.textContent = `Scoring below subject total average of ${subAvg.toFixed(1)}`;
                     countDisplay.textContent = below.length;
 
-                    list.innerHTML = below.map(s => `
-                        <div class="px-3 py-1.5 rounded-lg bg-red-500/10 border border-red-500/10 flex items-center gap-3 group cursor-pointer hover:bg-red-500/20 transition-all" onclick="revealName('${s.cName}')">
-                            <span class="text-[9px] font-black text-red-100 uppercase tracking-widest">${s.cName}</span>
-                            <div class="w-px h-3 bg-red-500/20"></div>
-                            <span class="text-[9px] font-black text-red-500">${s.total.toFixed(0)}</span>
+                    list.innerHTML = below.map((s, idx) => `
+                        <div class="flex items-center justify-between py-1 border-b border-red-500/5 hover:bg-red-500/10 transition-colors group px-2">
+                            <div class="flex items-center gap-4">
+                                <span class="text-[9px] font-bold text-red-500/30 w-5">${idx + 1}</span>
+                                <span class="text-[9px] font-bold text-red-100 uppercase tracking-wide standard-name-col">${s.cName}</span>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <span class="text-[9px] font-black text-red-400 group-hover:text-red-300 transition-colors">${s.total.toFixed(0)}</span>
+                            </div>
                         </div>
                     `).join('');
                 } else {
@@ -1387,19 +1354,7 @@
             });
         }
 
-        let nameToastTimeout;
-        function revealName(name) {
-            const toast = document.getElementById('name-reveal-toast');
-            const content = document.getElementById('name-reveal-content');
 
-            content.textContent = name;
-            toast.classList.add('show');
-
-            clearTimeout(nameToastTimeout);
-            nameToastTimeout = setTimeout(() => {
-                toast.classList.remove('show');
-            }, 3000);
-        }
 
         // ===== PERFORMANCE OPTIMIZATION: Debounced Render Functions =====
         const debouncedRenderStudentTrend = debounce(renderStudentTrendAnalysis, 150);

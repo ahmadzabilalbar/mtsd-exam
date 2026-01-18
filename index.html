@@ -66,39 +66,40 @@
             left: 28px;
             z-index: 20;
             background-color: #161B26;
-            padding: 6px 8px;
+            padding: 4px 6px;
         }
 
         .standard-name-col {
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
-            font-size: 9.5px;
+            font-size: 9px;
         }
 
         .standard-mark-col {
-            font-size: 11px;
-            padding: 4px 6px !important;
+            font-size: 10px;
+            padding: 2px 4px !important;
             text-align: center;
-            min-width: 45px;
+            min-width: 40px;
         }
 
         @media (max-width: 639px) {
             .standard-name-col {
-                font-size: 8.5px !important;
-                max-width: 80px;
+                font-size: 8px !important;
+                max-width: 70px;
             }
 
             .standard-mark-col {
-                font-size: 9px !important;
-                padding: 4px 2px !important;
-                min-width: 35px;
+                font-size: 8px !important;
+                padding: 1.5px 1px !important;
+                min-width: 32px;
             }
 
             .sticky-col-rank,
             .sticky-col-name,
             .mate-sticky-name {
                 background-color: #1C2230 !important;
+                padding: 2px 4px !important;
             }
         }
 
@@ -134,13 +135,56 @@
             opacity: 0;
             box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
             text-align: center;
-            min-width: 180px;
-            max-width: 90vw;
+            min-width: 140px;
+            max-width: 85vw;
         }
 
         #name-reveal-toast.show {
             transform: translateX(-50%) translateY(0);
             opacity: 1;
+        }
+
+        /* Custom Animations */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes bounceSubtle {
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-5px);
+            }
+        }
+
+        .animate-fade-in {
+            animation: fadeIn 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+        }
+
+        .animate-bounce-subtle {
+            animation: bounceSubtle 3s ease-in-out infinite;
+        }
+
+        /* Hide Scrollbar */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
         }
     </style>
 </head>
@@ -161,123 +205,160 @@
 
 
 
-    <div class="max-w-7xl mx-auto px-4 py-8 sm:py-12">
-        <header class="mb-10 text-center sm:text-left flex flex-col sm:flex-row sm:items-end justify-between gap-6">
-            <div>
-                <div
-                    class="inline-flex items-center px-3 py-1 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 text-[10px] font-bold uppercase tracking-wider mb-3">
-                    Maahad Tahfiz Sains Darul Aman
-                </div>
-                <p id="data-meta" class="text-slate-400 mt-2 text-sm italic">Loading data...</p>
+    <div class="max-w-7xl mx-auto px-2 py-2 sm:py-4 flex flex-col items-center">
+        <!-- Compact Header Section -->
+        <div class="w-full flex flex-col sm:flex-row items-center justify-between gap-4 mb-4 sm:mb-6">
+            <div
+                class="inline-flex items-center px-3 py-1 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 text-[9px] sm:text-[10px] font-black uppercase tracking-[0.2em]">
+                Maahad Tahfiz Sains Darul Aman
             </div>
 
-            <div class="inline-flex p-1 bg-white/5 rounded-2xl overflow-hidden self-center sm:self-auto">
-                <button onclick="changeForm('F1')" id="btn-f1"
-                    class="px-8 py-2.5 text-sm font-bold rounded-xl transition-all duration-300 bg-indigo-600 text-white shadow-xl shadow-indigo-500/20">
-                    Form 1
-                </button>
-                <button onclick="changeForm('F2')" id="btn-f2"
-                    class="px-8 py-2.5 text-sm font-bold rounded-xl transition-all duration-300 text-slate-400 hover:text-slate-200">
-                    Form 2
-                </button>
+            <div id="rule-badge-container" class="transition-all duration-500 opacity-0 translate-y-2">
+                <!-- Dynamic badge injected here -->
             </div>
-        </header>
+        </div>
 
-        <main id="main-content" class="space-y-8 opacity-0 transition-opacity duration-500">
-            <!-- View Selector (Report Switcher) -->
-            <div class="flex flex-wrap justify-center gap-2 p-1 bg-white/5 rounded-2xl w-full max-w-5xl mx-auto">
-                <button onclick="changeView('results')" id="view-results"
-                    class="flex-1 px-3 py-2.5 text-[10px] sm:text-xs font-bold uppercase tracking-wider rounded-xl transition-all duration-300 bg-indigo-600 text-white shadow-lg">Class
-                    Results</button>
-                <button onclick="changeView('mate')" id="view-mate"
-                    class="flex-1 px-3 py-2.5 text-[10px] sm:text-xs font-bold uppercase tracking-wider rounded-xl transition-all duration-300 text-slate-400 hover:text-slate-200">Trends</button>
-                <button onclick="changeView('subjects')" id="view-subjects"
-                    class="flex-1 px-3 py-2.5 text-[10px] sm:text-xs font-bold uppercase tracking-wider rounded-xl transition-all duration-300 text-slate-400 hover:text-slate-200">Subjects</button>
-                <button onclick="changeView('analysis')" id="view-analysis"
-                    class="flex-1 px-3 py-2.5 text-[10px] sm:text-xs font-bold uppercase tracking-wider rounded-xl transition-all duration-300 text-slate-400 hover:text-slate-200">Deep
-                    Dive</button>
-                <button onclick="changeView('simulator')" id="view-simulator"
-                    class="flex-1 px-3 py-2.5 text-[10px] sm:text-xs font-bold uppercase tracking-wider rounded-xl transition-all duration-300 text-slate-400 hover:text-slate-200">What-If</button>
-            </div>
+        <!-- View Selector (Navigation) -->
+        <div
+            class="flex items-center gap-1 p-1 bg-white/5 rounded-lg w-full max-w-4xl mx-auto mb-4 sm:mb-6 overflow-x-auto no-scrollbar flex-nowrap whitespace-nowrap">
+            <button onclick="changeView('results')" id="view-results"
+                class="flex-1 min-w-max px-3 py-1.5 text-[9px] sm:text-xs font-bold uppercase tracking-wider rounded-lg transition-all duration-300 bg-indigo-600 text-white shadow-lg">Class
+                Results</button>
+            <button onclick="changeView('subjects')" id="view-subjects"
+                class="flex-1 min-w-max px-3 py-1.5 text-[9px] sm:text-xs font-bold uppercase tracking-wider rounded-lg transition-all duration-300 text-slate-400 hover:text-slate-200">Subjects</button>
+            <button onclick="changeView('mate')" id="view-mate"
+                class="flex-1 min-w-max px-3 py-1.5 text-[9px] sm:text-xs font-bold uppercase tracking-wider rounded-lg transition-all duration-300 text-slate-400 hover:text-slate-200">Trends</button>
+            <button onclick="changeView('analysis')" id="view-analysis"
+                class="flex-1 min-w-max px-3 py-1.5 text-[9px] sm:text-xs font-bold uppercase tracking-wider rounded-lg transition-all duration-300 text-slate-400 hover:text-slate-200">Deep
+                Dive</button>
+            <button onclick="changeView('simulator')" id="view-simulator"
+                class="flex-1 min-w-max px-3 py-1.5 text-[9px] sm:text-xs font-bold uppercase tracking-wider rounded-lg transition-all duration-300 text-slate-400 hover:text-slate-200">What-If</button>
+        </div>
 
-            <!-- Session Navigation (Tab Selector) -->
+        <main id="main-content" class="w-full space-y-4 sm:space-y-8 opacity-0 transition-opacity duration-500">
+            <!-- Filter Section (Form + Session + Search) -->
             <div id="session-selector-container"
-                class="flex flex-wrap items-center justify-center sm:justify-start gap-4 mb-8">
-                <span
-                    class="text-[10px] font-bold uppercase tracking-widest text-slate-500 w-full sm:w-auto text-center sm:text-left text-xs">Select
-                    Exam:</span>
-                <div id="session-buttons" class="flex bg-white/5 p-1 rounded-xl">
-                    <!-- Buttons injected by JS -->
+                class="flex flex-col lg:flex-row items-center justify-center gap-4 sm:gap-10 mb-6 sm:mb-10 w-full max-w-6xl mx-auto">
+                <div class="flex flex-wrap items-center justify-center gap-4 sm:gap-10">
+                    <div class="flex flex-col gap-1 sm:gap-2">
+                        <span
+                            class="text-[9px] font-bold uppercase tracking-widest text-slate-500 text-center">Form:</span>
+                        <div class="inline-flex p-0.5 bg-white/5 rounded-lg overflow-hidden border border-white/5">
+                            <button onclick="changeForm('F1')" id="btn-f1"
+                                class="px-3 py-1.5 text-[9px] font-bold rounded-md transition-all duration-300 bg-indigo-600 text-white shadow-lg">
+                                F1
+                            </button>
+                            <button onclick="changeForm('F2')" id="btn-f2"
+                                class="px-3 py-1.5 text-[9px] font-bold rounded-md transition-all duration-300 text-slate-400 hover:text-slate-200">
+                                F2
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="flex flex-col gap-1 sm:gap-2">
+                        <span class="text-[9px] font-bold uppercase tracking-widest text-slate-500 text-center">Exam
+                            Cycle:</span>
+                        <div id="session-buttons" class="flex bg-white/5 p-0.5 rounded-lg border border-white/5">
+                            <!-- Buttons injected by JS -->
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex flex-col gap-1 sm:gap-2 w-full max-w-[280px]">
+                    <span
+                        class="text-[9px] font-bold uppercase tracking-widest text-slate-500 text-center lg:text-left">Search
+                        Student:</span>
+                    <div class="relative group">
+                        <input type="text" id="student-search" oninput="debouncedRender()"
+                            placeholder="Type name to filter..."
+                            class="w-full bg-white/5 border border-white/10 rounded-lg pl-9 pr-3 py-1.5 text-[11px] font-bold text-slate-200 focus:outline-none focus:border-indigo-500/50 transition-all placeholder:text-slate-600">
+                        <div
+                            class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500 group-focus-within:text-indigo-400 transition-colors">
+                            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3"
+                                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                            </svg>
+                        </div>
+                    </div>
                 </div>
             </div>
 
             <section id="section-results">
-                <div class="flex items-center gap-3 mb-6">
-                    <div class="w-1.5 h-6 bg-emerald-500 rounded-full"></div>
-                    <h2 id="table-title" class="text-sm font-bold uppercase tracking-widest text-slate-400">Class
-                        results table</h2>
+                <div class="flex items-center gap-2 mb-3">
+                    <div class="w-1 h-4 bg-emerald-500 rounded-full"></div>
+                    <h2 id="table-title"
+                        class="text-[10px] sm:text-xs font-bold uppercase tracking-widest text-slate-400">
+                        Class Results
+                    </h2>
                 </div>
 
-                <div class="glass-card rounded-2xl overflow-hidden">
-                    <div class="overflow-x-auto overflow-y-auto custom-scroll pb-1 max-h-[600px]">
+                <!-- Quick Stats Dashboard -->
+                <div id="quick-stats" class="grid grid-cols-2 lg:grid-cols-4 gap-2 mb-4">
+                    <!-- Stats injected by JS -->
+                </div>
+
+                <div class="glass-card rounded-xl overflow-hidden p-0 sm:p-0">
+                    <div class="overflow-x-auto overflow-y-auto custom-scroll max-h-[70vh]">
                         <table class="w-full text-left border-collapse">
                             <thead id="table-head"></thead>
-                            <tbody id="table-body" class="divide-y divide-white/5 text-[10px] sm:text-[11px]"></tbody>
+                            <tbody id="table-body" class="divide-y divide-white/5 text-[9px] sm:text-[10px]"></tbody>
                         </table>
                     </div>
                 </div>
             </section>
             <!-- Student Trends Section -->
-            <section id="section-mate" class="pb-8 hidden">
-                <div class="flex flex-col sm:flex-row sm:items-center gap-4 mb-6 justify-between">
-                    <div class="flex items-center gap-3">
-                        <div class="w-1.5 h-6 bg-amber-500 rounded-full"></div>
-                        <h2 class="text-sm font-bold uppercase tracking-widest text-slate-400">Student Performance
+            <section id="section-mate" class="pb-1 hidden">
+                <div class="flex flex-col sm:flex-row sm:items-center gap-2 mb-3 sm:mb-6 justify-between">
+                    <div class="flex items-center gap-2">
+                        <div class="w-1 h-4 bg-amber-500 rounded-full"></div>
+                        <h2 class="text-[10px] sm:text-xs font-bold uppercase tracking-widest text-slate-400">Student
                             Trends</h2>
                     </div>
-                    <div class="relative">
+                    <div class="relative w-full sm:w-auto">
                         <select id="trend-subject-select" onchange="debouncedRenderStudentTrend()"
-                            class="appearance-none bg-[#161B26] border border-white/10 text-indigo-300 text-xs font-bold rounded-xl px-4 py-2 pr-8 focus:outline-none focus:border-indigo-500 transition-colors uppercase tracking-wide">
+                            class="appearance-none bg-[#161B26] border border-white/10 text-indigo-300 text-[9px] sm:text-xs font-bold rounded-lg px-3 py-1.5 pr-8 focus:outline-none focus:border-indigo-500 transition-colors uppercase tracking-wide w-full">
                             <!-- Options injected by JS -->
                         </select>
                         <div
                             class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-slate-400">
-                            <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                            <svg class="fill-current h-3 w-3" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
                                 <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
                             </svg>
                         </div>
                     </div>
                 </div>
 
-                <div class="glass-card rounded-2xl overflow-hidden shadow-2xl mb-12">
-                    <div class="overflow-x-auto overflow-y-auto custom-scroll pb-1 max-h-[600px]">
+                <div class="glass-card rounded-xl overflow-hidden shadow-xl mb-6 sm:mb-10">
+                    <div class="overflow-x-auto overflow-y-auto custom-scroll max-h-[60vh]">
                         <table class="w-full text-left border-collapse">
                             <thead id="mate-head"></thead>
-                            <tbody id="mate-body" class="divide-y divide-white/5 text-[10px] sm:text-[11px]"></tbody>
+                            <tbody id="mate-body" class="divide-y divide-white/5 text-[9px] sm:text-[10px]"></tbody>
                         </table>
                     </div>
                 </div>
 
                 <!-- Below Average Section -->
-                <div id="below-avg-container" class="mb-12 hidden">
-                    <div class="flex items-center gap-3 mb-6">
-                        <div class="w-1.5 h-6 bg-red-500 rounded-full"></div>
-                        <h2 class="text-sm font-bold uppercase tracking-widest text-slate-400">Subject Performance
-                            Warning</h2>
+                <div id="below-avg-container" class="mb-6 sm:mb-10 hidden">
+                    <div class="flex items-center gap-2 mb-3">
+                        <div class="w-1 h-4 bg-red-500 rounded-full"></div>
+                        <h2 class="text-[10px] sm:text-xs font-bold uppercase tracking-widest text-slate-400">
+                            Performance Warning</h2>
                     </div>
-                    <div class="glass-card rounded-2xl p-6 border-red-500/20 bg-red-500/5">
-                        <div
-                            class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6 border-b border-white/5 pb-4">
+                    <div class="glass-card rounded-xl p-3 sm:p-5 border-red-500/20 bg-red-500/5">
+                        <div class="flex items-center justify-between gap-3 mb-4 border-b border-white/5 pb-3">
                             <div>
                                 <h3 id="below-avg-title"
-                                    class="text-xs font-black text-red-400 uppercase tracking-widest leading-relaxed">
+                                    class="text-[9px] sm:text-[10px] font-black text-red-400 uppercase tracking-widest leading-none">
                                 </h3>
                                 <p id="below-avg-meta"
-                                    class="text-[10px] text-slate-400 uppercase tracking-wider font-bold mt-1"></p>
+                                    class="text-[8px] sm:text-[9px] text-slate-400 uppercase tracking-wider font-bold mt-1">
+                                </p>
                             </div>
-                            <div class="px-4 py-2 bg-red-500/10 rounded-xl border border-red-500/20">
-                                <span id="below-avg-count" class="text-lg font-black text-red-500"></span>
-                                <span class="text-[9px] text-red-400 uppercase font-black ml-1">Critical Cases</span>
+                            <div
+                                class="px-3 py-1 bg-red-500/10 rounded-lg border border-red-500/20 flex flex-col items-center">
+                                <span id="below-avg-count"
+                                    class="text-sm sm:text-base font-black text-red-500 leading-none"></span>
+                                <span class="text-[7px] text-red-400 uppercase font-black">Critical</span>
                             </div>
                         </div>
                         <div id="below-avg-list-new" class="overflow-x-auto">
@@ -286,29 +367,28 @@
                     </div>
                 </div>
 
-                <div class="flex flex-col sm:flex-row sm:items-center gap-4 mb-6 justify-between">
-                    <div class="flex items-center gap-3">
-                        <div class="w-1.5 h-6 bg-teal-500 rounded-full"></div>
-                        <h2 class="text-sm font-bold uppercase tracking-widest text-slate-400">Individual Student
-                            Analysis</h2>
+                <div class="flex flex-col sm:flex-row sm:items-center gap-2 mb-3 sm:mb-6 justify-between">
+                    <div class="flex items-center gap-2">
+                        <div class="w-1 h-4 bg-teal-500 rounded-full"></div>
+                        <h2 class="text-[10px] sm:text-xs font-bold uppercase tracking-widest text-slate-400">Individual
+                            Student Analysis</h2>
                     </div>
 
-                    <div class="flex flex-wrap items-center gap-3">
-                        <!-- Toggle for Marks in this section only -->
+                    <div class="flex flex-wrap items-center gap-2 w-full sm:w-auto">
                         <button onclick="toggleDataLabels()" id="btn-toggle-labels"
-                            class="px-4 py-2 text-[9px] font-bold rounded-xl transition-all duration-300 border border-white/10 text-slate-400 hover:text-indigo-300 hover:border-indigo-500/30 hover:bg-indigo-500/5 uppercase tracking-widest flex items-center gap-2">
+                            class="flex-1 sm:flex-initial px-3 py-1.5 text-[8px] font-bold rounded-lg transition-all duration-300 border border-white/10 text-slate-400 hover:text-indigo-300 uppercase tracking-widest flex items-center justify-center gap-2">
                             <span id="label-toggle-icon" class="w-1.5 h-1.5 rounded-full bg-slate-500"></span>
-                            Show Marks
+                            Marks
                         </button>
 
-                        <div class="relative w-full sm:w-auto">
+                        <div class="relative flex-1 sm:flex-initial min-w-[150px]">
                             <select id="student-select" onchange="debouncedRenderStudentLine()"
-                                class="appearance-none bg-[#161B26] border border-white/10 text-indigo-300 text-xs font-bold rounded-xl px-4 py-2 pr-8 focus:outline-none focus:border-indigo-500 transition-colors uppercase tracking-wide w-full sm:w-auto min-w-[250px]">
+                                class="appearance-none bg-[#161B26] border border-white/10 text-indigo-300 text-[9px] sm:text-xs font-bold rounded-lg px-3 py-1.5 pr-8 focus:outline-none focus:border-indigo-500 transition-colors uppercase tracking-wide w-full">
                                 <!-- Options injected by JS -->
                             </select>
                             <div
                                 class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-slate-400">
-                                <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg"
+                                <svg class="fill-current h-3 w-3" xmlns="http://www.w3.org/2000/svg"
                                     viewBox="0 0 20 20">
                                     <path
                                         d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
@@ -318,45 +398,41 @@
                     </div>
                 </div>
 
-                <div class="glass-card rounded-2xl p-1 sm:p-6 shadow-2xl">
-                    <div class="relative h-[450px] w-full mb-6">
+                <div class="glass-card rounded-xl p-2 sm:p-5 shadow-xl">
+                    <div class="relative h-[250px] sm:h-[400px] w-full mb-3">
                         <canvas id="studentLineChart"></canvas>
                     </div>
-                    <!-- Custom Legend Container -->
-                    <div id="custom-legend-container" class="border-t border-white/10 pt-4 px-3 flex flex-col gap-4">
-                    </div>
+                    <div id="custom-legend-container" class="border-t border-white/10 pt-3 flex flex-col gap-2"></div>
                 </div>
             </section>
 
             <!-- Specialized Analysis Section -->
-            <section id="section-analysis" class="pb-12 hidden">
-                <div class="flex flex-col sm:flex-row sm:items-center gap-4 mb-8 justify-between">
-                    <div class="flex items-center gap-3">
-                        <div class="w-1.5 h-6 bg-indigo-500 rounded-full"></div>
-                        <h2 class="text-sm font-bold uppercase tracking-widest text-slate-400">Deep Dive Analysis</h2>
+            <section id="section-analysis" class="pb-6 hidden">
+                <div class="flex flex-col sm:flex-row sm:items-center gap-2 mb-4 justify-between">
+                    <div class="flex items-center gap-2">
+                        <div class="w-1 h-4 bg-indigo-500 rounded-full"></div>
+                        <h2 class="text-[10px] sm:text-xs font-bold uppercase tracking-widest text-slate-400">Deep Dive
+                        </h2>
                     </div>
 
-                    <div class="flex flex-wrap items-center gap-3 w-full sm:w-auto">
-                        <div class="relative flex-1 sm:flex-initial min-w-[150px]">
+                    <div class="flex gap-2 w-full sm:w-auto">
+                        <div class="relative flex-1 sm:min-w-[150px]">
                             <select id="analysis-student-select" onchange="renderSpecializedAnalysis()"
-                                class="appearance-none bg-[#161B26] border border-white/10 text-slate-200 text-xs font-bold rounded-xl px-4 py-2.5 pr-8 focus:outline-none focus:border-indigo-500 transition-colors uppercase tracking-wide w-full">
-                            </select>
+                                class="appearance-none bg-[#161B26] border border-white/10 text-slate-200 text-[9px] sm:text-xs font-bold rounded-lg px-3 py-1.5 pr-8 focus:outline-none focus:border-indigo-500 transition-colors uppercase tracking-wide w-full"></select>
                             <div
                                 class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-slate-500">
-                                <svg class="fill-current h-4 w-4" viewBox="0 0 20 20">
+                                <svg class="fill-current h-3 w-3" viewBox="0 0 20 20">
                                     <path
                                         d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
                                 </svg>
                             </div>
                         </div>
-
-                        <div class="relative flex-1 sm:flex-initial min-w-[150px]">
+                        <div class="relative flex-1 sm:min-w-[150px]">
                             <select id="analysis-subject-select" onchange="renderSpecializedAnalysis()"
-                                class="appearance-none bg-[#161B26] border border-white/10 text-indigo-300 text-xs font-bold rounded-xl px-4 py-2.5 pr-8 focus:outline-none focus:border-indigo-500 transition-colors uppercase tracking-wide w-full">
-                            </select>
+                                class="appearance-none bg-[#161B26] border border-white/10 text-indigo-300 text-[9px] sm:text-xs font-bold rounded-lg px-3 py-1.5 pr-8 focus:outline-none focus:border-indigo-500 transition-colors uppercase tracking-wide w-full"></select>
                             <div
                                 class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-slate-500">
-                                <svg class="fill-current h-4 w-4" viewBox="0 0 20 20">
+                                <svg class="fill-current h-3 w-3" viewBox="0 0 20 20">
                                     <path
                                         d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
                                 </svg>
@@ -365,33 +441,19 @@
                     </div>
                 </div>
 
-                <!-- Analysis Summary Cards -->
-                <div id="analysis-stats" class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-                    <!-- Cards injected by JS -->
-                </div>
+                <div id="analysis-stats" class="grid grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-4 mb-6"></div>
 
-                <!-- Comparison Chart -->
-                <div class="glass-card rounded-2xl p-4 sm:p-8 mb-8 shadow-2xl relative">
-                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
-                        <div>
-                            <h3 class="text-sm font-black text-white uppercase tracking-widest">Performance Comparison
-                            </h3>
-                            <p class="text-[10px] text-slate-400 mt-1 uppercase font-bold tracking-wider">Student vs
-                                Class Benchmarks</p>
-                        </div>
-                        <div class="flex items-center gap-4 text-[9px] font-bold uppercase tracking-widest">
-                            <div class="flex items-center gap-1.5"><span
-                                    class="w-2 h-2 rounded-full bg-indigo-500"></span> <span
-                                    class="text-slate-300">Student</span></div>
-                            <div class="flex items-center gap-1.5"><span
-                                    class="w-2 h-2 rounded-full border border-indigo-500/50"></span> <span
-                                    class="text-slate-500">Avg</span></div>
-                            <div class="flex items-center gap-1.5"><span
-                                    class="w-2 h-2 rounded-full bg-emerald-500"></span> <span
-                                    class="text-emerald-500/70">Highest</span></div>
+                <div class="glass-card rounded-xl p-3 sm:p-6 mb-6 shadow-xl">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-[10px] font-black text-white uppercase tracking-widest">Growth Analytics</h3>
+                        <div class="hidden sm:flex items-center gap-3 text-[8px] font-bold uppercase tracking-widest">
+                            <div class="flex items-center gap-1"><span
+                                    class="w-1.5 h-1.5 rounded-full bg-indigo-500"></span> Student</div>
+                            <div class="flex items-center gap-1"><span
+                                    class="w-1.5 h-1.5 rounded-full border border-indigo-500/50"></span> Avg</div>
                         </div>
                     </div>
-                    <div class="relative h-[400px] w-full">
+                    <div class="relative h-[250px] sm:h-[350px] w-full">
                         <canvas id="analysisChart"></canvas>
                     </div>
                 </div>
@@ -410,10 +472,10 @@
                             <thead>
                                 <tr
                                     class="bg-white/[0.02] text-[8px] font-black uppercase tracking-widest text-slate-500">
-                                    <th class="px-6 py-4 border-b border-white/5">Exam Cycle</th>
-                                    <th class="px-6 py-4 border-b border-white/5 text-center">Score</th>
-                                    <th class="px-6 py-4 border-b border-white/5 text-center">Grade</th>
-                                    <th class="px-6 py-4 border-b border-white/5 text-center">Gap to Avg</th>
+                                    <th class="px-2 sm:px-6 py-2 sm:py-4 border-b border-white/5">Exam</th>
+                                    <th class="px-1 sm:px-6 py-2 sm:py-4 border-b border-white/5 text-center">Score</th>
+                                    <th class="px-1 sm:px-6 py-2 sm:py-4 border-b border-white/5 text-center">Gr</th>
+                                    <th class="px-1 sm:px-6 py-2 sm:py-4 border-b border-white/5 text-center">Gap</th>
                                 </tr>
                             </thead>
                             <tbody id="analysis-history-body" class="divide-y divide-white/5">
@@ -446,77 +508,79 @@
                     </h2>
                 </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
-                    <div class="glass-card rounded-2xl p-4 sm:p-6 shadow-2xl">
-                        <h3 class="text-xs font-bold uppercase tracking-widest text-slate-300 mb-4 text-center">Form 1
-                            Average</h3>
-                        <div class="relative h-[350px] w-full">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6 sm:mb-10">
+                    <div class="glass-card rounded-xl p-3 sm:p-5 shadow-lg">
+                        <h3
+                            class="text-[9px] sm:text-xs font-bold uppercase tracking-widest text-slate-300 mb-2 text-center text-xs">
+                            F1 Average</h3>
+                        <div class="relative h-[220px] sm:h-[300px] w-full">
                             <canvas id="f1Chart"></canvas>
                         </div>
                     </div>
-                    <div class="glass-card rounded-2xl p-4 sm:p-6 shadow-2xl">
-                        <h3 class="text-xs font-bold uppercase tracking-widest text-slate-300 mb-4 text-center">Form 2
-                            Average</h3>
-                        <div class="relative h-[350px] w-full">
+                    <div class="glass-card rounded-xl p-3 sm:p-5 shadow-lg">
+                        <h3
+                            class="text-[9px] sm:text-xs font-bold uppercase tracking-widest text-slate-300 mb-2 text-center text-xs">
+                            F2 Average</h3>
+                        <div class="relative h-[220px] sm:h-[300px] w-full">
                             <canvas id="f2Chart"></canvas>
                         </div>
                     </div>
                 </div>
 
-                <div class="flex items-center gap-3 mb-6">
-                    <div class="w-1.5 h-6 bg-purple-500 rounded-full"></div>
-                    <h2 class="text-sm font-bold uppercase tracking-widest text-slate-400">Detailed Subject Trends (Line
-                        Analysis)</h2>
+                <div class="flex items-center gap-2 mb-3">
+                    <div class="w-1 h-4 bg-purple-500 rounded-full"></div>
+                    <h2 class="text-[10px] sm:text-xs font-bold uppercase tracking-widest text-slate-400">Detailed
+                        Subject Trends</h2>
                 </div>
 
-                <div id="subject-charts-container" class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div id="subject-charts-container" class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <!-- Dynamic Subject Charts Injected Here -->
                 </div>
             </section>
 
             <!-- Scenario Simulator Section -->
-            <section id="section-simulator" class="pb-12 hidden">
-                <div class="flex flex-col sm:flex-row sm:items-center gap-4 mb-8 justify-between">
-                    <div class="flex items-center gap-3">
-                        <div class="w-1.5 h-6 bg-rose-500 rounded-full animate-pulse"></div>
-                        <h2 class="text-sm font-bold uppercase tracking-widest text-slate-400">What-If Scenario
+            <section id="section-simulator" class="pb-6 hidden">
+                <div class="flex flex-col sm:flex-row sm:items-center gap-2 mb-4 justify-between">
+                    <div class="flex items-center gap-2">
+                        <div class="w-1 h-4 bg-rose-500 rounded-full animate-pulse"></div>
+                        <h2 class="text-[10px] sm:text-xs font-bold uppercase tracking-widest text-slate-400">What-If
                             Simulator</h2>
                     </div>
 
-                    <div class="relative w-full sm:w-auto min-w-[300px]">
+                    <div class="relative w-full sm:w-auto sm:min-w-[250px]">
                         <select id="sim-student-select" onchange="renderSimulatorWorkspace()"
-                            class="appearance-none bg-[#161B26] border border-white/10 text-indigo-300 text-xs font-bold rounded-xl px-4 py-2.5 pr-8 focus:outline-none focus:border-rose-500 transition-colors uppercase tracking-wide w-full">
+                            class="appearance-none bg-[#161B26] border border-white/10 text-indigo-300 text-[9px] sm:text-xs font-bold rounded-lg px-3 py-1.5 pr-8 focus:outline-none focus:border-rose-500 transition-colors uppercase tracking-wide w-full">
                         </select>
                         <div
                             class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-slate-500">
-                            <svg class="fill-current h-4 w-4" viewBox="0 0 20 20">
+                            <svg class="fill-current h-3 w-3" viewBox="0 0 20 20">
                                 <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
                             </svg>
                         </div>
                     </div>
                 </div>
 
-                <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-4 items-start">
                     <!-- Left: Workspace -->
-                    <div class="lg:col-span-8 space-y-6">
-                        <div class="glass-card rounded-2xl p-6 shadow-2xl border-white/5">
-                            <div class="flex items-center justify-between mb-6 pb-4 border-b border-white/5">
-                                <h3 class="text-[10px] font-black text-slate-400 uppercase tracking-widest">Adjust Marks
+                    <div class="lg:col-span-8">
+                        <div class="glass-card rounded-xl p-3 sm:p-5 shadow-xl border-white/5">
+                            <div class="flex items-center justify-between mb-4 pb-2 border-b border-white/5">
+                                <h3 class="text-[9px] font-black text-slate-400 uppercase tracking-widest">Adjust Marks
                                 </h3>
                                 <button onclick="resetSimulation()"
-                                    class="text-[9px] font-bold text-rose-400 uppercase tracking-widest hover:text-rose-300 transition-colors">Reset
-                                    Scores</button>
+                                    class="text-[8px] font-bold text-rose-400 uppercase tracking-widest hover:text-rose-300 transition-colors">Reset</button>
                             </div>
-                            <div id="sim-inputs-grid" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+                            <div id="sim-inputs-grid"
+                                class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2 sm:gap-3">
                                 <!-- Inputs injected by JS -->
                             </div>
                         </div>
                     </div>
 
                     <!-- Right: Results Dashboard -->
-                    <div class="lg:col-span-4 space-y-6">
+                    <div class="lg:col-span-4">
                         <div
-                            class="glass-card rounded-2xl p-8 bg-indigo-500/5 border-indigo-500/20 shadow-2xl sticky top-8">
+                            class="glass-card rounded-xl p-5 sm:p-8 bg-indigo-500/5 border-indigo-500/20 shadow-xl lg:sticky lg:top-4">
                             <div class="text-center mb-8">
                                 <div class="text-[10px] font-black text-indigo-400 uppercase tracking-[0.2em] mb-2">
                                     Simulated Standing</div>
@@ -564,7 +628,7 @@
     </div>
 
     <script>
-        const rawData = [{"EXAM": "F1-1", "BIL": "1", "NAMA": "MUS'AB BIN MUSLIM", "BM": "88", "BI": "95", "SEJ": "88", "GEO": "94", "BA": "98", "PI": "95", "MATE": "83", "SNS": "79", "RBT": "92", "HQ": "88", "MQ": "100", "FEQ": "100", "HAD": "93", "TAU": "100", "TAF": "100", "PJK": "", "PSV": "", "JUMLAH": "1393", "PURATA": "92.87"}, {"EXAM": "F1-1", "BIL": "2", "NAMA": "MUHAMMAD ANAS FIRDAUS BIN ABDUL MOKHTI", "BM": "98", "BI": "98", "SEJ": "87", "GEO": "100", "BA": "100", "PI": "91", "MATE": "77", "SNS": "82", "RBT": "75", "HQ": "92", "MQ": "94", "FEQ": "100", "HAD": "100", "TAU": "95", "TAF": "100", "PJK": "", "PSV": "", "JUMLAH": "1389", "PURATA": "92.6"}, {"EXAM": "F1-1", "BIL": "3", "NAMA": "SYED HADIF WAFIY BIN SYED ABDUL RAHMAN", "BM": "86", "BI": "95", "SEJ": "80", "GEO": "82", "BA": "84", "PI": "81", "MATE": "93", "SNS": "77", "RBT": "94", "HQ": "74", "MQ": "76", "FEQ": "90", "HAD": "93", "TAU": "93", "TAF": "100", "PJK": "", "PSV": "", "JUMLAH": "1298", "PURATA": "86.53"}, {"EXAM": "F1-1", "BIL": "4", "NAMA": "AKIF FAHIMI BIN ZULAZRI", "BM": "95", "BI": "85", "SEJ": "82", "GEO": "90", "BA": "90", "PI": "81", "MATE": "70", "SNS": "82", "RBT": "86", "HQ": "89", "MQ": "74", "FEQ": "100", "HAD": "96", "TAU": "75", "TAF": "98", "PJK": "", "PSV": "", "JUMLAH": "1293", "PURATA": "86.2"}, {"EXAM": "F1-1", "BIL": "5", "NAMA": "MUHAMMAD UMAR YAASIN BIN MOHAMAD ZAMRI", "BM": "93", "BI": "90", "SEJ": "88", "GEO": "98", "BA": "94", "PI": "73", "MATE": "80", "SNS": "83", "RBT": "82", "HQ": "83", "MQ": "88", "FEQ": "100", "HAD": "70", "TAU": "93", "TAF": "78", "PJK": "", "PSV": "", "JUMLAH": "1293", "PURATA": "86.2"}, {"EXAM": "F1-1", "BIL": "6", "NAMA": "MUHAMMAD AYSAR NAFIS BIN ABDUL RAZAK", "BM": "95", "BI": "85", "SEJ": "80", "GEO": "90", "BA": "92", "PI": "76", "MATE": "73", "SNS": "71", "RBT": "80", "HQ": "86", "MQ": "92", "FEQ": "92", "HAD": "79", "TAU": "100", "TAF": "98", "PJK": "", "PSV": "", "JUMLAH": "1289", "PURATA": "85.93"}, {"EXAM": "F1-1", "BIL": "7", "NAMA": "MUHAMMAD AL-FATEH BIN MOHD ASLAM", "BM": "88", "BI": "93", "SEJ": "73", "GEO": "94", "BA": "96", "PI": "80", "MATE": "60", "SNS": "77", "RBT": "70", "HQ": "87", "MQ": "80", "FEQ": "100", "HAD": "100", "TAU": "83", "TAF": "98", "PJK": "", "PSV": "", "JUMLAH": "1279", "PURATA": "85.27"}, {"EXAM": "F1-1", "BIL": "8", "NAMA": "MUNIF BIN AHMAD", "BM": "86", "BI": "85", "SEJ": "83", "GEO": "98", "BA": "96", "PI": "79", "MATE": "67", "SNS": "65", "RBT": "86", "HQ": "85", "MQ": "76", "FEQ": "96", "HAD": "89", "TAU": "90", "TAF": "96", "PJK": "", "PSV": "", "JUMLAH": "1277", "PURATA": "85.13"}, {"EXAM": "F1-1", "BIL": "9", "NAMA": "MOHAMAD HARITH NUKMAN BIN MOHAMAD NAZIR", "BM": "93", "BI": "85", "SEJ": "78", "GEO": "94", "BA": "100", "PI": "81", "MATE": "70", "SNS": "70", "RBT": "70", "HQ": "72", "MQ": "90", "FEQ": "90", "HAD": "89", "TAU": "100", "TAF": "94", "PJK": "", "PSV": "", "JUMLAH": "1276", "PURATA": "85.07"}, {"EXAM": "F1-1", "BIL": "10", "NAMA": "IHSAN ISKANDAR HAKIM BIN SUHAIMI", "BM": "88", "BI": "93", "SEJ": "78", "GEO": "90", "BA": "84", "PI": "80", "MATE": "87", "SNS": "76", "RBT": "88", "HQ": "87", "MQ": "70", "FEQ": "100", "HAD": "80", "TAU": "75", "TAF": "98", "PJK": "", "PSV": "", "JUMLAH": "1274", "PURATA": "84.93"}, {"EXAM": "F1-1", "BIL": "11", "NAMA": "NIK AMEEN ZIQRI BIN SAKRI", "BM": "86", "BI": "95", "SEJ": "75", "GEO": "96", "BA": "88", "PI": "88", "MATE": "77", "SNS": "71", "RBT": "72", "HQ": "75", "MQ": "80", "FEQ": "88", "HAD": "83", "TAU": "98", "TAF": "76", "PJK": "", "PSV": "", "JUMLAH": "1248", "PURATA": "83.2"}, {"EXAM": "F1-1", "BIL": "12", "NAMA": "MUHAMMAD AQIL HARRAZ BIN MOHD FUAD", "BM": "81", "BI": "90", "SEJ": "77", "GEO": "80", "BA": "94", "PI": "83", "MATE": "70", "SNS": "71", "RBT": "70", "HQ": "78", "MQ": "80", "FEQ": "96", "HAD": "76", "TAU": "90", "TAF": "90", "PJK": "", "PSV": "", "JUMLAH": "1226", "PURATA": "81.73"}, {"EXAM": "F1-1", "BIL": "13", "NAMA": "MUHAMMAD ARIF ILHAM BIN RIDZUAN", "BM": "93", "BI": "93", "SEJ": "78", "GEO": "96", "BA": "90", "PI": "80", "MATE": "57", "SNS": "68", "RBT": "86", "HQ": "45", "MQ": "76", "FEQ": "96", "HAD": "99", "TAU": "75", "TAF": "88", "PJK": "", "PSV": "", "JUMLAH": "1220", "PURATA": "81.33"}, {"EXAM": "F1-1", "BIL": "14", "NAMA": "AIMAN ZAFFRAN BIN AHMAD ZABIL ALBAR", "BM": "90", "BI": "95", "SEJ": "70", "GEO": "96", "BA": "72", "PI": "71", "MATE": "53", "SNS": "74", "RBT": "76", "HQ": "86", "MQ": "76", "FEQ": "96", "HAD": "79", "TAU": "78", "TAF": "84", "PJK": "", "PSV": "", "JUMLAH": "1196", "PURATA": "79.73"}, {"EXAM": "F1-1", "BIL": "15", "NAMA": "MUHAMMAD FAREEZ ZIKRY BIN MOHD FATHUL HAKIM", "BM": "95", "BI": "85", "SEJ": "83", "GEO": "86", "BA": "82", "PI": "85", "MATE": "60", "SNS": "67", "RBT": "80", "HQ": "66", "MQ": "66", "FEQ": "90", "HAD": "81", "TAU": "95", "TAF": "74", "PJK": "", "PSV": "", "JUMLAH": "1195", "PURATA": "79.67"}, {"EXAM": "F1-1", "BIL": "16", "NAMA": "MUHAMMAD NIYAZ BIN MOHD SOBRI", "BM": "83", "BI": "85", "SEJ": "58", "GEO": "94", "BA": "82", "PI": "78", "MATE": "80", "SNS": "70", "RBT": "74", "HQ": "76", "MQ": "76", "FEQ": "76", "HAD": "59", "TAU": "53", "TAF": "74", "PJK": "", "PSV": "", "JUMLAH": "1118", "PURATA": "74.53"}, {"EXAM": "F1-1", "BIL": "17", "NAMA": "MUHAMMAD HADIF ARMAN BIN MUHAMMAD AL'HAPIS", "BM": "86", "BI": "90", "SEJ": "87", "GEO": "92", "BA": "68", "PI": "65", "MATE": "70", "SNS": "79", "RBT": "82", "HQ": "88", "MQ": "58", "FEQ": "74", "HAD": "61", "TAU": "53", "TAF": "58", "PJK": "", "PSV": "", "JUMLAH": "1111", "PURATA": "74.07"}, {"EXAM": "F1-1", "BIL": "18", "NAMA": "AIMAN QAWARIEZMI BIN SHAJIHAN", "BM": "93", "BI": "93", "SEJ": "53", "GEO": "82", "BA": "76", "PI": "74", "MATE": "60", "SNS": "73", "RBT": "80", "HQ": "59", "MQ": "64", "FEQ": "60", "HAD": "81", "TAU": "73", "TAF": "82", "PJK": "", "PSV": "", "JUMLAH": "1103", "PURATA": "73.53"}, {"EXAM": "F1-1", "BIL": "19", "NAMA": "ABDUL MU'IZZ BIN MUHAMMAD ZAHIDI", "BM": "93", "BI": "85", "SEJ": "45", "GEO": "80", "BA": "82", "PI": "68", "MATE": "73", "SNS": "61", "RBT": "64", "HQ": "80", "MQ": "52", "FEQ": "80", "HAD": "67", "TAU": "70", "TAF": "68", "PJK": "", "PSV": "", "JUMLAH": "1068", "PURATA": "71.2"}, {"EXAM": "F1-1", "BIL": "20", "NAMA": "MUHAMMAD MUAZ BIN ZAINUDDIN", "BM": "88", "BI": "90", "SEJ": "45", "GEO": "94", "BA": "86", "PI": "64", "MATE": "80", "SNS": "73", "RBT": "60", "HQ": "81", "MQ": "64", "FEQ": "92", "HAD": "53", "TAU": "50", "TAF": "40", "PJK": "", "PSV": "", "JUMLAH": "1060", "PURATA": "70.67"}, {"EXAM": "F1-1", "BIL": "21", "NAMA": "MUHAMMAD IRFAN UWAIS BIN MOHD NAJIB", "BM": "91", "BI": "80", "SEJ": "56", "GEO": "84", "BA": "90", "PI": "63", "MATE": "53", "SNS": "68", "RBT": "62", "HQ": "87", "MQ": "60", "FEQ": "92", "HAD": "83", "TAU": "53", "TAF": "22", "PJK": "", "PSV": "", "JUMLAH": "1044", "PURATA": "69.6"}, {"EXAM": "F1-1", "BIL": "22", "NAMA": "MUHAMMAD FAHIM MIRZA BIN MOHD FEISAL", "BM": "90", "BI": "93", "SEJ": "70", "GEO": "76", "BA": "64", "PI": "68", "MATE": "83", "SNS": "71", "RBT": "64", "HQ": "51", "MQ": "58", "FEQ": "40", "HAD": "46", "TAU": "33", "TAF": "68", "PJK": "", "PSV": "", "JUMLAH": "975", "PURATA": "65.0"}, {"EXAM": "F1-1", "BIL": "23", "NAMA": "NUR MUHAMMAD IMAN BIN RUZAIMAN", "BM": "93", "BI": "90", "SEJ": "48", "GEO": "88", "BA": "62", "PI": "69", "MATE": "33", "SNS": "62", "RBT": "66", "HQ": "86", "MQ": "36", "FEQ": "78", "HAD": "46", "TAU": "30", "TAF": "38", "PJK": "", "PSV": "", "JUMLAH": "925", "PURATA": "61.67"}, {"EXAM": "F1-1", "BIL": "24", "NAMA": "MUHAMMAD AL-IDRISSI BIN MD SUPARDZI", "BM": "82", "BI": "85", "SEJ": "60", "GEO": "94", "BA": "54", "PI": "69", "MATE": "80", "SNS": "67", "RBT": "60", "HQ": "68", "MQ": "32", "FEQ": "52", "HAD": "46", "TAU": "30", "TAF": "28", "PJK": "", "PSV": "", "JUMLAH": "907", "PURATA": "60.47"}, {"EXAM": "F1-2", "BIL": "1", "NAMA": "MUS'AB BIN MUSLIM", "BM": "91", "BI": "95", "SEJ": "90", "GEO": "93", "BA": "95", "PI": "89", "MATE": "91", "SNS": "88", "RBT": "80", "HQ": "100", "MQ": "90", "FEQ": "91", "HAD": "100", "TAU": "96", "TAF": "99", "PJK": "", "PSV": "", "JUMLAH": "1388", "PURATA": "92.53"}, {"EXAM": "F1-2", "BIL": "2", "NAMA": "MUHAMMAD AYSAR NAFIS BIN ABDUL RAZAK", "BM": "93", "BI": "83", "SEJ": "85", "GEO": "84", "BA": "92", "PI": "92", "MATE": "95", "SNS": "67", "RBT": "88", "HQ": "99", "MQ": "87", "FEQ": "91", "HAD": "99", "TAU": "99", "TAF": "97", "PJK": "", "PSV": "", "JUMLAH": "1351", "PURATA": "90.07"}, {"EXAM": "F1-2", "BIL": "3", "NAMA": "MUHAMMAD ANAS FIRDAUS BIN ABDUL MOKHTI", "BM": "81", "BI": "94", "SEJ": "86", "GEO": "90", "BA": "96", "PI": "91", "MATE": "86", "SNS": "79", "RBT": "83", "HQ": "98", "MQ": "83", "FEQ": "90", "HAD": "97", "TAU": "95", "TAF": "98", "PJK": "", "PSV": "", "JUMLAH": "1347", "PURATA": "89.8"}, {"EXAM": "F1-2", "BIL": "4", "NAMA": "MOHAMAD HARITH NUKMAN BIN MOHAMAD NAZIR", "BM": "83", "BI": "85", "SEJ": "69", "GEO": "91", "BA": "97", "PI": "89", "MATE": "92", "SNS": "72", "RBT": "90", "HQ": "91", "MQ": "85", "FEQ": "72", "HAD": "97", "TAU": "73", "TAF": "98", "PJK": "", "PSV": "", "JUMLAH": "1284", "PURATA": "85.6"}, {"EXAM": "F1-2", "BIL": "5", "NAMA": "IHSAN ISKANDAR HAKIM BIN SUHAIMI", "BM": "88", "BI": "91", "SEJ": "69", "GEO": "94", "BA": "94", "PI": "83", "MATE": "73", "SNS": "66", "RBT": "93", "HQ": "96", "MQ": "70", "FEQ": "88", "HAD": "85", "TAU": "98", "TAF": "96", "PJK": "", "PSV": "", "JUMLAH": "1284", "PURATA": "85.6"}, {"EXAM": "F1-2", "BIL": "6", "NAMA": "MUHAMMAD UMAR YAASIN BIN MOHAMAD ZAMRI", "BM": "86", "BI": "86", "SEJ": "67", "GEO": "88", "BA": "90", "PI": "90", "MATE": "68", "SNS": "77", "RBT": "70", "HQ": "95", "MQ": "76", "FEQ": "76", "HAD": "94", "TAU": "96", "TAF": "95", "PJK": "", "PSV": "", "JUMLAH": "1254", "PURATA": "83.6"}, {"EXAM": "F1-2", "BIL": "7", "NAMA": "MUHAMMAD AQIL HARRAZ BIN MOHD FUAD", "BM": "81", "BI": "79", "SEJ": "80", "GEO": "79", "BA": "94", "PI": "86", "MATE": "91", "SNS": "56", "RBT": "73", "HQ": "93", "MQ": "75", "FEQ": "82", "HAD": "98", "TAU": "95", "TAF": "81", "PJK": "", "PSV": "", "JUMLAH": "1243", "PURATA": "82.87"}, {"EXAM": "F1-2", "BIL": "8", "NAMA": "AKIF FAHIMI BIN ZULAZRI", "BM": "72", "BI": "86", "SEJ": "63", "GEO": "86", "BA": "95", "PI": "75", "MATE": "75", "SNS": "75", "RBT": "70", "HQ": "94", "MQ": "72", "FEQ": "86", "HAD": "96", "TAU": "96", "TAF": "99", "PJK": "", "PSV": "", "JUMLAH": "1240", "PURATA": "82.67"}, {"EXAM": "F1-2", "BIL": "9", "NAMA": "NIK AMEEN ZIQRI BIN SAKRI", "BM": "85", "BI": "95", "SEJ": "80", "GEO": "81", "BA": "79", "PI": "76", "MATE": "86", "SNS": "76", "RBT": "80", "HQ": "92", "MQ": "65", "FEQ": "64", "HAD": "88", "TAU": "83", "TAF": "96", "PJK": "", "PSV": "", "JUMLAH": "1226", "PURATA": "81.73"}, {"EXAM": "F1-2", "BIL": "10", "NAMA": "MUHAMMAD AL-FATEH BIN MOHD ASLAM", "BM": "80", "BI": "85", "SEJ": "57", "GEO": "68", "BA": "86", "PI": "90", "MATE": "76", "SNS": "70", "RBT": "71", "HQ": "100", "MQ": "73", "FEQ": "77", "HAD": "94", "TAU": "84", "TAF": "98", "PJK": "", "PSV": "", "JUMLAH": "1209", "PURATA": "80.6"}, {"EXAM": "F1-2", "BIL": "11", "NAMA": "AIMAN ZAFFRAN BIN AHMAD ZABIL ALBAR", "BM": "82", "BI": "90", "SEJ": "72", "GEO": "83", "BA": "79", "PI": "72", "MATE": "71", "SNS": "69", "RBT": "80", "HQ": "92", "MQ": "65", "FEQ": "55", "HAD": "93", "TAU": "89", "TAF": "93", "PJK": "", "PSV": "", "JUMLAH": "1185", "PURATA": "79.0"}, {"EXAM": "F1-2", "BIL": "12", "NAMA": "MUNIF BIN AHMAD", "BM": "78", "BI": "68", "SEJ": "76", "GEO": "67", "BA": "86", "PI": "83", "MATE": "53", "SNS": "63", "RBT": "76", "HQ": "88", "MQ": "73", "FEQ": "73", "HAD": "97", "TAU": "91", "TAF": "96", "PJK": "", "PSV": "", "JUMLAH": "1168", "PURATA": "77.87"}, {"EXAM": "F1-2", "BIL": "13", "NAMA": "MUHAMMAD MUAZ BIN ZAINUDDIN", "BM": "83", "BI": "84", "SEJ": "44", "GEO": "77", "BA": "87", "PI": "74", "MATE": "86", "SNS": "62", "RBT": "74", "HQ": "78", "MQ": "47", "FEQ": "74", "HAD": "98", "TAU": "93", "TAF": "83", "PJK": "", "PSV": "", "JUMLAH": "1144", "PURATA": "76.27"}, {"EXAM": "F1-2", "BIL": "14", "NAMA": "AIMAN QAWARIEZMI BIN SHAJIHAN", "BM": "84", "BI": "88", "SEJ": "73", "GEO": "64", "BA": "74", "PI": "83", "MATE": "56", "SNS": "66", "RBT": "71", "HQ": "92", "MQ": "51", "FEQ": "60", "HAD": "95", "TAU": "89", "TAF": "94", "PJK": "", "PSV": "", "JUMLAH": "1140", "PURATA": "76.0"}, {"EXAM": "F1-2", "BIL": "15", "NAMA": "SYED HADIF WAFIY BIN SYED ABDUL RAHMAN", "BM": "82", "BI": "88", "SEJ": "68", "GEO": "70", "BA": "90", "PI": "73", "MATE": "78", "SNS": "50", "RBT": "77", "HQ": "79", "MQ": "69", "FEQ": "64", "HAD": "69", "TAU": "87", "TAF": "71", "PJK": "", "PSV": "", "JUMLAH": "1115", "PURATA": "74.33"}, {"EXAM": "F1-2", "BIL": "16", "NAMA": "MUHAMMAD ARIF ILHAM BIN RIDZUAN", "BM": "80", "BI": "81", "SEJ": "43", "GEO": "76", "BA": "95", "PI": "77", "MATE": "73", "SNS": "54", "RBT": "70", "HQ": "68", "MQ": "51", "FEQ": "70", "HAD": "71", "TAU": "86", "TAF": "85", "PJK": "", "PSV": "", "JUMLAH": "1080", "PURATA": "72.0"}, {"EXAM": "F1-2", "BIL": "17", "NAMA": "MUHAMMAD FAREEZ ZIKRY BIN MOHD FATHUL HAKIM", "BM": "70", "BI": "85", "SEJ": "72", "GEO": "74", "BA": "82", "PI": "72", "MATE": "64", "SNS": "57", "RBT": "80", "HQ": "67", "MQ": "59", "FEQ": "71", "HAD": "77", "TAU": "74", "TAF": "55", "PJK": "", "PSV": "", "JUMLAH": "1059", "PURATA": "70.6"}, {"EXAM": "F1-2", "BIL": "18", "NAMA": "MUHAMMAD NIYAZ BIN MOHD SOBRI", "BM": "64", "BI": "86", "SEJ": "54", "GEO": "84", "BA": "79", "PI": "71", "MATE": "93", "SNS": "78", "RBT": "71", "HQ": "69", "MQ": "55", "FEQ": "56", "HAD": "76", "TAU": "68", "TAF": "42", "PJK": "", "PSV": "", "JUMLAH": "1046", "PURATA": "69.73"}, {"EXAM": "F1-2", "BIL": "19", "NAMA": "MUHAMMAD HADIF ARMAN BIN MUHAMMAD AL'HAPIS", "BM": "80", "BI": "85", "SEJ": "60", "GEO": "75", "BA": "67", "PI": "75", "MATE": "72", "SNS": "76", "RBT": "56", "HQ": "87", "MQ": "46", "FEQ": "41", "HAD": "71", "TAU": "63", "TAF": "74", "PJK": "", "PSV": "", "JUMLAH": "1028", "PURATA": "68.53"}, {"EXAM": "F1-2", "BIL": "20", "NAMA": "NUR MUHAMMAD IMAN BIN RUZAIMAN", "BM": "76", "BI": "70", "SEJ": "60", "GEO": "80", "BA": "60", "PI": "69", "MATE": "50", "SNS": "58", "RBT": "70", "HQ": "88", "MQ": "41", "FEQ": "42", "HAD": "87", "TAU": "81", "TAF": "79", "PJK": "", "PSV": "", "JUMLAH": "1011", "PURATA": "67.4"}, {"EXAM": "F1-2", "BIL": "21", "NAMA": "ABDUL MU'IZZ BIN MUHAMMAD ZAHIDI", "BM": "74", "BI": "68", "SEJ": "41", "GEO": "44", "BA": "67", "PI": "71", "MATE": "61", "SNS": "55", "RBT": "70", "HQ": "89", "MQ": "54", "FEQ": "58", "HAD": "66", "TAU": "70", "TAF": "55", "PJK": "", "PSV": "", "JUMLAH": "943", "PURATA": "62.87"}, {"EXAM": "F1-2", "BIL": "22", "NAMA": "MUHAMMAD IRFAN UWAIS BIN MOHD NAJIB", "BM": "77", "BI": "79", "SEJ": "56", "GEO": "60", "BA": "70", "PI": "68", "MATE": "56", "SNS": "50", "RBT": "67", "HQ": "74", "MQ": "47", "FEQ": "38", "HAD": "65", "TAU": "65", "TAF": "40", "PJK": "", "PSV": "", "JUMLAH": "912", "PURATA": "60.8"}, {"EXAM": "F1-2", "BIL": "23", "NAMA": "MUHAMMAD FAHIM MIRZA BIN MOHD FEISAL", "BM": "76", "BI": "78", "SEJ": "46", "GEO": "68", "BA": "67", "PI": "60", "MATE": "74", "SNS": "55", "RBT": "67", "HQ": "57", "MQ": "44", "FEQ": "51", "HAD": "40", "TAU": "63", "TAF": "48", "PJK": "", "PSV": "", "JUMLAH": "894", "PURATA": "59.6"}, {"EXAM": "F1-2", "BIL": "24", "NAMA": "MUHAMMAD AL-IDRISSI BIN MD SUPARDZI", "BM": "76", "BI": "80", "SEJ": "60", "GEO": "69", "BA": "41", "PI": "69", "MATE": "53", "SNS": "58", "RBT": "64", "HQ": "56", "MQ": "42", "FEQ": "35", "HAD": "50", "TAU": "48", "TAF": "12", "PJK": "", "PSV": "", "JUMLAH": "813", "PURATA": "54.2"}, {"EXAM": "F1-3", "BIL": "1", "NAMA": "MUHAMMAD ANAS FIRDAUS BIN ABDUL MOKHTI", "BM": "93", "BI": "95", "SEJ": "86", "GEO": "88", "BA": "97", "PI": "99", "MATE": "86", "SNS": "87", "RBT": "87", "HQ": "100", "MQ": "98", "FEQ": "98", "HAD": "99", "TAU": "100", "TAF": "84", "PJK": "", "PSV": "", "JUMLAH": "1397", "PURATA": "93.13"}, {"EXAM": "F1-3", "BIL": "2", "NAMA": "MUS'AB BIN MUSLIM", "BM": "95", "BI": "92", "SEJ": "92", "GEO": "90", "BA": "97", "PI": "94", "MATE": "81", "SNS": "94", "RBT": "70", "HQ": "92", "MQ": "100", "FEQ": "97", "HAD": "87", "TAU": "98", "TAF": "90", "PJK": "", "PSV": "", "JUMLAH": "1369", "PURATA": "91.27"}, {"EXAM": "F1-3", "BIL": "3", "NAMA": "IHSAN ISKANDAR HAKIM BIN SUHAIMI", "BM": "95", "BI": "85", "SEJ": "80", "GEO": "84", "BA": "95", "PI": "87", "MATE": "72", "SNS": "86", "RBT": "84", "HQ": "99", "MQ": "100", "FEQ": "99", "HAD": "100", "TAU": "100", "TAF": "87", "PJK": "", "PSV": "", "JUMLAH": "1353", "PURATA": "90.2"}, {"EXAM": "F1-3", "BIL": "4", "NAMA": "MUHAMMAD UMAR YAASIN BIN MOHAMAD ZAMRI", "BM": "85", "BI": "78", "SEJ": "95", "GEO": "82", "BA": "94", "PI": "94", "MATE": "70", "SNS": "86", "RBT": "90", "HQ": "100", "MQ": "98", "FEQ": "94", "HAD": "87", "TAU": "92", "TAF": "88", "PJK": "", "PSV": "", "JUMLAH": "1333", "PURATA": "88.87"}, {"EXAM": "F1-3", "BIL": "5", "NAMA": "MUHAMMAD AYSAR NAFIS BIN ABDUL RAZAK", "BM": "92", "BI": "80", "SEJ": "85", "GEO": "87", "BA": "95", "PI": "95", "MATE": "76", "SNS": "86", "RBT": "83", "HQ": "84", "MQ": "98", "FEQ": "99", "HAD": "90", "TAU": "92", "TAF": "85", "PJK": "", "PSV": "", "JUMLAH": "1327", "PURATA": "88.47"}, {"EXAM": "F1-3", "BIL": "6", "NAMA": "MOHAMAD HARITH NUKMAN BIN MOHAMAD NAZIR", "BM": "93", "BI": "80", "SEJ": "83", "GEO": "86", "BA": "89", "PI": "94", "MATE": "71", "SNS": "83", "RBT": "80", "HQ": "94", "MQ": "98", "FEQ": "98", "HAD": "96", "TAU": "94", "TAF": "82", "PJK": "", "PSV": "", "JUMLAH": "1321", "PURATA": "88.07"}, {"EXAM": "F1-3", "BIL": "7", "NAMA": "AKIF FAHIMI BIN ZULAZRI", "BM": "86", "BI": "78", "SEJ": "88", "GEO": "80", "BA": "94", "PI": "91", "MATE": "70", "SNS": "81", "RBT": "80", "HQ": "100", "MQ": "98", "FEQ": "94", "HAD": "90", "TAU": "98", "TAF": "88", "PJK": "", "PSV": "", "JUMLAH": "1316", "PURATA": "87.73"}, {"EXAM": "F1-3", "BIL": "8", "NAMA": "MUHAMMAD AQIL HARRAZ BIN MOHD FUAD", "BM": "90", "BI": "82", "SEJ": "80", "GEO": "77", "BA": "93", "PI": "95", "MATE": "63", "SNS": "85", "RBT": "70", "HQ": "99", "MQ": "94", "FEQ": "94", "HAD": "87", "TAU": "93", "TAF": "84", "PJK": "", "PSV": "", "JUMLAH": "1286", "PURATA": "85.73"}, {"EXAM": "F1-3", "BIL": "9", "NAMA": "MUNIF BIN AHMAD", "BM": "86", "BI": "75", "SEJ": "77", "GEO": "89", "BA": "94", "PI": "97", "MATE": "52", "SNS": "87", "RBT": "71", "HQ": "90", "MQ": "96", "FEQ": "98", "HAD": "94", "TAU": "89", "TAF": "89", "PJK": "", "PSV": "", "JUMLAH": "1284", "PURATA": "85.6"}, {"EXAM": "F1-3", "BIL": "10", "NAMA": "AIMAN ZAFFRAN BIN AHMAD ZABIL ALBAR", "BM": "90", "BI": "88", "SEJ": "84", "GEO": "87", "BA": "89", "PI": "91", "MATE": "62", "SNS": "85", "RBT": "63", "HQ": "99", "MQ": "86", "FEQ": "93", "HAD": "66", "TAU": "84", "TAF": "88", "PJK": "", "PSV": "", "JUMLAH": "1255", "PURATA": "83.67"}, {"EXAM": "F1-3", "BIL": "11", "NAMA": "AIMAN QAWARIEZMI BIN SHAJIHAN", "BM": "93", "BI": "93", "SEJ": "80", "GEO": "73", "BA": "84", "PI": "93", "MATE": "56", "SNS": "76", "RBT": "77", "HQ": "84", "MQ": "96", "FEQ": "90", "HAD": "86", "TAU": "91", "TAF": "74", "PJK": "", "PSV": "", "JUMLAH": "1246", "PURATA": "83.07"}, {"EXAM": "F1-3", "BIL": "12", "NAMA": "MUHAMMAD MUAZ BIN ZAINUDDIN", "BM": "89", "BI": "78", "SEJ": "45", "GEO": "64", "BA": "83", "PI": "86", "MATE": "83", "SNS": "78", "RBT": "86", "HQ": "85", "MQ": "92", "FEQ": "91", "HAD": "92", "TAU": "92", "TAF": "78", "PJK": "", "PSV": "", "JUMLAH": "1222", "PURATA": "81.47"}, {"EXAM": "F1-3", "BIL": "13", "NAMA": "MUHAMMAD AL-FATEH BIN MOHD ASLAM", "BM": "91", "BI": "82", "SEJ": "73", "GEO": "87", "BA": "91", "PI": "91", "MATE": "55", "SNS": "79", "RBT": "66", "HQ": "100", "MQ": "82", "FEQ": "92", "HAD": "70", "TAU": "76", "TAF": "76", "PJK": "", "PSV": "", "JUMLAH": "1211", "PURATA": "80.73"}, {"EXAM": "F1-3", "BIL": "14", "NAMA": "NIK AMEEN ZIQRI BIN SAKRI", "BM": "88", "BI": "90", "SEJ": "75", "GEO": "78", "BA": "87", "PI": "88", "MATE": "73", "SNS": "84", "RBT": "73", "HQ": "57", "MQ": "84", "FEQ": "93", "HAD": "71", "TAU": "82", "TAF": "75", "PJK": "", "PSV": "", "JUMLAH": "1198", "PURATA": "79.87"}, {"EXAM": "F1-3", "BIL": "15", "NAMA": "SYED HADIF WAFIY BIN SYED ABDUL RAHMAN", "BM": "81", "BI": "88", "SEJ": "70", "GEO": "70", "BA": "95", "PI": "89", "MATE": "68", "SNS": "70", "RBT": "60", "HQ": "86", "MQ": "96", "FEQ": "94", "HAD": "65", "TAU": "80", "TAF": "72", "PJK": "", "PSV": "", "JUMLAH": "1184", "PURATA": "78.93"}, {"EXAM": "F1-3", "BIL": "16", "NAMA": "MUHAMMAD ARIF ILHAM BIN RIDZUAN", "BM": "82", "BI": "75", "SEJ": "73", "GEO": "83", "BA": "89", "PI": "92", "MATE": "54", "SNS": "71", "RBT": "81", "HQ": "59", "MQ": "88", "FEQ": "91", "HAD": "60", "TAU": "61", "TAF": "75", "PJK": "", "PSV": "", "JUMLAH": "1134", "PURATA": "75.6"}, {"EXAM": "F1-3", "BIL": "17", "NAMA": "MUHAMMAD FAREEZ ZIKRY BIN MOHD FATHUL HAKIM", "BM": "90", "BI": "78", "SEJ": "79", "GEO": "72", "BA": "86", "PI": "93", "MATE": "53", "SNS": "72", "RBT": "77", "HQ": "63", "MQ": "78", "FEQ": "95", "HAD": "58", "TAU": "82", "TAF": "52", "PJK": "", "PSV": "", "JUMLAH": "1128", "PURATA": "75.2"}, {"EXAM": "F1-3", "BIL": "18", "NAMA": "MUHAMMAD HADIF ARMAN BIN MUHAMMAD AL'HAPIS", "BM": "90", "BI": "80", "SEJ": "69", "GEO": "83", "BA": "80", "PI": "93", "MATE": "54", "SNS": "78", "RBT": "56", "HQ": "76", "MQ": "80", "FEQ": "86", "HAD": "64", "TAU": "81", "TAF": "47", "PJK": "", "PSV": "", "JUMLAH": "1117", "PURATA": "74.47"}, {"EXAM": "F1-3", "BIL": "19", "NAMA": "MUHAMMAD NIYAZ BIN MOHD SOBRI", "BM": "82", "BI": "75", "SEJ": "67", "GEO": "82", "BA": "78", "PI": "87", "MATE": "64", "SNS": "82", "RBT": "63", "HQ": "70", "MQ": "70", "FEQ": "87", "HAD": "67", "TAU": "74", "TAF": "60", "PJK": "", "PSV": "", "JUMLAH": "1108", "PURATA": "73.87"}, {"EXAM": "F1-3", "BIL": "20", "NAMA": "ABDUL MU'IZZ BIN MUHAMMAD ZAHIDI", "BM": "86", "BI": "75", "SEJ": "63", "GEO": "74", "BA": "89", "PI": "86", "MATE": "48", "SNS": "51", "RBT": "54", "HQ": "88", "MQ": "84", "FEQ": "84", "HAD": "55", "TAU": "66", "TAF": "78", "PJK": "", "PSV": "", "JUMLAH": "1081", "PURATA": "72.07"}, {"EXAM": "F1-3", "BIL": "21", "NAMA": "MUHAMMAD IRFAN UWAIS BIN MOHD NAJIB", "BM": "83", "BI": "78", "SEJ": "73", "GEO": "68", "BA": "84", "PI": "90", "MATE": "60", "SNS": "62", "RBT": "50", "HQ": "93", "MQ": "78", "FEQ": "68", "HAD": "56", "TAU": "53", "TAF": "35", "PJK": "", "PSV": "", "JUMLAH": "1031", "PURATA": "68.73"}, {"EXAM": "F1-3", "BIL": "22", "NAMA": "NUR MUHAMMAD IMAN BIN RUZAIMAN", "BM": "70", "BI": "75", "SEJ": "71", "GEO": "68", "BA": "71", "PI": "88", "MATE": "35", "SNS": "57", "RBT": "63", "HQ": "81", "MQ": "60", "FEQ": "75", "HAD": "73", "TAU": "72", "TAF": "57", "PJK": "", "PSV": "", "JUMLAH": "1016", "PURATA": "67.73"}, {"EXAM": "F1-3", "BIL": "23", "NAMA": "MUHAMMAD FAHIM MIRZA BIN MOHD FEISAL", "BM": "85", "BI": "75", "SEJ": "68", "GEO": "76", "BA": "85", "PI": "77", "MATE": "52", "SNS": "77", "RBT": "43", "HQ": "57", "MQ": "82", "FEQ": "71", "HAD": "46", "TAU": "48", "TAF": "45", "PJK": "", "PSV": "", "JUMLAH": "987", "PURATA": "65.8"}, {"EXAM": "F1-3", "BIL": "24", "NAMA": "MUHAMMAD AL-IDRISSI BIN MD SUPARDZI", "BM": "86", "BI": "80", "SEJ": "65", "GEO": "79", "BA": "71", "PI": "82", "MATE": "54", "SNS": "74", "RBT": "60", "HQ": "46", "MQ": "32", "FEQ": "70", "HAD": "43", "TAU": "40", "TAF": "21", "PJK": "", "PSV": "", "JUMLAH": "903", "PURATA": "60.2"}, {"EXAM": "F2-1", "BIL": "1", "NAMA": "MUS'AB BIN MUSLIM", "BM": "75", "BI": "88", "SEJ": "99", "GEO": "78", "BA": "90", "PI": "86", "MATE": "83", "SNS": "96", "RBT": "80", "HQ": "100", "MQ": "98", "FEQ": "78", "HAD": "100", "TAU": "100", "TAF": "96", "PJK": "", "PSV": "", "JUMLAH": "1347", "PURATA": "89.8"}, {"EXAM": "F2-1", "BIL": "2", "NAMA": "MUHAMMAD AYSAR NAFIS BIN ABDUL RAZAK", "BM": "78", "BI": "75", "SEJ": "94", "GEO": "80", "BA": "90", "PI": "95", "MATE": "82", "SNS": "80", "RBT": "83", "HQ": "98", "MQ": "96", "FEQ": "98", "HAD": "98", "TAU": "100", "TAF": "94", "PJK": "", "PSV": "", "JUMLAH": "1341", "PURATA": "89.4"}, {"EXAM": "F2-1", "BIL": "3", "NAMA": "MUHAMMAD ANAS FIRDAUS BIN ABDUL MOKHTI", "BM": "78", "BI": "85", "SEJ": "86", "GEO": "65", "BA": "95", "PI": "90", "MATE": "79", "SNS": "94", "RBT": "80", "HQ": "100", "MQ": "100", "FEQ": "98", "HAD": "100", "TAU": "84", "TAF": "94", "PJK": "", "PSV": "", "JUMLAH": "1328", "PURATA": "88.53"}, {"EXAM": "F2-1", "BIL": "4", "NAMA": "IHSAN ISKANDAR HAKIM BIN SUHAIMI", "BM": "76", "BI": "79", "SEJ": "89", "GEO": "68", "BA": "93", "PI": "93", "MATE": "76", "SNS": "69", "RBT": "73", "HQ": "100", "MQ": "94", "FEQ": "98", "HAD": "100", "TAU": "98", "TAF": "92", "PJK": "", "PSV": "", "JUMLAH": "1298", "PURATA": "86.53"}, {"EXAM": "F2-1", "BIL": "5", "NAMA": "AKIF FAHIMI BIN ZULAZRI", "BM": "81", "BI": "79", "SEJ": "95", "GEO": "60", "BA": "91", "PI": "91", "MATE": "72", "SNS": "72", "RBT": "76", "HQ": "100", "MQ": "94", "FEQ": "90", "HAD": "100", "TAU": "100", "TAF": "94", "PJK": "", "PSV": "", "JUMLAH": "1295", "PURATA": "86.33"}, {"EXAM": "F2-1", "BIL": "6", "NAMA": "MOHAMAD HARITH NUKMAN BIN MOHAMAD NAZIR", "BM": "81", "BI": "81", "SEJ": "94", "GEO": "65", "BA": "89", "PI": "69", "MATE": "83", "SNS": "77", "RBT": "80", "HQ": "98", "MQ": "90", "FEQ": "98", "HAD": "100", "TAU": "98", "TAF": "88", "PJK": "", "PSV": "", "JUMLAH": "1291", "PURATA": "86.07"}, {"EXAM": "F2-1", "BIL": "7", "NAMA": "MUHAMMAD UMAR YAASIN BIN MOHAMAD ZAMRI", "BM": "75", "BI": "81", "SEJ": "89", "GEO": "74", "BA": "88", "PI": "90", "MATE": "78", "SNS": "83", "RBT": "70", "HQ": "92", "MQ": "96", "FEQ": "90", "HAD": "90", "TAU": "92", "TAF": "92", "PJK": "", "PSV": "", "JUMLAH": "1280", "PURATA": "85.33"}, {"EXAM": "F2-1", "BIL": "8", "NAMA": "NIK AMEEN ZIQRI BIN SAKRI", "BM": "80", "BI": "86", "SEJ": "99", "GEO": "71", "BA": "81", "PI": "66", "MATE": "85", "SNS": "83", "RBT": "77", "HQ": "82", "MQ": "90", "FEQ": "84", "HAD": "96", "TAU": "100", "TAF": "100", "PJK": "", "PSV": "", "JUMLAH": "1280", "PURATA": "85.33"}, {"EXAM": "F2-1", "BIL": "9", "NAMA": "MUHAMMAD ARIF ILHAM BIN RIDZUAN", "BM": "78", "BI": "78", "SEJ": "88", "GEO": "84", "BA": "84", "PI": "81", "MATE": "76", "SNS": "72", "RBT": "71", "HQ": "100", "MQ": "96", "FEQ": "98", "HAD": "100", "TAU": "88", "TAF": "70", "PJK": "", "PSV": "", "JUMLAH": "1264", "PURATA": "84.27"}, {"EXAM": "F2-1", "BIL": "10", "NAMA": "MUNIF BIN AHMAD", "BM": "85", "BI": "75", "SEJ": "78", "GEO": "65", "BA": "91", "PI": "90", "MATE": "73", "SNS": "69", "RBT": "77", "HQ": "84", "MQ": "96", "FEQ": "90", "HAD": "100", "TAU": "94", "TAF": "96", "PJK": "", "PSV": "", "JUMLAH": "1263", "PURATA": "84.2"}, {"EXAM": "F2-1", "BIL": "11", "NAMA": "AIMAN ZAFFRAN BIN AHMAD ZABIL ALBAR", "BM": "80", "BI": "89", "SEJ": "71", "GEO": "70", "BA": "81", "PI": "76", "MATE": "68", "SNS": "72", "RBT": "77", "HQ": "94", "MQ": "98", "FEQ": "98", "HAD": "100", "TAU": "82", "TAF": "92", "PJK": "", "PSV": "", "JUMLAH": "1248", "PURATA": "83.2"}, {"EXAM": "F2-1", "BIL": "12", "NAMA": "AIMAN QAWARIEZMI BIN SHAJIHAN", "BM": "80", "BI": "84", "SEJ": "98", "GEO": "60", "BA": "75", "PI": "82", "MATE": "59", "SNS": "74", "RBT": "77", "HQ": "100", "MQ": "88", "FEQ": "98", "HAD": "100", "TAU": "88", "TAF": "76", "PJK": "", "PSV": "", "JUMLAH": "1239", "PURATA": "82.6"}, {"EXAM": "F2-1", "BIL": "13", "NAMA": "MUHAMMAD AL-FATEH BIN MOHD ASLAM", "BM": "82", "BI": "76", "SEJ": "51", "GEO": "48", "BA": "86", "PI": "95", "MATE": "81", "SNS": "68", "RBT": "70", "HQ": "100", "MQ": "88", "FEQ": "94", "HAD": "100", "TAU": "94", "TAF": "96", "PJK": "", "PSV": "", "JUMLAH": "1229", "PURATA": "81.93"}, {"EXAM": "F2-1", "BIL": "14", "NAMA": "SYED HADIF WAFIY BIN SYED ABDUL RAHMAN", "BM": "73", "BI": "84", "SEJ": "66", "GEO": "66", "BA": "88", "PI": "83", "MATE": "79", "SNS": "77", "RBT": "70", "HQ": "79", "MQ": "88", "FEQ": "68", "HAD": "96", "TAU": "94", "TAF": "100", "PJK": "", "PSV": "", "JUMLAH": "1211", "PURATA": "80.73"}, {"EXAM": "F2-1", "BIL": "15", "NAMA": "MUHAMMAD AQIL HARRAZ BIN MOHD FUAD", "BM": "74", "BI": "74", "SEJ": "89", "GEO": "61", "BA": "90", "PI": "80", "MATE": "76", "SNS": "78", "RBT": "66", "HQ": "100", "MQ": "88", "FEQ": "78", "HAD": "80", "TAU": "100", "TAF": "68", "PJK": "", "PSV": "", "JUMLAH": "1202", "PURATA": "80.13"}, {"EXAM": "F2-1", "BIL": "16", "NAMA": "MUHAMMAD HADIF ARMAN BIN MUHAMMAD AL'HAPIS", "BM": "75", "BI": "76", "SEJ": "84", "GEO": "73", "BA": "68", "PI": "80", "MATE": "64", "SNS": "75", "RBT": "70", "HQ": "71", "MQ": "90", "FEQ": "96", "HAD": "76", "TAU": "82", "TAF": "68", "PJK": "", "PSV": "", "JUMLAH": "1148", "PURATA": "76.53"}, {"EXAM": "F2-1", "BIL": "17", "NAMA": "MUHAMMAD MUAZ BIN ZAINUDDIN", "BM": "74", "BI": "75", "SEJ": "65", "GEO": "60", "BA": "87", "PI": "60", "MATE": "77", "SNS": "60", "RBT": "58", "HQ": "76", "MQ": "94", "FEQ": "90", "HAD": "100", "TAU": "76", "TAF": "86", "PJK": "", "PSV": "", "JUMLAH": "1138", "PURATA": "75.87"}, {"EXAM": "F2-1", "BIL": "18", "NAMA": "MUHAMMAD NIYAZ BIN MOHD SOBRI", "BM": "71", "BI": "81", "SEJ": "88", "GEO": "63", "BA": "73", "PI": "70", "MATE": "74", "SNS": "84", "RBT": "83", "HQ": "61", "MQ": "92", "FEQ": "82", "HAD": "52", "TAU": "82", "TAF": "80", "PJK": "", "PSV": "", "JUMLAH": "1136", "PURATA": "75.73"}, {"EXAM": "F2-1", "BIL": "19", "NAMA": "NUR MUHAMMAD IMAN BIN RUZAIMAN", "BM": "74", "BI": "74", "SEJ": "75", "GEO": "58", "BA": "52", "PI": "73", "MATE": "49", "SNS": "67", "RBT": "63", "HQ": "88", "MQ": "90", "FEQ": "72", "HAD": "76", "TAU": "86", "TAF": "92", "PJK": "", "PSV": "", "JUMLAH": "1089", "PURATA": "72.6"}, {"EXAM": "F2-1", "BIL": "20", "NAMA": "MUHAMMAD FAREEZ ZIKRY BIN MOHD FATHUL HAKIM", "BM": "81", "BI": "71", "SEJ": "89", "GEO": "60", "BA": "75", "PI": "67", "MATE": "65", "SNS": "72", "RBT": "64", "HQ": "66", "MQ": "88", "FEQ": "62", "HAD": "62", "TAU": "58", "TAF": "78", "PJK": "", "PSV": "", "JUMLAH": "1058", "PURATA": "70.53"}, {"EXAM": "F2-1", "BIL": "21", "NAMA": "MUHAMMAD IRFAN UWAIS BIN MOHD NAJIB", "BM": "78", "BI": "74", "SEJ": "66", "GEO": "36", "BA": "74", "PI": "79", "MATE": "53", "SNS": "72", "RBT": "61", "HQ": "72", "MQ": "78", "FEQ": "24", "HAD": "62", "TAU": "68", "TAF": "84", "PJK": "", "PSV": "", "JUMLAH": "981", "PURATA": "65.4"}, {"EXAM": "F2-1", "BIL": "22", "NAMA": "MUHAMMAD FAHIM MIRZA BIN MOHD FEISAL", "BM": "71", "BI": "80", "SEJ": "51", "GEO": "61", "BA": "63", "PI": "49", "MATE": "73", "SNS": "74", "RBT": "63", "HQ": "55", "MQ": "78", "FEQ": "70", "HAD": "28", "TAU": "82", "TAF": "48", "PJK": "", "PSV": "", "JUMLAH": "946", "PURATA": "63.07"}, {"EXAM": "F2-1", "BIL": "23", "NAMA": "ABDUL MU'IZZ BIN MUHAMMAD ZAHIDI", "BM": "71", "BI": "65", "SEJ": "47", "GEO": "43", "BA": "68", "PI": "63", "MATE": "58", "SNS": "48", "RBT": "50", "HQ": "94", "MQ": "68", "FEQ": "74", "HAD": "50", "TAU": "84", "TAF": "62", "PJK": "", "PSV": "", "JUMLAH": "945", "PURATA": "63.0"}, {"EXAM": "F2-1", "BIL": "24", "NAMA": "MUHAMMAD AL-IDRISSI BIN MD SUPARDZI", "BM": "66", "BI": "80", "SEJ": "75", "GEO": "55", "BA": "46", "PI": "64", "MATE": "76", "SNS": "74", "RBT": "61", "HQ": "55", "MQ": "56", "FEQ": "10", "HAD": "28", "TAU": "46", "TAF": "48", "PJK": "", "PSV": "", "JUMLAH": "840", "PURATA": "56.0"}, {"EXAM": "F2-1", "BIL": "25", "NAMA": "ABDUL MUSTAQIM UZAIR BIN MOHAMED BAISAL", "BM": "70", "BI": "79", "SEJ": "41", "GEO": "44", "BA": "66", "PI": "47", "MATE": "38", "SNS": "52", "RBT": "77", "HQ": "78", "MQ": "68", "FEQ": "46", "HAD": "30", "TAU": "62", "TAF": "36", "PJK": "", "PSV": "", "JUMLAH": "834", "PURATA": "55.6"}, {"EXAM": "F2-2", "BIL": "1", "NAMA": "MUS'AB BIN MUSLIM", "BM": "91", "BI": "86", "SEJ": "96", "GEO": "84", "BA": "93", "PI": "82", "MATE": "86", "SNS": "81", "RBT": "90", "HQ": "99", "MQ": "94", "FEQ": "97", "HAD": "97", "TAU": "97", "TAF": "96", "PJK": "", "PSV": "", "JUMLAH": "1369", "PURATA": "91.27"}, {"EXAM": "F2-2", "BIL": "2", "NAMA": "MUHAMMAD ANAS FIRDAUS BIN ABDUL MOKHTI", "BM": "86", "BI": "89", "SEJ": "90", "GEO": "69", "BA": "92", "PI": "90", "MATE": "83", "SNS": "71", "RBT": "90", "HQ": "98", "MQ": "94", "FEQ": "99", "HAD": "99", "TAU": "94", "TAF": "100", "PJK": "", "PSV": "", "JUMLAH": "1344", "PURATA": "89.6"}, {"EXAM": "F2-2", "BIL": "3", "NAMA": "IHSAN ISKANDAR HAKIM BIN SUHAIMI", "BM": "84", "BI": "79", "SEJ": "79", "GEO": "70", "BA": "82", "PI": "85", "MATE": "81", "SNS": "66", "RBT": "77", "HQ": "98", "MQ": "92", "FEQ": "94", "HAD": "98", "TAU": "93", "TAF": "99", "PJK": "", "PSV": "", "JUMLAH": "1277", "PURATA": "85.13"}, {"EXAM": "F2-2", "BIL": "4", "NAMA": "MUHAMMAD AYSAR NAFIS BIN ABDUL RAZAK", "BM": "85", "BI": "74", "SEJ": "91", "GEO": "73", "BA": "93", "PI": "92", "MATE": "82", "SNS": "62", "RBT": "82", "HQ": "86", "MQ": "92", "FEQ": "88", "HAD": "89", "TAU": "85", "TAF": "94", "PJK": "", "PSV": "", "JUMLAH": "1268", "PURATA": "84.53"}, {"EXAM": "F2-2", "BIL": "5", "NAMA": "MUHAMMAD UMAR YAASIN BIN MOHAMAD ZAMRI", "BM": "85", "BI": "66", "SEJ": "94", "GEO": "65", "BA": "89", "PI": "90", "MATE": "59", "SNS": "69", "RBT": "82", "HQ": "98", "MQ": "88", "FEQ": "96", "HAD": "95", "TAU": "87", "TAF": "91", "PJK": "", "PSV": "", "JUMLAH": "1254", "PURATA": "83.6"}, {"EXAM": "F2-2", "BIL": "6", "NAMA": "MUHAMMAD AL-FATEH BIN MOHD ASLAM", "BM": "80", "BI": "78", "SEJ": "73", "GEO": "65", "BA": "83", "PI": "79", "MATE": "84", "SNS": "77", "RBT": "83", "HQ": "96", "MQ": "84", "FEQ": "96", "HAD": "88", "TAU": "84", "TAF": "98", "PJK": "", "PSV": "", "JUMLAH": "1248", "PURATA": "83.2"}, {"EXAM": "F2-2", "BIL": "7", "NAMA": "NIK AMEEN ZIQRI BIN SAKRI", "BM": "85", "BI": "89", "SEJ": "92", "GEO": "65", "BA": "76", "PI": "64", "MATE": "89", "SNS": "70", "RBT": "70", "HQ": "83", "MQ": "86", "FEQ": "98", "HAD": "94", "TAU": "84", "TAF": "90", "PJK": "", "PSV": "", "JUMLAH": "1235", "PURATA": "82.33"}, {"EXAM": "F2-2", "BIL": "8", "NAMA": "MOHAMAD HARITH NUKMAN BIN MOHAMAD NAZIR", "BM": "79", "BI": "70", "SEJ": "90", "GEO": "63", "BA": "88", "PI": "67", "MATE": "83", "SNS": "75", "RBT": "80", "HQ": "94", "MQ": "80", "FEQ": "96", "HAD": "89", "TAU": "84", "TAF": "88", "PJK": "", "PSV": "", "JUMLAH": "1226", "PURATA": "81.73"}, {"EXAM": "F2-2", "BIL": "9", "NAMA": "MUHAMMAD ARIF ILHAM BIN RIDZUAN", "BM": "76", "BI": "79", "SEJ": "68", "GEO": "64", "BA": "87", "PI": "74", "MATE": "67", "SNS": "73", "RBT": "80", "HQ": "89", "MQ": "92", "FEQ": "81", "HAD": "100", "TAU": "87", "TAF": "88", "PJK": "", "PSV": "", "JUMLAH": "1205", "PURATA": "80.33"}, {"EXAM": "F2-2", "BIL": "10", "NAMA": "AIMAN ZAFFRAN BIN AHMAD ZABIL ALBAR", "BM": "84", "BI": "84", "SEJ": "83", "GEO": "73", "BA": "85", "PI": "73", "MATE": "63", "SNS": "67", "RBT": "82", "HQ": "82", "MQ": "90", "FEQ": "68", "HAD": "88", "TAU": "73", "TAF": "72", "PJK": "", "PSV": "", "JUMLAH": "1167", "PURATA": "77.8"}, {"EXAM": "F2-2", "BIL": "11", "NAMA": "AIMAN QAWARIEZMI BIN SHAJIHAN", "BM": "83", "BI": "79", "SEJ": "88", "GEO": "61", "BA": "82", "PI": "69", "MATE": "54", "SNS": "67", "RBT": "71", "HQ": "92", "MQ": "92", "FEQ": "82", "HAD": "87", "TAU": "74", "TAF": "82", "PJK": "", "PSV": "", "JUMLAH": "1163", "PURATA": "77.53"}, {"EXAM": "F2-2", "BIL": "12", "NAMA": "MUHAMMAD AQIL HARRAZ BIN MOHD FUAD", "BM": "85", "BI": "68", "SEJ": "82", "GEO": "41", "BA": "92", "PI": "77", "MATE": "73", "SNS": "66", "RBT": "80", "HQ": "97", "MQ": "74", "FEQ": "68", "HAD": "83", "TAU": "88", "TAF": "87", "PJK": "", "PSV": "", "JUMLAH": "1161", "PURATA": "77.4"}, {"EXAM": "F2-2", "BIL": "13", "NAMA": "SYED HADIF WAFIY BIN SYED ABDUL RAHMAN", "BM": "82", "BI": "80", "SEJ": "58", "GEO": "41", "BA": "80", "PI": "68", "MATE": "70", "SNS": "67", "RBT": "70", "HQ": "81", "MQ": "84", "FEQ": "68", "HAD": "82", "TAU": "85", "TAF": "90", "PJK": "", "PSV": "", "JUMLAH": "1106", "PURATA": "73.73"}, {"EXAM": "F2-2", "BIL": "14", "NAMA": "MUNIF BIN AHMAD", "BM": "77", "BI": "54", "SEJ": "57", "GEO": "55", "BA": "91", "PI": "76", "MATE": "57", "SNS": "63", "RBT": "80", "HQ": "77", "MQ": "82", "FEQ": "86", "HAD": "75", "TAU": "84", "TAF": "88", "PJK": "", "PSV": "", "JUMLAH": "1102", "PURATA": "73.47"}, {"EXAM": "F2-2", "BIL": "15", "NAMA": "MUHAMMAD FAREEZ ZIKRY BIN MOHD FATHUL HAKIM", "BM": "84", "BI": "64", "SEJ": "68", "GEO": "56", "BA": "78", "PI": "76", "MATE": "53", "SNS": "56", "RBT": "70", "HQ": "71", "MQ": "70", "FEQ": "85", "HAD": "82", "TAU": "73", "TAF": "63", "PJK": "", "PSV": "", "JUMLAH": "1049", "PURATA": "69.93"}, {"EXAM": "F2-2", "BIL": "16", "NAMA": "MUHAMMAD NIYAZ BIN MOHD SOBRI", "BM": "80", "BI": "79", "SEJ": "57", "GEO": "65", "BA": "66", "PI": "71", "MATE": "52", "SNS": "77", "RBT": "80", "HQ": "78", "MQ": "64", "FEQ": "51", "HAD": "73", "TAU": "75", "TAF": "76", "PJK": "", "PSV": "", "JUMLAH": "1044", "PURATA": "69.6"}, {"EXAM": "F2-2", "BIL": "17", "NAMA": "MUHAMMAD HADIF ARMAN BIN MUHAMMAD AL'HAPIS", "BM": "82", "BI": "80", "SEJ": "61", "GEO": "60", "BA": "57", "PI": "63", "MATE": "56", "SNS": "70", "RBT": "70", "HQ": "84", "MQ": "64", "FEQ": "33", "HAD": "65", "TAU": "64", "TAF": "60", "PJK": "", "PSV": "", "JUMLAH": "969", "PURATA": "64.6"}, {"EXAM": "F2-2", "BIL": "18", "NAMA": "NUR MUHAMMAD IMAN BIN RUZAIMAN", "BM": "83", "BI": "68", "SEJ": "67", "GEO": "59", "BA": "53", "PI": "71", "MATE": "42", "SNS": "44", "RBT": "76", "HQ": "91", "MQ": "60", "FEQ": "44", "HAD": "67", "TAU": "66", "TAF": "66", "PJK": "", "PSV": "", "JUMLAH": "957", "PURATA": "63.8"}, {"EXAM": "F2-2", "BIL": "19", "NAMA": "MUHAMMAD IRFAN UWAIS BIN MOHD NAJIB", "BM": "73", "BI": "64", "SEJ": "64", "GEO": "55", "BA": "73", "PI": "65", "MATE": "48", "SNS": "52", "RBT": "65", "HQ": "90", "MQ": "62", "FEQ": "54", "HAD": "46", "TAU": "53", "TAF": "63", "PJK": "", "PSV": "", "JUMLAH": "927", "PURATA": "61.8"}, {"EXAM": "F2-2", "BIL": "20", "NAMA": "MUHAMMAD FAHIM MIRZA BIN MOHD FEISAL", "BM": "77", "BI": "65", "SEJ": "45", "GEO": "61", "BA": "67", "PI": "54", "MATE": "62", "SNS": "60", "RBT": "84", "HQ": "59", "MQ": "68", "FEQ": "43", "HAD": "66", "TAU": "57", "TAF": "55", "PJK": "", "PSV": "", "JUMLAH": "923", "PURATA": "61.53"}, {"EXAM": "F2-2", "BIL": "21", "NAMA": "ABDUL MU'IZZ BIN MUHAMMAD ZAHIDI", "BM": "71", "BI": "63", "SEJ": "49", "GEO": "33", "BA": "75", "PI": "62", "MATE": "55", "SNS": "41", "RBT": "50", "HQ": "93", "MQ": "62", "FEQ": "57", "HAD": "61", "TAU": "58", "TAF": "70", "PJK": "", "PSV": "", "JUMLAH": "900", "PURATA": "60.0"}, {"EXAM": "F2-2", "BIL": "22", "NAMA": "MUHAMMAD AL-IDRISSI BIN MD SUPARDZI", "BM": "79", "BI": "75", "SEJ": "62", "GEO": "48", "BA": "64", "PI": "59", "MATE": "83", "SNS": "61", "RBT": "73", "HQ": "50", "MQ": "26", "FEQ": "28", "HAD": "57", "TAU": "38", "TAF": "30", "PJK": "", "PSV": "", "JUMLAH": "833", "PURATA": "55.53"}, {"EXAM": "F2-2", "BIL": "23", "NAMA": "ABDUL MUSTAQIM UZAIR BIN MOHAMED BAISAL", "BM": "69", "BI": "74", "SEJ": "39", "GEO": "31", "BA": "46", "PI": "49", "MATE": "34", "SNS": "48", "RBT": "73", "HQ": "71", "MQ": "38", "FEQ": "21", "HAD": "27", "TAU": "35", "TAF": "27", "PJK": "", "PSV": "", "JUMLAH": "682", "PURATA": "45.47"}, {"EXAM": "F2-2", "BIL": "24", "NAMA": "MUHAMMAD MUAZ BIN ZAINUDDIN", "BM": "77", "BI": "65", "SEJ": "TH", "GEO": "48", "BA": "85", "PI": "TH", "MATE": "76", "SNS": "47", "RBT": "82", "HQ": "77", "MQ": "TH", "FEQ": "TH", "HAD": "87", "TAU": "TH", "TAF": "TH", "PJK": "", "PSV": "", "JUMLAH": "644", "PURATA": "71.56"}, {"EXAM": "F2-2", "BIL": "25", "NAMA": "AKIF FAHIMI BIN ZULAZRI", "BM": "82", "BI": "TH", "SEJ": "TH", "GEO": "TH", "BA": "TH", "PI": "TH", "MATE": "TH", "SNS": "TH", "RBT": "77", "HQ": "98", "MQ": "TH", "FEQ": "TH", "HAD": "TH", "TAU": "TH", "TAF": "TH", "PJK": "", "PSV": "", "JUMLAH": "257", "PURATA": "85.67"}, {"EXAM": "F2-3", "BIL": "1", "NAMA": "MUS'AB BIN MUSLIM", "BM": "98", "BI": "89", "SEJ": "97", "GEO": "88", "BA": "98", "PI": "97", "MATE": "82", "SNS": "92", "RBT": "82", "HQ": "100", "MQ": "100", "FEQ": "88", "HAD": "95", "TAU": "100", "TAF": "97", "PJK": "78", "PSV": "60", "JUMLAH": "1403", "PURATA": "93.53"}, {"EXAM": "F2-3", "BIL": "2", "NAMA": "MUHAMMAD ANAS FIRDAUS BIN ABDUL MOKHTI", "BM": "93", "BI": "86", "SEJ": "82", "GEO": "73", "BA": "93", "PI": "95", "MATE": "67", "SNS": "83", "RBT": "84", "HQ": "100", "MQ": "100", "FEQ": "91", "HAD": "94", "TAU": "98", "TAF": "99", "PJK": "82", "PSV": "78", "JUMLAH": "1338", "PURATA": "89.2"}, {"EXAM": "F2-3", "BIL": "3", "NAMA": "AKIF FAHIMI BIN ZULAZRI", "BM": "95", "BI": "64", "SEJ": "88", "GEO": "80", "BA": "95", "PI": "94", "MATE": "81", "SNS": "71", "RBT": "82", "HQ": "98", "MQ": "94", "FEQ": "88", "HAD": "95", "TAU": "100", "TAF": "97", "PJK": "80", "PSV": "80", "JUMLAH": "1322", "PURATA": "88.13"}, {"EXAM": "F2-3", "BIL": "4", "NAMA": "MUHAMMAD AYSAR NAFIS BIN ABDUL RAZAK", "BM": "99", "BI": "66", "SEJ": "88", "GEO": "81", "BA": "99", "PI": "94", "MATE": "64", "SNS": "64", "RBT": "82", "HQ": "92", "MQ": "100", "FEQ": "94", "HAD": "98", "TAU": "99", "TAF": "97", "PJK": "84", "PSV": "78", "JUMLAH": "1317", "PURATA": "87.8"}, {"EXAM": "F2-3", "BIL": "5", "NAMA": "IHSAN ISKANDAR HAKIM BIN SUHAIMI", "BM": "95", "BI": "76", "SEJ": "85", "GEO": "74", "BA": "95", "PI": "95", "MATE": "66", "SNS": "70", "RBT": "70", "HQ": "95", "MQ": "100", "FEQ": "93", "HAD": "93", "TAU": "90", "TAF": "93", "PJK": "82", "PSV": "70", "JUMLAH": "1290", "PURATA": "86.0"}, {"EXAM": "F2-3", "BIL": "6", "NAMA": "MUHAMMAD UMAR YAASIN BIN MOHAMAD ZAMRI", "BM": "95", "BI": "70", "SEJ": "82", "GEO": "79", "BA": "95", "PI": "91", "MATE": "55", "SNS": "90", "RBT": "77", "HQ": "94", "MQ": "96", "FEQ": "75", "HAD": "92", "TAU": "98", "TAF": "97", "PJK": "92", "PSV": "80", "JUMLAH": "1286", "PURATA": "85.73"}, {"EXAM": "F2-3", "BIL": "7", "NAMA": "MUHAMMAD AL-FATEH BIN MOHD ASLAM", "BM": "89", "BI": "84", "SEJ": "80", "GEO": "78", "BA": "89", "PI": "87", "MATE": "48", "SNS": "75", "RBT": "74", "HQ": "100", "MQ": "94", "FEQ": "96", "HAD": "87", "TAU": "100", "TAF": "91", "PJK": "84", "PSV": "60", "JUMLAH": "1272", "PURATA": "84.8"}, {"EXAM": "F2-3", "BIL": "8", "NAMA": "NIK AMEEN ZIQRI BIN SAKRI", "BM": "83", "BI": "83", "SEJ": "83", "GEO": "73", "BA": "83", "PI": "79", "MATE": "71", "SNS": "73", "RBT": "77", "HQ": "98", "MQ": "100", "FEQ": "90", "HAD": "86", "TAU": "99", "TAF": "92", "PJK": "76", "PSV": "60", "JUMLAH": "1270", "PURATA": "84.67"}, {"EXAM": "F2-3", "BIL": "9", "NAMA": "AIMAN ZAFFRAN BIN AHMAD ZABIL ALBAR", "BM": "92", "BI": "89", "SEJ": "85", "GEO": "84", "BA": "92", "PI": "81", "MATE": "53", "SNS": "72", "RBT": "71", "HQ": "83", "MQ": "100", "FEQ": "93", "HAD": "90", "TAU": "96", "TAF": "87", "PJK": "82", "PSV": "78", "JUMLAH": "1268", "PURATA": "84.53"}, {"EXAM": "F2-3", "BIL": "10", "NAMA": "MUHAMMAD AQIL HARRAZ BIN MOHD FUAD", "BM": "96", "BI": "69", "SEJ": "87", "GEO": "74", "BA": "96", "PI": "92", "MATE": "68", "SNS": "67", "RBT": "71", "HQ": "99", "MQ": "98", "FEQ": "77", "HAD": "90", "TAU": "91", "TAF": "91", "PJK": "76", "PSV": "78", "JUMLAH": "1266", "PURATA": "84.4"}, {"EXAM": "F2-3", "BIL": "11", "NAMA": "MOHAMAD HARITH NUKMAN BIN MOHAMAD NAZIR", "BM": "95", "BI": "69", "SEJ": "70", "GEO": "75", "BA": "95", "PI": "91", "MATE": "68", "SNS": "64", "RBT": "76", "HQ": "83", "MQ": "96", "FEQ": "86", "HAD": "86", "TAU": "100", "TAF": "90", "PJK": "76", "PSV": "78", "JUMLAH": "1244", "PURATA": "82.93"}, {"EXAM": "F2-3", "BIL": "12", "NAMA": "AIMAN QAWARIEZMI BIN SHAJIHAN", "BM": "87", "BI": "80", "SEJ": "77", "GEO": "69", "BA": "87", "PI": "93", "MATE": "47", "SNS": "85", "RBT": "74", "HQ": "88", "MQ": "96", "FEQ": "74", "HAD": "94", "TAU": "96", "TAF": "90", "PJK": "80", "PSV": "78", "JUMLAH": "1237", "PURATA": "82.47"}, {"EXAM": "F2-3", "BIL": "13", "NAMA": "MUNIF BIN AHMAD", "BM": "98", "BI": "59", "SEJ": "75", "GEO": "70", "BA": "98", "PI": "91", "MATE": "53", "SNS": "78", "RBT": "82", "HQ": "94", "MQ": "82", "FEQ": "73", "HAD": "92", "TAU": "100", "TAF": "88", "PJK": "82", "PSV": "75", "JUMLAH": "1233", "PURATA": "82.2"}, {"EXAM": "F2-3", "BIL": "14", "NAMA": "MUHAMMAD ARIF ILHAM BIN RIDZUAN", "BM": "94", "BI": "76", "SEJ": "77", "GEO": "71", "BA": "94", "PI": "82", "MATE": "68", "SNS": "71", "RBT": "71", "HQ": "83", "MQ": "92", "FEQ": "73", "HAD": "87", "TAU": "95", "TAF": "92", "PJK": "68", "PSV": "85", "JUMLAH": "1226", "PURATA": "81.73"}, {"EXAM": "F2-3", "BIL": "15", "NAMA": "MUHAMMAD MUAZ BIN ZAINUDDIN", "BM": "83", "BI": "61", "SEJ": "74", "GEO": "69", "BA": "83", "PI": "83", "MATE": "71", "SNS": "58", "RBT": "70", "HQ": "93", "MQ": "94", "FEQ": "98", "HAD": "95", "TAU": "100", "TAF": "92", "PJK": "74", "PSV": "65", "JUMLAH": "1224", "PURATA": "81.6"}, {"EXAM": "F2-3", "BIL": "16", "NAMA": "SYED HADIF WAFIY BIN SYED ABDUL RAHMAN", "BM": "82", "BI": "80", "SEJ": "67", "GEO": "73", "BA": "82", "PI": "70", "MATE": "80", "SNS": "72", "RBT": "71", "HQ": "84", "MQ": "98", "FEQ": "92", "HAD": "88", "TAU": "88", "TAF": "93", "PJK": "80", "PSV": "60", "JUMLAH": "1220", "PURATA": "81.33"}, {"EXAM": "F2-3", "BIL": "17", "NAMA": "MUHAMMAD HADIF ARMAN BIN MUHAMMAD AL'HAPIS", "BM": "79", "BI": "75", "SEJ": "75", "GEO": "76", "BA": "79", "PI": "78", "MATE": "35", "SNS": "76", "RBT": "82", "HQ": "81", "MQ": "94", "FEQ": "71", "HAD": "70", "TAU": "78", "TAF": "64", "PJK": "86", "PSV": "65", "JUMLAH": "1113", "PURATA": "74.2"}, {"EXAM": "F2-3", "BIL": "18", "NAMA": "MUHAMMAD FAREEZ ZIKRY BIN MOHD FATHUL HAKIM", "BM": "73", "BI": "63", "SEJ": "86", "GEO": "76", "BA": "73", "PI": "89", "MATE": "45", "SNS": "65", "RBT": "82", "HQ": "74", "MQ": "82", "FEQ": "66", "HAD": "78", "TAU": "79", "TAF": "75", "PJK": "68", "PSV": "60", "JUMLAH": "1106", "PURATA": "73.73"}, {"EXAM": "F2-3", "BIL": "19", "NAMA": "MUHAMMAD NIYAZ BIN MOHD SOBRI", "BM": "82", "BI": "75", "SEJ": "67", "GEO": "70", "BA": "82", "PI": "77", "MATE": "60", "SNS": "65", "RBT": "74", "HQ": "66", "MQ": "80", "FEQ": "78", "HAD": "56", "TAU": "71", "TAF": "87", "PJK": "70", "PSV": "60", "JUMLAH": "1090", "PURATA": "72.67"}, {"EXAM": "F2-3", "BIL": "20", "NAMA": "NUR MUHAMMAD IMAN BIN RUZAIMAN", "BM": "65", "BI": "59", "SEJ": "64", "GEO": "74", "BA": "65", "PI": "87", "MATE": "30", "SNS": "63", "RBT": "66", "HQ": "79", "MQ": "88", "FEQ": "82", "HAD": "67", "TAU": "82", "TAF": "62", "PJK": "76", "PSV": "60", "JUMLAH": "1033", "PURATA": "68.87"}, {"EXAM": "F2-3", "BIL": "21", "NAMA": "MUHAMMAD FAHIM MIRZA BIN MOHD FEISAL", "BM": "59", "BI": "78", "SEJ": "68", "GEO": "66", "BA": "59", "PI": "77", "MATE": "63", "SNS": "74", "RBT": "76", "HQ": "58", "MQ": "80", "FEQ": "64", "HAD": "49", "TAU": "52", "TAF": "58", "PJK": "82", "PSV": "65", "JUMLAH": "981", "PURATA": "65.4"}, {"EXAM": "F2-3", "BIL": "22", "NAMA": "MUHAMMAD IRFAN UWAIS BIN MOHD NAJIB", "BM": "64", "BI": "51", "SEJ": "60", "GEO": "51", "BA": "64", "PI": "77", "MATE": "30", "SNS": "63", "RBT": "64", "HQ": "83", "MQ": "88", "FEQ": "56", "HAD": "66", "TAU": "70", "TAF": "57", "PJK": "76", "PSV": "78", "JUMLAH": "944", "PURATA": "62.93"}, {"EXAM": "F2-3", "BIL": "23", "NAMA": "ABDUL MU'IZZ BIN MUHAMMAD ZAHIDI", "BM": "84", "BI": "55", "SEJ": "68", "GEO": "41", "BA": "84", "PI": "58", "MATE": "33", "SNS": "62", "RBT": "60", "HQ": "75", "MQ": "90", "FEQ": "55", "HAD": "48", "TAU": "44", "TAF": "67", "PJK": "50", "PSV": "68", "JUMLAH": "924", "PURATA": "61.6"}, {"EXAM": "F2-3", "BIL": "24", "NAMA": "MUHAMMAD AL-IDRISSI BIN MD SUPARDZI", "BM": "44", "BI": "79", "SEJ": "62", "GEO": "59", "BA": "44", "PI": "62", "MATE": "78", "SNS": "55", "RBT": "65", "HQ": "44", "MQ": "28", "FEQ": "24", "HAD": "19", "TAU": "51", "TAF": "23", "PJK": "76", "PSV": "68", "JUMLAH": "737", "PURATA": "49.13"}, {"EXAM": "F2-3", "BIL": "25", "NAMA": "ABDUL MUSTAQIM UZAIR BIN MOHAMED BAISAL", "BM": "57", "BI": "70", "SEJ": "22", "GEO": "59", "BA": "57", "PI": "42", "MATE": "32", "SNS": "61", "RBT": "57", "HQ": "61", "MQ": "58", "FEQ": "35", "HAD": "14", "TAU": "55", "TAF": "16", "PJK": "70", "PSV": "60", "JUMLAH": "696", "PURATA": "46.4"}];
+        const rawData = [{"EXAM": "F1-1", "BIL": "1", "NAMA": "MUS'AB BIN MUSLIM", "BM": "88", "BI": "95", "SEJ": "88", "GEO": "94", "BA": "98", "PI": "95", "MATE": "83", "SNS": "79", "RBT": "92", "HQ": "88", "MQ": "100", "FEQ": "100", "HAD": "93", "TAU": "100", "TAF": "100", "PJK": "", "PSV": "", "JUMLAH": "1393", "PURATA": "92.87"}, {"EXAM": "F1-1", "BIL": "2", "NAMA": "MUHAMMAD ANAS FIRDAUS BIN ABDUL MOKHTI", "BM": "98", "BI": "98", "SEJ": "87", "GEO": "100", "BA": "100", "PI": "91", "MATE": "77", "SNS": "82", "RBT": "75", "HQ": "92", "MQ": "94", "FEQ": "100", "HAD": "100", "TAU": "95", "TAF": "100", "PJK": "", "PSV": "", "JUMLAH": "1389", "PURATA": "92.6"}, {"EXAM": "F1-1", "BIL": "3", "NAMA": "SYED HADIF WAFIY BIN SYED ABDUL RAHMAN", "BM": "86", "BI": "95", "SEJ": "80", "GEO": "82", "BA": "84", "PI": "81", "MATE": "93", "SNS": "77", "RBT": "94", "HQ": "74", "MQ": "76", "FEQ": "90", "HAD": "93", "TAU": "93", "TAF": "100", "PJK": "", "PSV": "", "JUMLAH": "1298", "PURATA": "86.53"}, {"EXAM": "F1-1", "BIL": "4", "NAMA": "AKIF FAHIMI BIN ZULAZRI", "BM": "95", "BI": "85", "SEJ": "82", "GEO": "90", "BA": "90", "PI": "81", "MATE": "70", "SNS": "82", "RBT": "86", "HQ": "89", "MQ": "74", "FEQ": "100", "HAD": "96", "TAU": "75", "TAF": "98", "PJK": "", "PSV": "", "JUMLAH": "1293", "PURATA": "86.2"}, {"EXAM": "F1-1", "BIL": "5", "NAMA": "MUHAMMAD UMAR YAASIN BIN MOHAMAD ZAMRI", "BM": "93", "BI": "90", "SEJ": "88", "GEO": "98", "BA": "94", "PI": "73", "MATE": "80", "SNS": "83", "RBT": "82", "HQ": "83", "MQ": "88", "FEQ": "100", "HAD": "70", "TAU": "93", "TAF": "78", "PJK": "", "PSV": "", "JUMLAH": "1293", "PURATA": "86.2"}, {"EXAM": "F1-1", "BIL": "6", "NAMA": "MUHAMMAD AYSAR NAFIS BIN ABDUL RAZAK", "BM": "95", "BI": "85", "SEJ": "80", "GEO": "90", "BA": "92", "PI": "76", "MATE": "73", "SNS": "71", "RBT": "80", "HQ": "86", "MQ": "92", "FEQ": "92", "HAD": "79", "TAU": "100", "TAF": "98", "PJK": "", "PSV": "", "JUMLAH": "1289", "PURATA": "85.93"}, {"EXAM": "F1-1", "BIL": "7", "NAMA": "MUHAMMAD AL-FATEH BIN MOHD ASLAM", "BM": "88", "BI": "93", "SEJ": "73", "GEO": "94", "BA": "96", "PI": "80", "MATE": "60", "SNS": "77", "RBT": "70", "HQ": "87", "MQ": "80", "FEQ": "100", "HAD": "100", "TAU": "83", "TAF": "98", "PJK": "", "PSV": "", "JUMLAH": "1279", "PURATA": "85.27"}, {"EXAM": "F1-1", "BIL": "8", "NAMA": "MUNIF BIN AHMAD", "BM": "86", "BI": "85", "SEJ": "83", "GEO": "98", "BA": "96", "PI": "79", "MATE": "67", "SNS": "65", "RBT": "86", "HQ": "85", "MQ": "76", "FEQ": "96", "HAD": "89", "TAU": "90", "TAF": "96", "PJK": "", "PSV": "", "JUMLAH": "1277", "PURATA": "85.13"}, {"EXAM": "F1-1", "BIL": "9", "NAMA": "MOHAMAD HARITH NUKMAN BIN MOHAMAD NAZIR", "BM": "93", "BI": "85", "SEJ": "78", "GEO": "94", "BA": "100", "PI": "81", "MATE": "70", "SNS": "70", "RBT": "70", "HQ": "72", "MQ": "90", "FEQ": "90", "HAD": "89", "TAU": "100", "TAF": "94", "PJK": "", "PSV": "", "JUMLAH": "1276", "PURATA": "85.07"}, {"EXAM": "F1-1", "BIL": "10", "NAMA": "IHSAN ISKANDAR HAKIM BIN SUHAIMI", "BM": "88", "BI": "93", "SEJ": "78", "GEO": "90", "BA": "84", "PI": "80", "MATE": "87", "SNS": "76", "RBT": "88", "HQ": "87", "MQ": "70", "FEQ": "100", "HAD": "80", "TAU": "75", "TAF": "98", "PJK": "", "PSV": "", "JUMLAH": "1274", "PURATA": "84.93"}, {"EXAM": "F1-1", "BIL": "11", "NAMA": "NIK AMEEN ZIQRI BIN SAKRI", "BM": "86", "BI": "95", "SEJ": "75", "GEO": "96", "BA": "88", "PI": "88", "MATE": "77", "SNS": "71", "RBT": "72", "HQ": "75", "MQ": "80", "FEQ": "88", "HAD": "83", "TAU": "98", "TAF": "76", "PJK": "", "PSV": "", "JUMLAH": "1248", "PURATA": "83.2"}, {"EXAM": "F1-1", "BIL": "12", "NAMA": "MUHAMMAD AQIL HARRAZ BIN MOHD FUAD", "BM": "81", "BI": "90", "SEJ": "77", "GEO": "80", "BA": "94", "PI": "83", "MATE": "70", "SNS": "71", "RBT": "70", "HQ": "78", "MQ": "80", "FEQ": "96", "HAD": "76", "TAU": "90", "TAF": "90", "PJK": "", "PSV": "", "JUMLAH": "1226", "PURATA": "81.73"}, {"EXAM": "F1-1", "BIL": "13", "NAMA": "MUHAMMAD ARIF ILHAM BIN RIDZUAN", "BM": "93", "BI": "93", "SEJ": "78", "GEO": "96", "BA": "90", "PI": "80", "MATE": "57", "SNS": "68", "RBT": "86", "HQ": "45", "MQ": "76", "FEQ": "96", "HAD": "99", "TAU": "75", "TAF": "88", "PJK": "", "PSV": "", "JUMLAH": "1220", "PURATA": "81.33"}, {"EXAM": "F1-1", "BIL": "14", "NAMA": "AIMAN ZAFFRAN BIN AHMAD ZABIL ALBAR", "BM": "90", "BI": "95", "SEJ": "70", "GEO": "96", "BA": "72", "PI": "71", "MATE": "53", "SNS": "74", "RBT": "76", "HQ": "86", "MQ": "76", "FEQ": "96", "HAD": "79", "TAU": "78", "TAF": "84", "PJK": "", "PSV": "", "JUMLAH": "1196", "PURATA": "79.73"}, {"EXAM": "F1-1", "BIL": "15", "NAMA": "MUHAMMAD FAREEZ ZIKRY BIN MOHD FATHUL HAKIM", "BM": "95", "BI": "85", "SEJ": "83", "GEO": "86", "BA": "82", "PI": "85", "MATE": "60", "SNS": "67", "RBT": "80", "HQ": "66", "MQ": "66", "FEQ": "90", "HAD": "81", "TAU": "95", "TAF": "74", "PJK": "", "PSV": "", "JUMLAH": "1195", "PURATA": "79.67"}, {"EXAM": "F1-1", "BIL": "16", "NAMA": "MUHAMMAD NIYAZ BIN MOHD SOBRI", "BM": "83", "BI": "85", "SEJ": "58", "GEO": "94", "BA": "82", "PI": "78", "MATE": "80", "SNS": "70", "RBT": "74", "HQ": "76", "MQ": "76", "FEQ": "76", "HAD": "59", "TAU": "53", "TAF": "74", "PJK": "", "PSV": "", "JUMLAH": "1118", "PURATA": "74.53"}, {"EXAM": "F1-1", "BIL": "17", "NAMA": "MUHAMMAD HADIF ARMAN BIN MUHAMMAD AL'HAPIS", "BM": "86", "BI": "90", "SEJ": "87", "GEO": "92", "BA": "68", "PI": "65", "MATE": "70", "SNS": "79", "RBT": "82", "HQ": "88", "MQ": "58", "FEQ": "74", "HAD": "61", "TAU": "53", "TAF": "58", "PJK": "", "PSV": "", "JUMLAH": "1111", "PURATA": "74.07"}, {"EXAM": "F1-1", "BIL": "18", "NAMA": "AIMAN QAWARIEZMI BIN SHAJIHAN", "BM": "93", "BI": "93", "SEJ": "53", "GEO": "82", "BA": "76", "PI": "74", "MATE": "60", "SNS": "73", "RBT": "80", "HQ": "59", "MQ": "64", "FEQ": "60", "HAD": "81", "TAU": "73", "TAF": "82", "PJK": "", "PSV": "", "JUMLAH": "1103", "PURATA": "73.53"}, {"EXAM": "F1-1", "BIL": "19", "NAMA": "ABDUL MU'IZZ BIN MUHAMMAD ZAHIDI", "BM": "93", "BI": "85", "SEJ": "45", "GEO": "80", "BA": "82", "PI": "68", "MATE": "73", "SNS": "61", "RBT": "64", "HQ": "80", "MQ": "52", "FEQ": "80", "HAD": "67", "TAU": "70", "TAF": "68", "PJK": "", "PSV": "", "JUMLAH": "1068", "PURATA": "71.2"}, {"EXAM": "F1-1", "BIL": "20", "NAMA": "MUHAMMAD MUAZ BIN ZAINUDDIN", "BM": "88", "BI": "90", "SEJ": "45", "GEO": "94", "BA": "86", "PI": "64", "MATE": "80", "SNS": "73", "RBT": "60", "HQ": "81", "MQ": "64", "FEQ": "92", "HAD": "53", "TAU": "50", "TAF": "40", "PJK": "", "PSV": "", "JUMLAH": "1060", "PURATA": "70.67"}, {"EXAM": "F1-1", "BIL": "21", "NAMA": "MUHAMMAD IRFAN UWAIS BIN MOHD NAJIB", "BM": "91", "BI": "80", "SEJ": "56", "GEO": "84", "BA": "90", "PI": "63", "MATE": "53", "SNS": "68", "RBT": "62", "HQ": "87", "MQ": "60", "FEQ": "92", "HAD": "83", "TAU": "53", "TAF": "22", "PJK": "", "PSV": "", "JUMLAH": "1044", "PURATA": "69.6"}, {"EXAM": "F1-1", "BIL": "22", "NAMA": "MUHAMMAD FAHIM MIRZA BIN MOHD FEISAL", "BM": "90", "BI": "93", "SEJ": "70", "GEO": "76", "BA": "64", "PI": "68", "MATE": "83", "SNS": "71", "RBT": "64", "HQ": "51", "MQ": "58", "FEQ": "40", "HAD": "46", "TAU": "33", "TAF": "68", "PJK": "", "PSV": "", "JUMLAH": "975", "PURATA": "65.0"}, {"EXAM": "F1-1", "BIL": "23", "NAMA": "NUR MUHAMMAD IMAN BIN RUZAIMAN", "BM": "93", "BI": "90", "SEJ": "48", "GEO": "88", "BA": "62", "PI": "69", "MATE": "33", "SNS": "62", "RBT": "66", "HQ": "86", "MQ": "36", "FEQ": "78", "HAD": "46", "TAU": "30", "TAF": "38", "PJK": "", "PSV": "", "JUMLAH": "925", "PURATA": "61.67"}, {"EXAM": "F1-1", "BIL": "24", "NAMA": "MUHAMMAD AL-IDRISSI BIN MD SUPARDZI", "BM": "82", "BI": "85", "SEJ": "60", "GEO": "94", "BA": "54", "PI": "69", "MATE": "80", "SNS": "67", "RBT": "60", "HQ": "68", "MQ": "32", "FEQ": "52", "HAD": "46", "TAU": "30", "TAF": "28", "PJK": "", "PSV": "", "JUMLAH": "907", "PURATA": "60.47"}, {"EXAM": "F1-2", "BIL": "1", "NAMA": "MUS'AB BIN MUSLIM", "BM": "91", "BI": "95", "SEJ": "90", "GEO": "93", "BA": "95", "PI": "89", "MATE": "91", "SNS": "88", "RBT": "80", "HQ": "100", "MQ": "90", "FEQ": "91", "HAD": "100", "TAU": "96", "TAF": "99", "PJK": "", "PSV": "", "JUMLAH": "1388", "PURATA": "92.53"}, {"EXAM": "F1-2", "BIL": "2", "NAMA": "MUHAMMAD AYSAR NAFIS BIN ABDUL RAZAK", "BM": "93", "BI": "83", "SEJ": "85", "GEO": "84", "BA": "92", "PI": "92", "MATE": "95", "SNS": "67", "RBT": "88", "HQ": "99", "MQ": "87", "FEQ": "91", "HAD": "99", "TAU": "99", "TAF": "97", "PJK": "", "PSV": "", "JUMLAH": "1351", "PURATA": "90.07"}, {"EXAM": "F1-2", "BIL": "3", "NAMA": "MUHAMMAD ANAS FIRDAUS BIN ABDUL MOKHTI", "BM": "81", "BI": "94", "SEJ": "86", "GEO": "90", "BA": "96", "PI": "91", "MATE": "86", "SNS": "79", "RBT": "83", "HQ": "98", "MQ": "83", "FEQ": "90", "HAD": "97", "TAU": "95", "TAF": "98", "PJK": "", "PSV": "", "JUMLAH": "1347", "PURATA": "89.8"}, {"EXAM": "F1-2", "BIL": "4", "NAMA": "MOHAMAD HARITH NUKMAN BIN MOHAMAD NAZIR", "BM": "83", "BI": "85", "SEJ": "69", "GEO": "91", "BA": "97", "PI": "89", "MATE": "92", "SNS": "72", "RBT": "90", "HQ": "91", "MQ": "85", "FEQ": "72", "HAD": "97", "TAU": "73", "TAF": "98", "PJK": "", "PSV": "", "JUMLAH": "1284", "PURATA": "85.6"}, {"EXAM": "F1-2", "BIL": "5", "NAMA": "IHSAN ISKANDAR HAKIM BIN SUHAIMI", "BM": "88", "BI": "91", "SEJ": "69", "GEO": "94", "BA": "94", "PI": "83", "MATE": "73", "SNS": "66", "RBT": "93", "HQ": "96", "MQ": "70", "FEQ": "88", "HAD": "85", "TAU": "98", "TAF": "96", "PJK": "", "PSV": "", "JUMLAH": "1284", "PURATA": "85.6"}, {"EXAM": "F1-2", "BIL": "6", "NAMA": "MUHAMMAD UMAR YAASIN BIN MOHAMAD ZAMRI", "BM": "86", "BI": "86", "SEJ": "67", "GEO": "88", "BA": "90", "PI": "90", "MATE": "68", "SNS": "77", "RBT": "70", "HQ": "95", "MQ": "76", "FEQ": "76", "HAD": "94", "TAU": "96", "TAF": "95", "PJK": "", "PSV": "", "JUMLAH": "1254", "PURATA": "83.6"}, {"EXAM": "F1-2", "BIL": "7", "NAMA": "MUHAMMAD AQIL HARRAZ BIN MOHD FUAD", "BM": "81", "BI": "79", "SEJ": "80", "GEO": "79", "BA": "94", "PI": "86", "MATE": "91", "SNS": "56", "RBT": "73", "HQ": "93", "MQ": "75", "FEQ": "82", "HAD": "98", "TAU": "95", "TAF": "81", "PJK": "", "PSV": "", "JUMLAH": "1243", "PURATA": "82.87"}, {"EXAM": "F1-2", "BIL": "8", "NAMA": "AKIF FAHIMI BIN ZULAZRI", "BM": "72", "BI": "86", "SEJ": "63", "GEO": "86", "BA": "95", "PI": "75", "MATE": "75", "SNS": "75", "RBT": "70", "HQ": "94", "MQ": "72", "FEQ": "86", "HAD": "96", "TAU": "96", "TAF": "99", "PJK": "", "PSV": "", "JUMLAH": "1240", "PURATA": "82.67"}, {"EXAM": "F1-2", "BIL": "9", "NAMA": "NIK AMEEN ZIQRI BIN SAKRI", "BM": "85", "BI": "95", "SEJ": "80", "GEO": "81", "BA": "79", "PI": "76", "MATE": "86", "SNS": "76", "RBT": "80", "HQ": "92", "MQ": "65", "FEQ": "64", "HAD": "88", "TAU": "83", "TAF": "96", "PJK": "", "PSV": "", "JUMLAH": "1226", "PURATA": "81.73"}, {"EXAM": "F1-2", "BIL": "10", "NAMA": "MUHAMMAD AL-FATEH BIN MOHD ASLAM", "BM": "80", "BI": "85", "SEJ": "57", "GEO": "68", "BA": "86", "PI": "90", "MATE": "76", "SNS": "70", "RBT": "71", "HQ": "100", "MQ": "73", "FEQ": "77", "HAD": "94", "TAU": "84", "TAF": "98", "PJK": "", "PSV": "", "JUMLAH": "1209", "PURATA": "80.6"}, {"EXAM": "F1-2", "BIL": "11", "NAMA": "AIMAN ZAFFRAN BIN AHMAD ZABIL ALBAR", "BM": "82", "BI": "90", "SEJ": "72", "GEO": "83", "BA": "79", "PI": "72", "MATE": "71", "SNS": "69", "RBT": "80", "HQ": "92", "MQ": "65", "FEQ": "55", "HAD": "93", "TAU": "89", "TAF": "93", "PJK": "", "PSV": "", "JUMLAH": "1185", "PURATA": "79.0"}, {"EXAM": "F1-2", "BIL": "12", "NAMA": "MUNIF BIN AHMAD", "BM": "78", "BI": "68", "SEJ": "76", "GEO": "67", "BA": "86", "PI": "83", "MATE": "53", "SNS": "63", "RBT": "76", "HQ": "88", "MQ": "73", "FEQ": "73", "HAD": "97", "TAU": "91", "TAF": "96", "PJK": "", "PSV": "", "JUMLAH": "1168", "PURATA": "77.87"}, {"EXAM": "F1-2", "BIL": "13", "NAMA": "MUHAMMAD MUAZ BIN ZAINUDDIN", "BM": "83", "BI": "84", "SEJ": "44", "GEO": "77", "BA": "87", "PI": "74", "MATE": "86", "SNS": "62", "RBT": "74", "HQ": "78", "MQ": "47", "FEQ": "74", "HAD": "98", "TAU": "93", "TAF": "83", "PJK": "", "PSV": "", "JUMLAH": "1144", "PURATA": "76.27"}, {"EXAM": "F1-2", "BIL": "14", "NAMA": "AIMAN QAWARIEZMI BIN SHAJIHAN", "BM": "84", "BI": "88", "SEJ": "73", "GEO": "64", "BA": "74", "PI": "83", "MATE": "56", "SNS": "66", "RBT": "71", "HQ": "92", "MQ": "51", "FEQ": "60", "HAD": "95", "TAU": "89", "TAF": "94", "PJK": "", "PSV": "", "JUMLAH": "1140", "PURATA": "76.0"}, {"EXAM": "F1-2", "BIL": "15", "NAMA": "SYED HADIF WAFIY BIN SYED ABDUL RAHMAN", "BM": "82", "BI": "88", "SEJ": "68", "GEO": "70", "BA": "90", "PI": "73", "MATE": "78", "SNS": "50", "RBT": "77", "HQ": "79", "MQ": "69", "FEQ": "64", "HAD": "69", "TAU": "87", "TAF": "71", "PJK": "", "PSV": "", "JUMLAH": "1115", "PURATA": "74.33"}, {"EXAM": "F1-2", "BIL": "16", "NAMA": "MUHAMMAD ARIF ILHAM BIN RIDZUAN", "BM": "80", "BI": "81", "SEJ": "43", "GEO": "76", "BA": "95", "PI": "77", "MATE": "73", "SNS": "54", "RBT": "70", "HQ": "68", "MQ": "51", "FEQ": "70", "HAD": "71", "TAU": "86", "TAF": "85", "PJK": "", "PSV": "", "JUMLAH": "1080", "PURATA": "72.0"}, {"EXAM": "F1-2", "BIL": "17", "NAMA": "MUHAMMAD FAREEZ ZIKRY BIN MOHD FATHUL HAKIM", "BM": "70", "BI": "85", "SEJ": "72", "GEO": "74", "BA": "82", "PI": "72", "MATE": "64", "SNS": "57", "RBT": "80", "HQ": "67", "MQ": "59", "FEQ": "71", "HAD": "77", "TAU": "74", "TAF": "55", "PJK": "", "PSV": "", "JUMLAH": "1059", "PURATA": "70.6"}, {"EXAM": "F1-2", "BIL": "18", "NAMA": "MUHAMMAD NIYAZ BIN MOHD SOBRI", "BM": "64", "BI": "86", "SEJ": "54", "GEO": "84", "BA": "79", "PI": "71", "MATE": "93", "SNS": "78", "RBT": "71", "HQ": "69", "MQ": "55", "FEQ": "56", "HAD": "76", "TAU": "68", "TAF": "42", "PJK": "", "PSV": "", "JUMLAH": "1046", "PURATA": "69.73"}, {"EXAM": "F1-2", "BIL": "19", "NAMA": "MUHAMMAD HADIF ARMAN BIN MUHAMMAD AL'HAPIS", "BM": "80", "BI": "85", "SEJ": "60", "GEO": "75", "BA": "67", "PI": "75", "MATE": "72", "SNS": "76", "RBT": "56", "HQ": "87", "MQ": "46", "FEQ": "41", "HAD": "71", "TAU": "63", "TAF": "74", "PJK": "", "PSV": "", "JUMLAH": "1028", "PURATA": "68.53"}, {"EXAM": "F1-2", "BIL": "20", "NAMA": "NUR MUHAMMAD IMAN BIN RUZAIMAN", "BM": "76", "BI": "70", "SEJ": "60", "GEO": "80", "BA": "60", "PI": "69", "MATE": "50", "SNS": "58", "RBT": "70", "HQ": "88", "MQ": "41", "FEQ": "42", "HAD": "87", "TAU": "81", "TAF": "79", "PJK": "", "PSV": "", "JUMLAH": "1011", "PURATA": "67.4"}, {"EXAM": "F1-2", "BIL": "21", "NAMA": "ABDUL MU'IZZ BIN MUHAMMAD ZAHIDI", "BM": "74", "BI": "68", "SEJ": "41", "GEO": "44", "BA": "67", "PI": "71", "MATE": "61", "SNS": "55", "RBT": "70", "HQ": "89", "MQ": "54", "FEQ": "58", "HAD": "66", "TAU": "70", "TAF": "55", "PJK": "", "PSV": "", "JUMLAH": "943", "PURATA": "62.87"}, {"EXAM": "F1-2", "BIL": "22", "NAMA": "MUHAMMAD IRFAN UWAIS BIN MOHD NAJIB", "BM": "77", "BI": "79", "SEJ": "56", "GEO": "60", "BA": "70", "PI": "68", "MATE": "56", "SNS": "50", "RBT": "67", "HQ": "74", "MQ": "47", "FEQ": "38", "HAD": "65", "TAU": "65", "TAF": "40", "PJK": "", "PSV": "", "JUMLAH": "912", "PURATA": "60.8"}, {"EXAM": "F1-2", "BIL": "23", "NAMA": "MUHAMMAD FAHIM MIRZA BIN MOHD FEISAL", "BM": "76", "BI": "78", "SEJ": "46", "GEO": "68", "BA": "67", "PI": "60", "MATE": "74", "SNS": "55", "RBT": "67", "HQ": "57", "MQ": "44", "FEQ": "51", "HAD": "40", "TAU": "63", "TAF": "48", "PJK": "", "PSV": "", "JUMLAH": "894", "PURATA": "59.6"}, {"EXAM": "F1-2", "BIL": "24", "NAMA": "MUHAMMAD AL-IDRISSI BIN MD SUPARDZI", "BM": "76", "BI": "80", "SEJ": "60", "GEO": "69", "BA": "41", "PI": "69", "MATE": "53", "SNS": "58", "RBT": "64", "HQ": "56", "MQ": "42", "FEQ": "35", "HAD": "50", "TAU": "48", "TAF": "12", "PJK": "", "PSV": "", "JUMLAH": "813", "PURATA": "54.2"}, {"EXAM": "F1-3", "BIL": "1", "NAMA": "MUHAMMAD ANAS FIRDAUS BIN ABDUL MOKHTI", "BM": "93", "BI": "95", "SEJ": "86", "GEO": "88", "BA": "97", "PI": "99", "MATE": "86", "SNS": "87", "RBT": "87", "HQ": "100", "MQ": "98", "FEQ": "98", "HAD": "99", "TAU": "100", "TAF": "84", "PJK": "", "PSV": "", "JUMLAH": "1397", "PURATA": "93.13"}, {"EXAM": "F1-3", "BIL": "2", "NAMA": "MUS'AB BIN MUSLIM", "BM": "95", "BI": "92", "SEJ": "92", "GEO": "90", "BA": "97", "PI": "94", "MATE": "81", "SNS": "94", "RBT": "70", "HQ": "92", "MQ": "100", "FEQ": "97", "HAD": "87", "TAU": "98", "TAF": "90", "PJK": "", "PSV": "", "JUMLAH": "1369", "PURATA": "91.27"}, {"EXAM": "F1-3", "BIL": "3", "NAMA": "IHSAN ISKANDAR HAKIM BIN SUHAIMI", "BM": "95", "BI": "85", "SEJ": "80", "GEO": "84", "BA": "95", "PI": "87", "MATE": "72", "SNS": "86", "RBT": "84", "HQ": "99", "MQ": "100", "FEQ": "99", "HAD": "100", "TAU": "100", "TAF": "87", "PJK": "", "PSV": "", "JUMLAH": "1353", "PURATA": "90.2"}, {"EXAM": "F1-3", "BIL": "4", "NAMA": "MUHAMMAD UMAR YAASIN BIN MOHAMAD ZAMRI", "BM": "85", "BI": "78", "SEJ": "95", "GEO": "82", "BA": "94", "PI": "94", "MATE": "70", "SNS": "86", "RBT": "90", "HQ": "100", "MQ": "98", "FEQ": "94", "HAD": "87", "TAU": "92", "TAF": "88", "PJK": "", "PSV": "", "JUMLAH": "1333", "PURATA": "88.87"}, {"EXAM": "F1-3", "BIL": "5", "NAMA": "MUHAMMAD AYSAR NAFIS BIN ABDUL RAZAK", "BM": "92", "BI": "80", "SEJ": "85", "GEO": "87", "BA": "95", "PI": "95", "MATE": "76", "SNS": "86", "RBT": "83", "HQ": "84", "MQ": "98", "FEQ": "99", "HAD": "90", "TAU": "92", "TAF": "85", "PJK": "", "PSV": "", "JUMLAH": "1327", "PURATA": "88.47"}, {"EXAM": "F1-3", "BIL": "6", "NAMA": "MOHAMAD HARITH NUKMAN BIN MOHAMAD NAZIR", "BM": "93", "BI": "80", "SEJ": "83", "GEO": "86", "BA": "89", "PI": "94", "MATE": "71", "SNS": "83", "RBT": "80", "HQ": "94", "MQ": "98", "FEQ": "98", "HAD": "96", "TAU": "94", "TAF": "82", "PJK": "", "PSV": "", "JUMLAH": "1321", "PURATA": "88.07"}, {"EXAM": "F1-3", "BIL": "7", "NAMA": "AKIF FAHIMI BIN ZULAZRI", "BM": "86", "BI": "78", "SEJ": "88", "GEO": "80", "BA": "94", "PI": "91", "MATE": "70", "SNS": "81", "RBT": "80", "HQ": "100", "MQ": "98", "FEQ": "94", "HAD": "90", "TAU": "98", "TAF": "88", "PJK": "", "PSV": "", "JUMLAH": "1316", "PURATA": "87.73"}, {"EXAM": "F1-3", "BIL": "8", "NAMA": "MUHAMMAD AQIL HARRAZ BIN MOHD FUAD", "BM": "90", "BI": "82", "SEJ": "80", "GEO": "77", "BA": "93", "PI": "95", "MATE": "63", "SNS": "85", "RBT": "70", "HQ": "99", "MQ": "94", "FEQ": "94", "HAD": "87", "TAU": "93", "TAF": "84", "PJK": "", "PSV": "", "JUMLAH": "1286", "PURATA": "85.73"}, {"EXAM": "F1-3", "BIL": "9", "NAMA": "MUNIF BIN AHMAD", "BM": "86", "BI": "75", "SEJ": "77", "GEO": "89", "BA": "94", "PI": "97", "MATE": "52", "SNS": "87", "RBT": "71", "HQ": "90", "MQ": "96", "FEQ": "98", "HAD": "94", "TAU": "89", "TAF": "89", "PJK": "", "PSV": "", "JUMLAH": "1284", "PURATA": "85.6"}, {"EXAM": "F1-3", "BIL": "10", "NAMA": "AIMAN ZAFFRAN BIN AHMAD ZABIL ALBAR", "BM": "90", "BI": "88", "SEJ": "84", "GEO": "87", "BA": "89", "PI": "91", "MATE": "62", "SNS": "85", "RBT": "63", "HQ": "99", "MQ": "86", "FEQ": "93", "HAD": "66", "TAU": "84", "TAF": "88", "PJK": "", "PSV": "", "JUMLAH": "1255", "PURATA": "83.67"}, {"EXAM": "F1-3", "BIL": "11", "NAMA": "AIMAN QAWARIEZMI BIN SHAJIHAN", "BM": "93", "BI": "93", "SEJ": "80", "GEO": "73", "BA": "84", "PI": "93", "MATE": "56", "SNS": "76", "RBT": "77", "HQ": "84", "MQ": "96", "FEQ": "90", "HAD": "86", "TAU": "91", "TAF": "74", "PJK": "", "PSV": "", "JUMLAH": "1246", "PURATA": "83.07"}, {"EXAM": "F1-3", "BIL": "12", "NAMA": "MUHAMMAD MUAZ BIN ZAINUDDIN", "BM": "89", "BI": "78", "SEJ": "45", "GEO": "64", "BA": "83", "PI": "86", "MATE": "83", "SNS": "78", "RBT": "86", "HQ": "85", "MQ": "92", "FEQ": "91", "HAD": "92", "TAU": "92", "TAF": "78", "PJK": "", "PSV": "", "JUMLAH": "1222", "PURATA": "81.47"}, {"EXAM": "F1-3", "BIL": "13", "NAMA": "MUHAMMAD AL-FATEH BIN MOHD ASLAM", "BM": "91", "BI": "82", "SEJ": "73", "GEO": "87", "BA": "91", "PI": "91", "MATE": "55", "SNS": "79", "RBT": "66", "HQ": "100", "MQ": "82", "FEQ": "92", "HAD": "70", "TAU": "76", "TAF": "76", "PJK": "", "PSV": "", "JUMLAH": "1211", "PURATA": "80.73"}, {"EXAM": "F1-3", "BIL": "14", "NAMA": "NIK AMEEN ZIQRI BIN SAKRI", "BM": "88", "BI": "90", "SEJ": "75", "GEO": "78", "BA": "87", "PI": "88", "MATE": "73", "SNS": "84", "RBT": "73", "HQ": "57", "MQ": "84", "FEQ": "93", "HAD": "71", "TAU": "82", "TAF": "75", "PJK": "", "PSV": "", "JUMLAH": "1198", "PURATA": "79.87"}, {"EXAM": "F1-3", "BIL": "15", "NAMA": "SYED HADIF WAFIY BIN SYED ABDUL RAHMAN", "BM": "81", "BI": "88", "SEJ": "70", "GEO": "70", "BA": "95", "PI": "89", "MATE": "68", "SNS": "70", "RBT": "60", "HQ": "86", "MQ": "96", "FEQ": "94", "HAD": "65", "TAU": "80", "TAF": "72", "PJK": "", "PSV": "", "JUMLAH": "1184", "PURATA": "78.93"}, {"EXAM": "F1-3", "BIL": "16", "NAMA": "MUHAMMAD ARIF ILHAM BIN RIDZUAN", "BM": "82", "BI": "75", "SEJ": "73", "GEO": "83", "BA": "89", "PI": "92", "MATE": "54", "SNS": "71", "RBT": "81", "HQ": "59", "MQ": "88", "FEQ": "91", "HAD": "60", "TAU": "61", "TAF": "75", "PJK": "", "PSV": "", "JUMLAH": "1134", "PURATA": "75.6"}, {"EXAM": "F1-3", "BIL": "17", "NAMA": "MUHAMMAD FAREEZ ZIKRY BIN MOHD FATHUL HAKIM", "BM": "90", "BI": "78", "SEJ": "79", "GEO": "72", "BA": "86", "PI": "93", "MATE": "53", "SNS": "72", "RBT": "77", "HQ": "63", "MQ": "78", "FEQ": "95", "HAD": "58", "TAU": "82", "TAF": "52", "PJK": "", "PSV": "", "JUMLAH": "1128", "PURATA": "75.2"}, {"EXAM": "F1-3", "BIL": "18", "NAMA": "MUHAMMAD HADIF ARMAN BIN MUHAMMAD AL'HAPIS", "BM": "90", "BI": "80", "SEJ": "69", "GEO": "83", "BA": "80", "PI": "93", "MATE": "54", "SNS": "78", "RBT": "56", "HQ": "76", "MQ": "80", "FEQ": "86", "HAD": "64", "TAU": "81", "TAF": "47", "PJK": "", "PSV": "", "JUMLAH": "1117", "PURATA": "74.47"}, {"EXAM": "F1-3", "BIL": "19", "NAMA": "MUHAMMAD NIYAZ BIN MOHD SOBRI", "BM": "82", "BI": "75", "SEJ": "67", "GEO": "82", "BA": "78", "PI": "87", "MATE": "64", "SNS": "82", "RBT": "63", "HQ": "70", "MQ": "70", "FEQ": "87", "HAD": "67", "TAU": "74", "TAF": "60", "PJK": "", "PSV": "", "JUMLAH": "1108", "PURATA": "73.87"}, {"EXAM": "F1-3", "BIL": "20", "NAMA": "ABDUL MU'IZZ BIN MUHAMMAD ZAHIDI", "BM": "86", "BI": "75", "SEJ": "63", "GEO": "74", "BA": "89", "PI": "86", "MATE": "48", "SNS": "51", "RBT": "54", "HQ": "88", "MQ": "84", "FEQ": "84", "HAD": "55", "TAU": "66", "TAF": "78", "PJK": "", "PSV": "", "JUMLAH": "1081", "PURATA": "72.07"}, {"EXAM": "F1-3", "BIL": "21", "NAMA": "MUHAMMAD IRFAN UWAIS BIN MOHD NAJIB", "BM": "83", "BI": "78", "SEJ": "73", "GEO": "68", "BA": "84", "PI": "90", "MATE": "60", "SNS": "62", "RBT": "50", "HQ": "93", "MQ": "78", "FEQ": "68", "HAD": "56", "TAU": "53", "TAF": "35", "PJK": "", "PSV": "", "JUMLAH": "1031", "PURATA": "68.73"}, {"EXAM": "F1-3", "BIL": "22", "NAMA": "NUR MUHAMMAD IMAN BIN RUZAIMAN", "BM": "70", "BI": "75", "SEJ": "71", "GEO": "68", "BA": "71", "PI": "88", "MATE": "35", "SNS": "57", "RBT": "63", "HQ": "81", "MQ": "60", "FEQ": "75", "HAD": "73", "TAU": "72", "TAF": "57", "PJK": "", "PSV": "", "JUMLAH": "1016", "PURATA": "67.73"}, {"EXAM": "F1-3", "BIL": "23", "NAMA": "MUHAMMAD FAHIM MIRZA BIN MOHD FEISAL", "BM": "85", "BI": "75", "SEJ": "68", "GEO": "76", "BA": "85", "PI": "77", "MATE": "52", "SNS": "77", "RBT": "43", "HQ": "57", "MQ": "82", "FEQ": "71", "HAD": "46", "TAU": "48", "TAF": "45", "PJK": "", "PSV": "", "JUMLAH": "987", "PURATA": "65.8"}, {"EXAM": "F1-3", "BIL": "24", "NAMA": "MUHAMMAD AL-IDRISSI BIN MD SUPARDZI", "BM": "86", "BI": "80", "SEJ": "65", "GEO": "79", "BA": "71", "PI": "82", "MATE": "54", "SNS": "74", "RBT": "60", "HQ": "46", "MQ": "32", "FEQ": "70", "HAD": "43", "TAU": "40", "TAF": "21", "PJK": "", "PSV": "", "JUMLAH": "903", "PURATA": "60.2"}, {"EXAM": "F2-1", "BIL": "1", "NAMA": "MUS'AB BIN MUSLIM", "BM": "75", "BI": "88", "SEJ": "99", "GEO": "78", "BA": "90", "PI": "86", "MATE": "83", "SNS": "96", "RBT": "80", "HQ": "100", "MQ": "98", "FEQ": "78", "HAD": "100", "TAU": "100", "TAF": "96", "PJK": "", "PSV": "", "JUMLAH": "1347", "PURATA": "89.8"}, {"EXAM": "F2-1", "BIL": "2", "NAMA": "MUHAMMAD AYSAR NAFIS BIN ABDUL RAZAK", "BM": "78", "BI": "75", "SEJ": "94", "GEO": "80", "BA": "90", "PI": "95", "MATE": "82", "SNS": "80", "RBT": "83", "HQ": "98", "MQ": "96", "FEQ": "98", "HAD": "98", "TAU": "100", "TAF": "94", "PJK": "", "PSV": "", "JUMLAH": "1341", "PURATA": "89.4"}, {"EXAM": "F2-1", "BIL": "3", "NAMA": "MUHAMMAD ANAS FIRDAUS BIN ABDUL MOKHTI", "BM": "78", "BI": "85", "SEJ": "86", "GEO": "65", "BA": "95", "PI": "90", "MATE": "79", "SNS": "94", "RBT": "80", "HQ": "100", "MQ": "100", "FEQ": "98", "HAD": "100", "TAU": "84", "TAF": "94", "PJK": "", "PSV": "", "JUMLAH": "1328", "PURATA": "88.53"}, {"EXAM": "F2-1", "BIL": "4", "NAMA": "IHSAN ISKANDAR HAKIM BIN SUHAIMI", "BM": "76", "BI": "79", "SEJ": "89", "GEO": "68", "BA": "93", "PI": "93", "MATE": "76", "SNS": "69", "RBT": "73", "HQ": "100", "MQ": "94", "FEQ": "98", "HAD": "100", "TAU": "98", "TAF": "92", "PJK": "", "PSV": "", "JUMLAH": "1298", "PURATA": "86.53"}, {"EXAM": "F2-1", "BIL": "5", "NAMA": "AKIF FAHIMI BIN ZULAZRI", "BM": "81", "BI": "79", "SEJ": "95", "GEO": "60", "BA": "91", "PI": "91", "MATE": "72", "SNS": "72", "RBT": "76", "HQ": "100", "MQ": "94", "FEQ": "90", "HAD": "100", "TAU": "100", "TAF": "94", "PJK": "", "PSV": "", "JUMLAH": "1295", "PURATA": "86.33"}, {"EXAM": "F2-1", "BIL": "6", "NAMA": "MOHAMAD HARITH NUKMAN BIN MOHAMAD NAZIR", "BM": "81", "BI": "81", "SEJ": "94", "GEO": "65", "BA": "89", "PI": "69", "MATE": "83", "SNS": "77", "RBT": "80", "HQ": "98", "MQ": "90", "FEQ": "98", "HAD": "100", "TAU": "98", "TAF": "88", "PJK": "", "PSV": "", "JUMLAH": "1291", "PURATA": "86.07"}, {"EXAM": "F2-1", "BIL": "7", "NAMA": "MUHAMMAD UMAR YAASIN BIN MOHAMAD ZAMRI", "BM": "75", "BI": "81", "SEJ": "89", "GEO": "74", "BA": "88", "PI": "90", "MATE": "78", "SNS": "83", "RBT": "70", "HQ": "92", "MQ": "96", "FEQ": "90", "HAD": "90", "TAU": "92", "TAF": "92", "PJK": "", "PSV": "", "JUMLAH": "1280", "PURATA": "85.33"}, {"EXAM": "F2-1", "BIL": "8", "NAMA": "NIK AMEEN ZIQRI BIN SAKRI", "BM": "80", "BI": "86", "SEJ": "99", "GEO": "71", "BA": "81", "PI": "66", "MATE": "85", "SNS": "83", "RBT": "77", "HQ": "82", "MQ": "90", "FEQ": "84", "HAD": "96", "TAU": "100", "TAF": "100", "PJK": "", "PSV": "", "JUMLAH": "1280", "PURATA": "85.33"}, {"EXAM": "F2-1", "BIL": "9", "NAMA": "MUHAMMAD ARIF ILHAM BIN RIDZUAN", "BM": "78", "BI": "78", "SEJ": "88", "GEO": "84", "BA": "84", "PI": "81", "MATE": "76", "SNS": "72", "RBT": "71", "HQ": "100", "MQ": "96", "FEQ": "98", "HAD": "100", "TAU": "88", "TAF": "70", "PJK": "", "PSV": "", "JUMLAH": "1264", "PURATA": "84.27"}, {"EXAM": "F2-1", "BIL": "10", "NAMA": "MUNIF BIN AHMAD", "BM": "85", "BI": "75", "SEJ": "78", "GEO": "65", "BA": "91", "PI": "90", "MATE": "73", "SNS": "69", "RBT": "77", "HQ": "84", "MQ": "96", "FEQ": "90", "HAD": "100", "TAU": "94", "TAF": "96", "PJK": "", "PSV": "", "JUMLAH": "1263", "PURATA": "84.2"}, {"EXAM": "F2-1", "BIL": "11", "NAMA": "AIMAN ZAFFRAN BIN AHMAD ZABIL ALBAR", "BM": "80", "BI": "89", "SEJ": "71", "GEO": "70", "BA": "81", "PI": "76", "MATE": "68", "SNS": "72", "RBT": "77", "HQ": "94", "MQ": "98", "FEQ": "98", "HAD": "100", "TAU": "82", "TAF": "92", "PJK": "", "PSV": "", "JUMLAH": "1248", "PURATA": "83.2"}, {"EXAM": "F2-1", "BIL": "12", "NAMA": "AIMAN QAWARIEZMI BIN SHAJIHAN", "BM": "80", "BI": "84", "SEJ": "98", "GEO": "60", "BA": "75", "PI": "82", "MATE": "59", "SNS": "74", "RBT": "77", "HQ": "100", "MQ": "88", "FEQ": "98", "HAD": "100", "TAU": "88", "TAF": "76", "PJK": "", "PSV": "", "JUMLAH": "1239", "PURATA": "82.6"}, {"EXAM": "F2-1", "BIL": "13", "NAMA": "MUHAMMAD AL-FATEH BIN MOHD ASLAM", "BM": "82", "BI": "76", "SEJ": "51", "GEO": "48", "BA": "86", "PI": "95", "MATE": "81", "SNS": "68", "RBT": "70", "HQ": "100", "MQ": "88", "FEQ": "94", "HAD": "100", "TAU": "94", "TAF": "96", "PJK": "", "PSV": "", "JUMLAH": "1229", "PURATA": "81.93"}, {"EXAM": "F2-1", "BIL": "14", "NAMA": "SYED HADIF WAFIY BIN SYED ABDUL RAHMAN", "BM": "73", "BI": "84", "SEJ": "66", "GEO": "66", "BA": "88", "PI": "83", "MATE": "79", "SNS": "77", "RBT": "70", "HQ": "79", "MQ": "88", "FEQ": "68", "HAD": "96", "TAU": "94", "TAF": "100", "PJK": "", "PSV": "", "JUMLAH": "1211", "PURATA": "80.73"}, {"EXAM": "F2-1", "BIL": "15", "NAMA": "MUHAMMAD AQIL HARRAZ BIN MOHD FUAD", "BM": "74", "BI": "74", "SEJ": "89", "GEO": "61", "BA": "90", "PI": "80", "MATE": "76", "SNS": "78", "RBT": "66", "HQ": "100", "MQ": "88", "FEQ": "78", "HAD": "80", "TAU": "100", "TAF": "68", "PJK": "", "PSV": "", "JUMLAH": "1202", "PURATA": "80.13"}, {"EXAM": "F2-1", "BIL": "16", "NAMA": "MUHAMMAD HADIF ARMAN BIN MUHAMMAD AL'HAPIS", "BM": "75", "BI": "76", "SEJ": "84", "GEO": "73", "BA": "68", "PI": "80", "MATE": "64", "SNS": "75", "RBT": "70", "HQ": "71", "MQ": "90", "FEQ": "96", "HAD": "76", "TAU": "82", "TAF": "68", "PJK": "", "PSV": "", "JUMLAH": "1148", "PURATA": "76.53"}, {"EXAM": "F2-1", "BIL": "17", "NAMA": "MUHAMMAD MUAZ BIN ZAINUDDIN", "BM": "74", "BI": "75", "SEJ": "65", "GEO": "60", "BA": "87", "PI": "60", "MATE": "77", "SNS": "60", "RBT": "58", "HQ": "76", "MQ": "94", "FEQ": "90", "HAD": "100", "TAU": "76", "TAF": "86", "PJK": "", "PSV": "", "JUMLAH": "1138", "PURATA": "75.87"}, {"EXAM": "F2-1", "BIL": "18", "NAMA": "MUHAMMAD NIYAZ BIN MOHD SOBRI", "BM": "71", "BI": "81", "SEJ": "88", "GEO": "63", "BA": "73", "PI": "70", "MATE": "74", "SNS": "84", "RBT": "83", "HQ": "61", "MQ": "92", "FEQ": "82", "HAD": "52", "TAU": "82", "TAF": "80", "PJK": "", "PSV": "", "JUMLAH": "1136", "PURATA": "75.73"}, {"EXAM": "F2-1", "BIL": "19", "NAMA": "NUR MUHAMMAD IMAN BIN RUZAIMAN", "BM": "74", "BI": "74", "SEJ": "75", "GEO": "58", "BA": "52", "PI": "73", "MATE": "49", "SNS": "67", "RBT": "63", "HQ": "88", "MQ": "90", "FEQ": "72", "HAD": "76", "TAU": "86", "TAF": "92", "PJK": "", "PSV": "", "JUMLAH": "1089", "PURATA": "72.6"}, {"EXAM": "F2-1", "BIL": "20", "NAMA": "MUHAMMAD FAREEZ ZIKRY BIN MOHD FATHUL HAKIM", "BM": "81", "BI": "71", "SEJ": "89", "GEO": "60", "BA": "75", "PI": "67", "MATE": "65", "SNS": "72", "RBT": "64", "HQ": "66", "MQ": "88", "FEQ": "62", "HAD": "62", "TAU": "58", "TAF": "78", "PJK": "", "PSV": "", "JUMLAH": "1058", "PURATA": "70.53"}, {"EXAM": "F2-1", "BIL": "21", "NAMA": "MUHAMMAD IRFAN UWAIS BIN MOHD NAJIB", "BM": "78", "BI": "74", "SEJ": "66", "GEO": "36", "BA": "74", "PI": "79", "MATE": "53", "SNS": "72", "RBT": "61", "HQ": "72", "MQ": "78", "FEQ": "24", "HAD": "62", "TAU": "68", "TAF": "84", "PJK": "", "PSV": "", "JUMLAH": "981", "PURATA": "65.4"}, {"EXAM": "F2-1", "BIL": "22", "NAMA": "MUHAMMAD FAHIM MIRZA BIN MOHD FEISAL", "BM": "71", "BI": "80", "SEJ": "51", "GEO": "61", "BA": "63", "PI": "49", "MATE": "73", "SNS": "74", "RBT": "63", "HQ": "55", "MQ": "78", "FEQ": "70", "HAD": "28", "TAU": "82", "TAF": "48", "PJK": "", "PSV": "", "JUMLAH": "946", "PURATA": "63.07"}, {"EXAM": "F2-1", "BIL": "23", "NAMA": "ABDUL MU'IZZ BIN MUHAMMAD ZAHIDI", "BM": "71", "BI": "65", "SEJ": "47", "GEO": "43", "BA": "68", "PI": "63", "MATE": "58", "SNS": "48", "RBT": "50", "HQ": "94", "MQ": "68", "FEQ": "74", "HAD": "50", "TAU": "84", "TAF": "62", "PJK": "", "PSV": "", "JUMLAH": "945", "PURATA": "63.0"}, {"EXAM": "F2-1", "BIL": "24", "NAMA": "MUHAMMAD AL-IDRISSI BIN MD SUPARDZI", "BM": "66", "BI": "80", "SEJ": "75", "GEO": "55", "BA": "46", "PI": "64", "MATE": "76", "SNS": "74", "RBT": "61", "HQ": "55", "MQ": "56", "FEQ": "10", "HAD": "28", "TAU": "46", "TAF": "48", "PJK": "", "PSV": "", "JUMLAH": "840", "PURATA": "56.0"}, {"EXAM": "F2-1", "BIL": "25", "NAMA": "ABDUL MUSTAQIM UZAIR BIN MOHAMED BAISAL", "BM": "70", "BI": "79", "SEJ": "41", "GEO": "44", "BA": "66", "PI": "47", "MATE": "38", "SNS": "52", "RBT": "77", "HQ": "78", "MQ": "68", "FEQ": "46", "HAD": "30", "TAU": "62", "TAF": "36", "PJK": "", "PSV": "", "JUMLAH": "834", "PURATA": "55.6"}, {"EXAM": "F2-2", "BIL": "1", "NAMA": "MUS'AB BIN MUSLIM", "BM": "91", "BI": "86", "SEJ": "96", "GEO": "84", "BA": "93", "PI": "82", "MATE": "86", "SNS": "81", "RBT": "90", "HQ": "99", "MQ": "94", "FEQ": "97", "HAD": "97", "TAU": "97", "TAF": "96", "PJK": "", "PSV": "", "JUMLAH": "1369", "PURATA": "91.27"}, {"EXAM": "F2-2", "BIL": "2", "NAMA": "MUHAMMAD ANAS FIRDAUS BIN ABDUL MOKHTI", "BM": "86", "BI": "89", "SEJ": "90", "GEO": "69", "BA": "92", "PI": "90", "MATE": "83", "SNS": "71", "RBT": "90", "HQ": "98", "MQ": "94", "FEQ": "99", "HAD": "99", "TAU": "94", "TAF": "100", "PJK": "", "PSV": "", "JUMLAH": "1344", "PURATA": "89.6"}, {"EXAM": "F2-2", "BIL": "3", "NAMA": "IHSAN ISKANDAR HAKIM BIN SUHAIMI", "BM": "84", "BI": "79", "SEJ": "79", "GEO": "70", "BA": "82", "PI": "85", "MATE": "81", "SNS": "66", "RBT": "77", "HQ": "98", "MQ": "92", "FEQ": "94", "HAD": "98", "TAU": "93", "TAF": "99", "PJK": "", "PSV": "", "JUMLAH": "1277", "PURATA": "85.13"}, {"EXAM": "F2-2", "BIL": "4", "NAMA": "MUHAMMAD AYSAR NAFIS BIN ABDUL RAZAK", "BM": "85", "BI": "74", "SEJ": "91", "GEO": "73", "BA": "93", "PI": "92", "MATE": "82", "SNS": "62", "RBT": "82", "HQ": "86", "MQ": "92", "FEQ": "88", "HAD": "89", "TAU": "85", "TAF": "94", "PJK": "", "PSV": "", "JUMLAH": "1268", "PURATA": "84.53"}, {"EXAM": "F2-2", "BIL": "5", "NAMA": "MUHAMMAD UMAR YAASIN BIN MOHAMAD ZAMRI", "BM": "85", "BI": "66", "SEJ": "94", "GEO": "65", "BA": "89", "PI": "90", "MATE": "59", "SNS": "69", "RBT": "82", "HQ": "98", "MQ": "88", "FEQ": "96", "HAD": "95", "TAU": "87", "TAF": "91", "PJK": "", "PSV": "", "JUMLAH": "1254", "PURATA": "83.6"}, {"EXAM": "F2-2", "BIL": "6", "NAMA": "MUHAMMAD AL-FATEH BIN MOHD ASLAM", "BM": "80", "BI": "78", "SEJ": "73", "GEO": "65", "BA": "83", "PI": "79", "MATE": "84", "SNS": "77", "RBT": "83", "HQ": "96", "MQ": "84", "FEQ": "96", "HAD": "88", "TAU": "84", "TAF": "98", "PJK": "", "PSV": "", "JUMLAH": "1248", "PURATA": "83.2"}, {"EXAM": "F2-2", "BIL": "7", "NAMA": "NIK AMEEN ZIQRI BIN SAKRI", "BM": "85", "BI": "89", "SEJ": "92", "GEO": "65", "BA": "76", "PI": "64", "MATE": "89", "SNS": "70", "RBT": "70", "HQ": "83", "MQ": "86", "FEQ": "98", "HAD": "94", "TAU": "84", "TAF": "90", "PJK": "", "PSV": "", "JUMLAH": "1235", "PURATA": "82.33"}, {"EXAM": "F2-2", "BIL": "8", "NAMA": "MOHAMAD HARITH NUKMAN BIN MOHAMAD NAZIR", "BM": "79", "BI": "70", "SEJ": "90", "GEO": "63", "BA": "88", "PI": "67", "MATE": "83", "SNS": "75", "RBT": "80", "HQ": "94", "MQ": "80", "FEQ": "96", "HAD": "89", "TAU": "84", "TAF": "88", "PJK": "", "PSV": "", "JUMLAH": "1226", "PURATA": "81.73"}, {"EXAM": "F2-2", "BIL": "9", "NAMA": "MUHAMMAD ARIF ILHAM BIN RIDZUAN", "BM": "76", "BI": "79", "SEJ": "68", "GEO": "64", "BA": "87", "PI": "74", "MATE": "67", "SNS": "73", "RBT": "80", "HQ": "89", "MQ": "92", "FEQ": "81", "HAD": "100", "TAU": "87", "TAF": "88", "PJK": "", "PSV": "", "JUMLAH": "1205", "PURATA": "80.33"}, {"EXAM": "F2-2", "BIL": "10", "NAMA": "AIMAN ZAFFRAN BIN AHMAD ZABIL ALBAR", "BM": "84", "BI": "84", "SEJ": "83", "GEO": "73", "BA": "85", "PI": "73", "MATE": "63", "SNS": "67", "RBT": "82", "HQ": "82", "MQ": "90", "FEQ": "68", "HAD": "88", "TAU": "73", "TAF": "72", "PJK": "", "PSV": "", "JUMLAH": "1167", "PURATA": "77.8"}, {"EXAM": "F2-2", "BIL": "11", "NAMA": "AIMAN QAWARIEZMI BIN SHAJIHAN", "BM": "83", "BI": "79", "SEJ": "88", "GEO": "61", "BA": "82", "PI": "69", "MATE": "54", "SNS": "67", "RBT": "71", "HQ": "92", "MQ": "92", "FEQ": "82", "HAD": "87", "TAU": "74", "TAF": "82", "PJK": "", "PSV": "", "JUMLAH": "1163", "PURATA": "77.53"}, {"EXAM": "F2-2", "BIL": "12", "NAMA": "MUHAMMAD AQIL HARRAZ BIN MOHD FUAD", "BM": "85", "BI": "68", "SEJ": "82", "GEO": "41", "BA": "92", "PI": "77", "MATE": "73", "SNS": "66", "RBT": "80", "HQ": "97", "MQ": "74", "FEQ": "68", "HAD": "83", "TAU": "88", "TAF": "87", "PJK": "", "PSV": "", "JUMLAH": "1161", "PURATA": "77.4"}, {"EXAM": "F2-2", "BIL": "13", "NAMA": "SYED HADIF WAFIY BIN SYED ABDUL RAHMAN", "BM": "82", "BI": "80", "SEJ": "58", "GEO": "41", "BA": "80", "PI": "68", "MATE": "70", "SNS": "67", "RBT": "70", "HQ": "81", "MQ": "84", "FEQ": "68", "HAD": "82", "TAU": "85", "TAF": "90", "PJK": "", "PSV": "", "JUMLAH": "1106", "PURATA": "73.73"}, {"EXAM": "F2-2", "BIL": "14", "NAMA": "MUNIF BIN AHMAD", "BM": "77", "BI": "54", "SEJ": "57", "GEO": "55", "BA": "91", "PI": "76", "MATE": "57", "SNS": "63", "RBT": "80", "HQ": "77", "MQ": "82", "FEQ": "86", "HAD": "75", "TAU": "84", "TAF": "88", "PJK": "", "PSV": "", "JUMLAH": "1102", "PURATA": "73.47"}, {"EXAM": "F2-2", "BIL": "15", "NAMA": "MUHAMMAD FAREEZ ZIKRY BIN MOHD FATHUL HAKIM", "BM": "84", "BI": "64", "SEJ": "68", "GEO": "56", "BA": "78", "PI": "76", "MATE": "53", "SNS": "56", "RBT": "70", "HQ": "71", "MQ": "70", "FEQ": "85", "HAD": "82", "TAU": "73", "TAF": "63", "PJK": "", "PSV": "", "JUMLAH": "1049", "PURATA": "69.93"}, {"EXAM": "F2-2", "BIL": "16", "NAMA": "MUHAMMAD NIYAZ BIN MOHD SOBRI", "BM": "80", "BI": "79", "SEJ": "57", "GEO": "65", "BA": "66", "PI": "71", "MATE": "52", "SNS": "77", "RBT": "80", "HQ": "78", "MQ": "64", "FEQ": "51", "HAD": "73", "TAU": "75", "TAF": "76", "PJK": "", "PSV": "", "JUMLAH": "1044", "PURATA": "69.6"}, {"EXAM": "F2-2", "BIL": "17", "NAMA": "MUHAMMAD HADIF ARMAN BIN MUHAMMAD AL'HAPIS", "BM": "82", "BI": "80", "SEJ": "61", "GEO": "60", "BA": "57", "PI": "63", "MATE": "56", "SNS": "70", "RBT": "70", "HQ": "84", "MQ": "64", "FEQ": "33", "HAD": "65", "TAU": "64", "TAF": "60", "PJK": "", "PSV": "", "JUMLAH": "969", "PURATA": "64.6"}, {"EXAM": "F2-2", "BIL": "18", "NAMA": "NUR MUHAMMAD IMAN BIN RUZAIMAN", "BM": "83", "BI": "68", "SEJ": "67", "GEO": "59", "BA": "53", "PI": "71", "MATE": "42", "SNS": "44", "RBT": "76", "HQ": "91", "MQ": "60", "FEQ": "44", "HAD": "67", "TAU": "66", "TAF": "66", "PJK": "", "PSV": "", "JUMLAH": "957", "PURATA": "63.8"}, {"EXAM": "F2-2", "BIL": "19", "NAMA": "MUHAMMAD IRFAN UWAIS BIN MOHD NAJIB", "BM": "73", "BI": "64", "SEJ": "64", "GEO": "55", "BA": "73", "PI": "65", "MATE": "48", "SNS": "52", "RBT": "65", "HQ": "90", "MQ": "62", "FEQ": "54", "HAD": "46", "TAU": "53", "TAF": "63", "PJK": "", "PSV": "", "JUMLAH": "927", "PURATA": "61.8"}, {"EXAM": "F2-2", "BIL": "20", "NAMA": "MUHAMMAD FAHIM MIRZA BIN MOHD FEISAL", "BM": "77", "BI": "65", "SEJ": "45", "GEO": "61", "BA": "67", "PI": "54", "MATE": "62", "SNS": "60", "RBT": "84", "HQ": "59", "MQ": "68", "FEQ": "43", "HAD": "66", "TAU": "57", "TAF": "55", "PJK": "", "PSV": "", "JUMLAH": "923", "PURATA": "61.53"}, {"EXAM": "F2-2", "BIL": "21", "NAMA": "ABDUL MU'IZZ BIN MUHAMMAD ZAHIDI", "BM": "71", "BI": "63", "SEJ": "49", "GEO": "33", "BA": "75", "PI": "62", "MATE": "55", "SNS": "41", "RBT": "50", "HQ": "93", "MQ": "62", "FEQ": "57", "HAD": "61", "TAU": "58", "TAF": "70", "PJK": "", "PSV": "", "JUMLAH": "900", "PURATA": "60.0"}, {"EXAM": "F2-2", "BIL": "22", "NAMA": "MUHAMMAD AL-IDRISSI BIN MD SUPARDZI", "BM": "79", "BI": "75", "SEJ": "62", "GEO": "48", "BA": "64", "PI": "59", "MATE": "83", "SNS": "61", "RBT": "73", "HQ": "50", "MQ": "26", "FEQ": "28", "HAD": "57", "TAU": "38", "TAF": "30", "PJK": "", "PSV": "", "JUMLAH": "833", "PURATA": "55.53"}, {"EXAM": "F2-2", "BIL": "23", "NAMA": "ABDUL MUSTAQIM UZAIR BIN MOHAMED BAISAL", "BM": "69", "BI": "74", "SEJ": "39", "GEO": "31", "BA": "46", "PI": "49", "MATE": "34", "SNS": "48", "RBT": "73", "HQ": "71", "MQ": "28", "FEQ": "21", "HAD": "27", "TAU": "35", "TAF": "27", "PJK": "", "PSV": "", "JUMLAH": "672", "PURATA": "44.8"}, {"EXAM": "F2-2", "BIL": "24", "NAMA": "MUHAMMAD MUAZ BIN ZAINUDDIN", "BM": "77", "BI": "65", "SEJ": "TH", "GEO": "48", "BA": "85", "PI": "TH", "MATE": "76", "SNS": "47", "RBT": "82", "HQ": "77", "MQ": "TH", "FEQ": "TH", "HAD": "87", "TAU": "TH", "TAF": "TH", "PJK": "", "PSV": "", "JUMLAH": "644", "PURATA": "42.93"}, {"EXAM": "F2-2", "BIL": "25", "NAMA": "AKIF FAHIMI BIN ZULAZRI", "BM": "82", "BI": "TH", "SEJ": "TH", "GEO": "TH", "BA": "TH", "PI": "TH", "MATE": "TH", "SNS": "TH", "RBT": "77", "HQ": "98", "MQ": "TH", "FEQ": "TH", "HAD": "TH", "TAU": "TH", "TAF": "TH", "PJK": "", "PSV": "", "JUMLAH": "257", "PURATA": "17.13"}, {"EXAM": "F2-3", "BIL": "1", "NAMA": "MUS'AB BIN MUSLIM", "BM": "98", "BI": "89", "SEJ": "97", "GEO": "88", "BA": "98", "PI": "97", "MATE": "82", "SNS": "92", "RBT": "82", "HQ": "100", "MQ": "100", "FEQ": "88", "HAD": "95", "TAU": "100", "TAF": "97", "PJK": "78", "PSV": "60", "JUMLAH": "1541", "PURATA": "90.65"}, {"EXAM": "F2-3", "BIL": "2", "NAMA": "MUHAMMAD ANAS FIRDAUS BIN ABDUL MOKHTI", "BM": "93", "BI": "86", "SEJ": "82", "GEO": "73", "BA": "93", "PI": "95", "MATE": "67", "SNS": "83", "RBT": "84", "HQ": "100", "MQ": "100", "FEQ": "91", "HAD": "94", "TAU": "98", "TAF": "99", "PJK": "82", "PSV": "78", "JUMLAH": "1498", "PURATA": "88.12"}, {"EXAM": "F2-3", "BIL": "3", "NAMA": "AKIF FAHIMI BIN ZULAZRI", "BM": "95", "BI": "64", "SEJ": "88", "GEO": "80", "BA": "95", "PI": "94", "MATE": "81", "SNS": "71", "RBT": "82", "HQ": "98", "MQ": "94", "FEQ": "88", "HAD": "95", "TAU": "100", "TAF": "97", "PJK": "80", "PSV": "80", "JUMLAH": "1482", "PURATA": "87.18"}, {"EXAM": "F2-3", "BIL": "4", "NAMA": "MUHAMMAD AYSAR NAFIS BIN ABDUL RAZAK", "BM": "99", "BI": "66", "SEJ": "88", "GEO": "81", "BA": "99", "PI": "94", "MATE": "64", "SNS": "64", "RBT": "82", "HQ": "92", "MQ": "100", "FEQ": "94", "HAD": "98", "TAU": "99", "TAF": "97", "PJK": "84", "PSV": "78", "JUMLAH": "1479", "PURATA": "87.0"}, {"EXAM": "F2-3", "BIL": "5", "NAMA": "MUHAMMAD UMAR YAASIN BIN MOHAMAD ZAMRI", "BM": "95", "BI": "70", "SEJ": "82", "GEO": "79", "BA": "95", "PI": "91", "MATE": "55", "SNS": "90", "RBT": "77", "HQ": "94", "MQ": "96", "FEQ": "75", "HAD": "92", "TAU": "98", "TAF": "97", "PJK": "92", "PSV": "80", "JUMLAH": "1458", "PURATA": "85.76"}, {"EXAM": "F2-3", "BIL": "6", "NAMA": "IHSAN ISKANDAR HAKIM BIN SUHAIMI", "BM": "95", "BI": "76", "SEJ": "85", "GEO": "74", "BA": "95", "PI": "95", "MATE": "66", "SNS": "70", "RBT": "70", "HQ": "95", "MQ": "100", "FEQ": "93", "HAD": "93", "TAU": "90", "TAF": "93", "PJK": "82", "PSV": "70", "JUMLAH": "1442", "PURATA": "84.82"}, {"EXAM": "F2-3", "BIL": "7", "NAMA": "AIMAN ZAFFRAN BIN AHMAD ZABIL ALBAR", "BM": "92", "BI": "89", "SEJ": "85", "GEO": "84", "BA": "92", "PI": "81", "MATE": "53", "SNS": "72", "RBT": "71", "HQ": "83", "MQ": "100", "FEQ": "93", "HAD": "90", "TAU": "96", "TAF": "87", "PJK": "82", "PSV": "78", "JUMLAH": "1428", "PURATA": "84.0"}, {"EXAM": "F2-3", "BIL": "8", "NAMA": "MUHAMMAD AQIL HARRAZ BIN MOHD FUAD", "BM": "96", "BI": "69", "SEJ": "87", "GEO": "74", "BA": "96", "PI": "92", "MATE": "68", "SNS": "67", "RBT": "71", "HQ": "99", "MQ": "98", "FEQ": "77", "HAD": "90", "TAU": "91", "TAF": "91", "PJK": "76", "PSV": "78", "JUMLAH": "1420", "PURATA": "83.53"}, {"EXAM": "F2-3", "BIL": "9", "NAMA": "MUHAMMAD AL-FATEH BIN MOHD ASLAM", "BM": "89", "BI": "84", "SEJ": "80", "GEO": "78", "BA": "89", "PI": "87", "MATE": "48", "SNS": "75", "RBT": "74", "HQ": "100", "MQ": "94", "FEQ": "96", "HAD": "87", "TAU": "100", "TAF": "91", "PJK": "84", "PSV": "60", "JUMLAH": "1416", "PURATA": "83.29"}, {"EXAM": "F2-3", "BIL": "10", "NAMA": "NIK AMEEN ZIQRI BIN SAKRI", "BM": "83", "BI": "83", "SEJ": "83", "GEO": "73", "BA": "83", "PI": "79", "MATE": "71", "SNS": "73", "RBT": "77", "HQ": "98", "MQ": "100", "FEQ": "90", "HAD": "86", "TAU": "99", "TAF": "92", "PJK": "76", "PSV": "60", "JUMLAH": "1406", "PURATA": "82.71"}, {"EXAM": "F2-3", "BIL": "11", "NAMA": "MOHAMAD HARITH NUKMAN BIN MOHAMAD NAZIR", "BM": "95", "BI": "69", "SEJ": "70", "GEO": "75", "BA": "95", "PI": "91", "MATE": "68", "SNS": "64", "RBT": "76", "HQ": "83", "MQ": "96", "FEQ": "86", "HAD": "86", "TAU": "100", "TAF": "90", "PJK": "76", "PSV": "78", "JUMLAH": "1398", "PURATA": "82.24"}, {"EXAM": "F2-3", "BIL": "12", "NAMA": "AIMAN QAWARIEZMI BIN SHAJIHAN", "BM": "87", "BI": "80", "SEJ": "77", "GEO": "69", "BA": "87", "PI": "93", "MATE": "47", "SNS": "85", "RBT": "74", "HQ": "88", "MQ": "96", "FEQ": "74", "HAD": "94", "TAU": "96", "TAF": "90", "PJK": "80", "PSV": "78", "JUMLAH": "1395", "PURATA": "82.06"}, {"EXAM": "F2-3", "BIL": "13", "NAMA": "MUNIF BIN AHMAD", "BM": "98", "BI": "59", "SEJ": "75", "GEO": "70", "BA": "98", "PI": "91", "MATE": "53", "SNS": "78", "RBT": "82", "HQ": "94", "MQ": "82", "FEQ": "73", "HAD": "92", "TAU": "100", "TAF": "88", "PJK": "82", "PSV": "75", "JUMLAH": "1390", "PURATA": "81.76"}, {"EXAM": "F2-3", "BIL": "14", "NAMA": "MUHAMMAD ARIF ILHAM BIN RIDZUAN", "BM": "94", "BI": "76", "SEJ": "77", "GEO": "71", "BA": "94", "PI": "82", "MATE": "68", "SNS": "71", "RBT": "71", "HQ": "83", "MQ": "92", "FEQ": "73", "HAD": "87", "TAU": "95", "TAF": "92", "PJK": "68", "PSV": "85", "JUMLAH": "1379", "PURATA": "81.12"}, {"EXAM": "F2-3", "BIL": "15", "NAMA": "MUHAMMAD MUAZ BIN ZAINUDDIN", "BM": "83", "BI": "61", "SEJ": "74", "GEO": "69", "BA": "83", "PI": "83", "MATE": "71", "SNS": "58", "RBT": "70", "HQ": "93", "MQ": "94", "FEQ": "98", "HAD": "95", "TAU": "100", "TAF": "92", "PJK": "74", "PSV": "65", "JUMLAH": "1363", "PURATA": "80.18"}, {"EXAM": "F2-3", "BIL": "16", "NAMA": "SYED HADIF WAFIY BIN SYED ABDUL RAHMAN", "BM": "82", "BI": "80", "SEJ": "67", "GEO": "73", "BA": "82", "PI": "70", "MATE": "80", "SNS": "72", "RBT": "71", "HQ": "84", "MQ": "98", "FEQ": "92", "HAD": "88", "TAU": "88", "TAF": "93", "PJK": "80", "PSV": "60", "JUMLAH": "1360", "PURATA": "80.0"}, {"EXAM": "F2-3", "BIL": "17", "NAMA": "MUHAMMAD HADIF ARMAN BIN MUHAMMAD AL'HAPIS", "BM": "79", "BI": "75", "SEJ": "75", "GEO": "76", "BA": "79", "PI": "78", "MATE": "35", "SNS": "76", "RBT": "82", "HQ": "81", "MQ": "94", "FEQ": "71", "HAD": "70", "TAU": "78", "TAF": "64", "PJK": "86", "PSV": "65", "JUMLAH": "1264", "PURATA": "74.35"}, {"EXAM": "F2-3", "BIL": "18", "NAMA": "MUHAMMAD FAREEZ ZIKRY BIN MOHD FATHUL HAKIM", "BM": "73", "BI": "63", "SEJ": "86", "GEO": "76", "BA": "73", "PI": "89", "MATE": "45", "SNS": "65", "RBT": "82", "HQ": "74", "MQ": "82", "FEQ": "66", "HAD": "78", "TAU": "79", "TAF": "75", "PJK": "68", "PSV": "60", "JUMLAH": "1234", "PURATA": "72.59"}, {"EXAM": "F2-3", "BIL": "19", "NAMA": "MUHAMMAD NIYAZ BIN MOHD SOBRI", "BM": "82", "BI": "75", "SEJ": "67", "GEO": "70", "BA": "82", "PI": "77", "MATE": "60", "SNS": "65", "RBT": "74", "HQ": "66", "MQ": "80", "FEQ": "78", "HAD": "56", "TAU": "71", "TAF": "87", "PJK": "70", "PSV": "60", "JUMLAH": "1220", "PURATA": "71.76"}, {"EXAM": "F2-3", "BIL": "20", "NAMA": "NUR MUHAMMAD IMAN BIN RUZAIMAN", "BM": "65", "BI": "59", "SEJ": "64", "GEO": "74", "BA": "65", "PI": "87", "MATE": "30", "SNS": "63", "RBT": "66", "HQ": "79", "MQ": "88", "FEQ": "82", "HAD": "67", "TAU": "82", "TAF": "62", "PJK": "76", "PSV": "60", "JUMLAH": "1169", "PURATA": "68.76"}, {"EXAM": "F2-3", "BIL": "21", "NAMA": "MUHAMMAD FAHIM MIRZA BIN MOHD FEISAL", "BM": "59", "BI": "78", "SEJ": "68", "GEO": "66", "BA": "59", "PI": "77", "MATE": "63", "SNS": "74", "RBT": "76", "HQ": "58", "MQ": "80", "FEQ": "64", "HAD": "49", "TAU": "52", "TAF": "58", "PJK": "82", "PSV": "65", "JUMLAH": "1128", "PURATA": "66.35"}, {"EXAM": "F2-3", "BIL": "22", "NAMA": "MUHAMMAD IRFAN UWAIS BIN MOHD NAJIB", "BM": "64", "BI": "51", "SEJ": "60", "GEO": "51", "BA": "64", "PI": "77", "MATE": "30", "SNS": "63", "RBT": "64", "HQ": "83", "MQ": "88", "FEQ": "56", "HAD": "66", "TAU": "70", "TAF": "57", "PJK": "76", "PSV": "78", "JUMLAH": "1098", "PURATA": "64.59"}, {"EXAM": "F2-3", "BIL": "23", "NAMA": "ABDUL MU'IZZ BIN MUHAMMAD ZAHIDI", "BM": "84", "BI": "55", "SEJ": "68", "GEO": "41", "BA": "84", "PI": "58", "MATE": "33", "SNS": "62", "RBT": "60", "HQ": "75", "MQ": "90", "FEQ": "55", "HAD": "48", "TAU": "44", "TAF": "67", "PJK": "50", "PSV": "68", "JUMLAH": "1042", "PURATA": "61.29"}, {"EXAM": "F2-3", "BIL": "24", "NAMA": "MUHAMMAD AL-IDRISSI BIN MD SUPARDZI", "BM": "44", "BI": "79", "SEJ": "62", "GEO": "59", "BA": "44", "PI": "62", "MATE": "78", "SNS": "55", "RBT": "65", "HQ": "44", "MQ": "28", "FEQ": "24", "HAD": "19", "TAU": "51", "TAF": "23", "PJK": "76", "PSV": "68", "JUMLAH": "881", "PURATA": "51.82"}, {"EXAM": "F2-3", "BIL": "25", "NAMA": "ABDUL MUSTAQIM UZAIR BIN MOHAMED BAISAL", "BM": "57", "BI": "70", "SEJ": "22", "GEO": "59", "BA": "57", "PI": "42", "MATE": "32", "SNS": "61", "RBT": "57", "HQ": "61", "MQ": "58", "FEQ": "35", "HAD": "44", "TAU": "55", "TAF": "16", "PJK": "70", "PSV": "60", "JUMLAH": "856", "PURATA": "50.35"}];
         const subjectMap = {"BM": "Bahasa Melayu", "BI": "Bahasa Inggeris", "SEJ": "Sejarah", "MATE": "Matematik", "SNS": "Sains", "PI": "Pendidikan Islam", "BA": "Bahasa Arab", "HQ": "Hifz Al-Quran", "MQ": "Maharat Al-Quran", "FEQ": "Feqah", "HAD": "Hadis", "TAU": "Tauhid", "TAF": "Tafsir", "GEO": "Geografi", "RBT": "Rekabentuk Teknologi", "PJK": "Pendidikan Jasmani & Kesihatan", "PSV": "Pendidikan Seni Visual"};
         const subjectsData = [{"KATEGORI": "Subjek Teras", "SINGKATAN": "BM", "NAMA PENUH": "Bahasa Melayu"}, {"KATEGORI": "Subjek Teras", "SINGKATAN": "BI", "NAMA PENUH": "Bahasa Inggeris"}, {"KATEGORI": "Subjek Teras", "SINGKATAN": "SEJ", "NAMA PENUH": "Sejarah"}, {"KATEGORI": "Subjek Teras", "SINGKATAN": "MATE", "NAMA PENUH": "Matematik"}, {"KATEGORI": "Subjek Teras", "SINGKATAN": "SNS", "NAMA PENUH": "Sains"}, {"KATEGORI": "Subjek Agama", "SINGKATAN": "PI", "NAMA PENUH": "Pendidikan Islam"}, {"KATEGORI": "Subjek Agama", "SINGKATAN": "BA", "NAMA PENUH": "Bahasa Arab"}, {"KATEGORI": "Subjek Agama", "SINGKATAN": "HQ", "NAMA PENUH": "Hifz Al-Quran"}, {"KATEGORI": "Subjek Agama", "SINGKATAN": "MQ", "NAMA PENUH": "Maharat Al-Quran"}, {"KATEGORI": "Subjek Agama", "SINGKATAN": "FEQ", "NAMA PENUH": "Feqah"}, {"KATEGORI": "Subjek Agama", "SINGKATAN": "HAD", "NAMA PENUH": "Hadis"}, {"KATEGORI": "Subjek Agama", "SINGKATAN": "TAU", "NAMA PENUH": "Tauhid"}, {"KATEGORI": "Subjek Agama", "SINGKATAN": "TAF", "NAMA PENUH": "Tafsir"}, {"KATEGORI": "Lain-lain", "SINGKATAN": "GEO", "NAMA PENUH": "Geografi"}, {"KATEGORI": "Lain-lain", "SINGKATAN": "RBT", "NAMA PENUH": "Rekabentuk Teknologi"}, {"KATEGORI": "Lain-lain", "SINGKATAN": "PJK", "NAMA PENUH": "Pendidikan Jasmani & Kesihatan"}, {"KATEGORI": "Lain-lain", "SINGKATAN": "PSV", "NAMA PENUH": "Pendidikan Seni Visual"}];
         const examMap = {"1": "UPP1", "2": "UPP2", "3": "UASA"};
@@ -699,9 +763,9 @@
                 const btn = document.getElementById('view-' + v);
                 if (btn) {
                     if (v === view) {
-                        btn.className = "flex-1 px-3 py-2.5 text-[10px] sm:text-xs font-bold uppercase tracking-wider rounded-xl transition-all duration-300 bg-indigo-600 text-white shadow-lg";
+                        btn.className = "flex-1 px-2 py-1.5 text-[9px] sm:text-xs font-bold uppercase tracking-wider rounded-lg transition-all duration-300 bg-indigo-600 text-white shadow-lg";
                     } else {
-                        btn.className = "flex-1 px-3 py-2.5 text-[10px] sm:text-xs font-bold uppercase tracking-wider rounded-xl transition-all duration-300 text-slate-400 hover:text-slate-200";
+                        btn.className = "flex-1 px-2 py-1.5 text-[9px] sm:text-xs font-bold uppercase tracking-wider rounded-lg transition-all duration-300 text-slate-400 hover:text-slate-200";
                     }
                 }
             });
@@ -788,43 +852,120 @@
             sessBtnContainer.innerHTML = sessIds.map(id => {
                 const isActive = parseInt(id) === activeSession;
                 const cls = isActive
-                    ? "px-6 py-2 text-xs font-bold rounded-lg transition-all bg-indigo-500/20 text-indigo-300"
-                    : "px-6 py-2 text-xs font-bold rounded-lg transition-all text-slate-400 hover:text-slate-200";
+                    ? "px-3 py-1.5 text-[9px] font-bold rounded-md transition-all bg-indigo-500/20 text-indigo-300 shadow-sm"
+                    : "px-3 py-1.5 text-[9px] font-bold rounded-md transition-all text-slate-400 hover:text-slate-200";
                 return `<button onclick="changeSession(${id})" id="btn-sess-${id}" class="${cls}">${examMap[id]}</button>`;
             }).join('');
 
             const fileId = activeForm + '-' + activeSession;
-            const sessionData = getExamData(fileId); // Use cached data
+            let sessionData = getExamData(fileId); // Use cached data
 
-            document.getElementById('data-meta').textContent = sessionData.length + ' student records for ' + fileId;
-            document.getElementById('table-title').textContent = 'Class results table (' + fileId + ')';
+            // Search filtering
+            const searchQuery = document.getElementById('student-search')?.value?.toUpperCase() || '';
+            if (searchQuery) {
+                sessionData = sessionData.filter(d => d.NAMA.toUpperCase().includes(searchQuery));
+            }
+
+            document.getElementById('table-title').textContent = searchQuery
+                ? `Results for "${searchQuery}" (${fileId})`
+                : 'Class results table (' + fileId + ')';
 
             if (sessionData.length === 0) {
-                document.getElementById('table-body').innerHTML = '<tr><td colspan="100" class="p-8 text-center text-slate-500">No data available for this session.</td></tr>';
-                // Do not return here, as renderMateAnalysis should still run
+                document.getElementById('table-body').innerHTML = `<tr><td colspan="100" class="p-12 text-center">
+                    <div class="flex flex-col items-center gap-2">
+                        <div class="text-slate-600 text-xs italic font-medium">No results found matching your criteria.</div>
+                        <button onclick="document.getElementById('student-search').value=''; render();" class="text-[9px] font-black uppercase tracking-widest text-indigo-500 hover:text-indigo-400">Clear Search</button>
+                    </div>
+                </td></tr>`;
+                return;
             }
+
+            // Calculate Quick Stats
+            const totalStudents = sessionData.length;
+            const avgPct = (sessionData.reduce((acc, row) => acc + parseFloat(row.PURATA || 0), 0) / totalStudents).toFixed(1);
+            const topStudent = sessionData[0]; // Data is usually sorted by rank/avg
+            const highAchievers = sessionData.filter(d => parseFloat(d.PURATA) >= 80).length;
+
+            const ruleContainer = document.getElementById('rule-badge-container');
+            if (fileId === 'F2-3') {
+                ruleContainer.innerHTML = `
+                    <div class="inline-flex items-center gap-2 px-3 py-1 rounded-lg bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-[8px] sm:text-[9px] font-bold uppercase tracking-wider animate-bounce-subtle">
+                        <svg class="w-2.5 h-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        Rule: PJK & PSV Included
+                    </div>
+                `;
+                ruleContainer.classList.remove('opacity-0', 'translate-y-2');
+            } else {
+                ruleContainer.classList.add('opacity-0', 'translate-y-2');
+            }
+
+            document.getElementById('quick-stats').innerHTML = `
+                <div class="glass-card p-3 rounded-xl border-white/5 bg-indigo-500/5">
+                    <p class="text-[8px] font-black text-slate-500 uppercase tracking-widest mb-1 text-center">Active Students</p>
+                    <div class="text-lg font-black text-white text-center leading-tight">${totalStudents}</div>
+                </div>
+                <div class="glass-card p-3 rounded-xl border-white/5 bg-emerald-500/5">
+                    <p class="text-[8px] font-black text-slate-500 uppercase tracking-widest mb-1 text-center">Class Average</p>
+                    <div class="text-lg font-black text-emerald-400 text-center leading-tight">${avgPct}%</div>
+                </div>
+                <div class="glass-card p-3 rounded-xl border-white/5 bg-amber-500/5">
+                    <p class="text-[8px] font-black text-slate-500 uppercase tracking-widest mb-1 text-center">Distinction (80+)</p>
+                    <div class="text-lg font-black text-amber-400 text-center leading-tight">${highAchievers}</div>
+                </div>
+                <div class="glass-card p-3 rounded-xl border-white/5 bg-purple-500/5">
+                    <p class="text-[8px] font-black text-slate-500 uppercase tracking-widest mb-1 text-center">Top Avg Score</p>
+                    <div class="text-lg font-black text-purple-400 text-center leading-tight">${parseFloat(topStudent.PURATA).toFixed(1)}%</div>
+                </div>
+            `;
 
             const academicSubjects = ['BM', 'BI', 'SEJ', 'GEO', 'BA', 'PI', 'MATE', 'SNS', 'RBT', 'HQ', 'MQ', 'FEQ', 'HAD', 'TAU', 'TAF'];
             const coCurricularSubjects = ['PJK', 'PSV'];
             const subjects = [...academicSubjects, ...coCurricularSubjects];
 
+            // Group items by category for the header
+            const categoryGroups = {};
+            subjects.forEach(s => {
+                const subInfo = subjectsData.find(si => si.SINGKATAN === s);
+                const cat = subInfo ? subInfo.KATEGORI : 'Lain-lain';
+                if (!categoryGroups[cat]) categoryGroups[cat] = 0;
+                categoryGroups[cat]++;
+            });
+
             const head = document.getElementById('table-head');
             head.innerHTML = `
+                <tr class="bg-white/[0.04] text-[7px] font-black uppercase tracking-[0.15em] text-slate-500">
+                    <th class="px-1.5 py-1 sticky-col-rank border-b border-white/5"></th>
+                    <th class="sticky-col-name border-b border-white/5"></th>
+                    ${Object.entries(categoryGroups).map(([cat, count]) => `
+                        <th colspan="${count}" class="px-1 py-1 text-center border-b border-white/5 border-l border-white/5 first:border-l-0">
+                            <span class="hidden sm:inline">${cat}</span>
+                            <span class="sm:hidden">${cat.substring(0, 3)}</span>
+                        </th>
+                    `).join('')}
+                    <th colspan="2" class="px-1 py-1 text-center border-b border-white/5 border-l border-white/5 bg-indigo-500/5 text-indigo-400/50">Statistik</th>
+                </tr>
                 <tr class="bg-white/[0.02] text-[8px] font-bold uppercase tracking-widest text-slate-400">
-                    <th class="px-2 py-2 sticky-col-rank border-b border-white/5">BIL</th>
+                    <th class="px-1.5 py-2 sticky-col-rank border-b border-white/5">BIL</th>
                     <th class="sticky-col-name border-b border-white/5">
                          <div class="standard-name-col">NAMA</div>
                     </th>
-                    ${subjects.map(s => '<th class="px-1 py-2 text-center border-b border-white/5">' + s + '</th>').join('')}
-                    <th class="px-2 py-2 text-center border-b border-white/5 bg-indigo-500/10 text-indigo-300">JUMLAH</th>
-                    <th class="px-2 py-2 text-center border-b border-white/5 bg-indigo-500/10 text-indigo-300">PERATUS</th>
+                    ${subjects.map(s => {
+                const fullName = subjectMap[s] || s;
+                return `<th class="px-0.5 py-2 text-center border-b border-white/5 cursor-help group/th" title="${fullName}">
+                            <span class="group-hover/th:text-indigo-400 transition-colors">${s}</span>
+                        </th>`;
+            }).join('')}
+                    <th class="px-1 py-2 text-center border-b border-white/5 bg-indigo-500/10 text-indigo-300">JUM</th>
+                    <th class="px-1 py-2 text-center border-b border-white/5 bg-indigo-500/10 text-indigo-300">%</th>
                 </tr>
             `;
 
             const body = document.getElementById('table-body');
             body.innerHTML = sessionData.map(row => `
                 <tr class="hover:bg-white/5 transition-colors group">
-                    <td class="px-2 py-1.5 font-bold text-slate-500 sticky-col-rank group-hover:bg-[#1C2230] border-b border-white/5 standard-mark-col">${row.BIL}</td>
+                    <td class="px-1.5 py-1.5 font-bold text-slate-500 sticky-col-rank group-hover:bg-[#1C2230] border-b border-white/5 standard-mark-col">${row.BIL}</td>
                     <td class="font-medium uppercase text-slate-300 sticky-col-name group-hover:bg-[#1C2230] border-b border-white/5 cursor-pointer" onclick="revealName('${row.NAMA.replace(/'/g, "\\'")}')">
                         <div class="standard-name-col" title="${row.NAMA}">
                             <span class="inline lg:hidden">${formatName(row.NAMA)}</span>
@@ -872,18 +1013,21 @@
 
             if (!studentData) return;
 
-            const academicSubjects = ['BM', 'BI', 'SEJ', 'GEO', 'BA', 'PI', 'MATE', 'SNS', 'RBT', 'HQ', 'MQ', 'FEQ', 'HAD', 'TAU', 'TAF'];
+            let simulationSubjects = ['BM', 'BI', 'SEJ', 'GEO', 'BA', 'PI', 'MATE', 'SNS', 'RBT', 'HQ', 'MQ', 'FEQ', 'HAD', 'TAU', 'TAF'];
+            if (fileId === 'F2-3') {
+                simulationSubjects = [...simulationSubjects, 'PJK', 'PSV'];
+            }
             const container = document.getElementById('sim-inputs-grid');
 
-            container.innerHTML = academicSubjects.map(sub => `
-                <div class="space-y-1.5">
-                    <label class="text-[9px] font-black text-slate-500 uppercase tracking-widest ml-1">${sub}</label>
+            container.innerHTML = simulationSubjects.map(sub => `
+                <div class="space-y-1">
+                    <label class="text-[8px] font-black text-slate-500 uppercase tracking-widest ml-1">${sub}</label>
                     <input type="number" 
                         id="sim-input-${sub}" 
                         value="${parseFloat(studentData[sub]) || 0}" 
                         min="0" max="100" 
                         oninput="runSimulation()"
-                        class="w-full bg-[#1C2230] border border-white/10 rounded-xl px-3 py-2 text-xs font-bold text-white focus:outline-none focus:border-rose-500/50 transition-all"
+                        class="w-full bg-[#1C2230] border border-white/10 rounded-lg px-2 py-1.5 text-[10px] sm:text-xs font-bold text-white focus:outline-none focus:border-rose-500/50 transition-all"
                     >
                 </div>
             `).join('');
@@ -900,11 +1044,14 @@
             const fileId = activeForm + '-' + activeSession;
             const allStudents = getExamData(fileId);
 
-            const academicSubjects = ['BM', 'BI', 'SEJ', 'GEO', 'BA', 'PI', 'MATE', 'SNS', 'RBT', 'HQ', 'MQ', 'FEQ', 'HAD', 'TAU', 'TAF'];
+            let simulationSubjects = ['BM', 'BI', 'SEJ', 'GEO', 'BA', 'PI', 'MATE', 'SNS', 'RBT', 'HQ', 'MQ', 'FEQ', 'HAD', 'TAU', 'TAF'];
+            if (fileId === 'F2-3') {
+                simulationSubjects = [...simulationSubjects, 'PJK', 'PSV'];
+            }
 
             // 1. Calculate New Total for the Selected Student
             let newTotal = 0;
-            academicSubjects.forEach(sub => {
+            simulationSubjects.forEach(sub => {
                 const val = parseFloat(document.getElementById('sim-input-' + sub).value) || 0;
                 newTotal += val;
             });
@@ -941,7 +1088,7 @@
             }
 
             document.getElementById('sim-total-display').textContent = newTotal.toLocaleString();
-            const newAvg = (newTotal / academicSubjects.length).toFixed(1);
+            const newAvg = (newTotal / simulationSubjects.length).toFixed(1);
             document.getElementById('sim-avg-display').textContent = newAvg + '%';
 
             // Grade Prediction
@@ -974,11 +1121,18 @@
 
                 const academicSubjects = ['BM', 'BI', 'SEJ', 'GEO', 'BA', 'PI', 'MATE', 'SNS', 'RBT', 'HQ', 'MQ', 'FEQ', 'HAD', 'TAU', 'TAF'];
                 academicSubjects.sort((a, b) => (subjectMap[a] || a).localeCompare(subjectMap[b] || b));
+
+                // Add Overall Performance option at the top
+                const overallOpt = document.createElement('option');
+                overallOpt.value = 'PURATA';
+                overallOpt.textContent = '--- OVERALL PERFORMANCE (%) ---';
+                overallOpt.selected = true; // Set as default
+                subjectSelect.appendChild(overallOpt);
+
                 academicSubjects.forEach(sub => {
                     const opt = document.createElement('option');
                     opt.value = sub;
                     opt.textContent = subjectMap[sub] || sub;
-                    if (sub === 'MATE') opt.selected = true;
                     subjectSelect.appendChild(opt);
                 });
             }
@@ -987,7 +1141,14 @@
             const activeSub = subjectSelect.value;
             if (!activeStudent || !activeSub) return;
 
+            const isOverall = activeSub === 'PURATA';
             const allExams = [...new Set(rawData.map(d => d.EXAM))].sort();
+            const subjectLabel = isOverall ? 'Overall Performance' : (subjectMap[activeSub] || activeSub);
+
+            // Update Title
+            const titles = document.querySelectorAll('#section-analysis h3');
+            if (titles[0]) titles[0].textContent = `Growth Analytics: ${subjectLabel}`;
+            if (titles[1]) titles[1].textContent = `Historical Data: ${subjectLabel}`;
 
             // 2. Performance Data Extraction
             const studentTrace = [];
@@ -1027,15 +1188,15 @@
 
                     tableRows.push(`
                         <tr class="hover:bg-white/5 transition-colors group">
-                            <td class="px-6 py-4 text-[10px] font-bold text-slate-300 tracking-wide">${exId}</td>
-                            <td class="px-6 py-4 text-center font-black text-white">${studentScore}</td>
-                            <td class="px-6 py-4 text-center">
-                                <span class="px-2 py-0.5 rounded-md text-[9px] font-black ${gradeStyle.weight}" style="color: ${gradeStyle.color}; border: 1px solid ${gradeStyle.color}20; background: ${gradeStyle.color}05">
+                            <td class="px-2 sm:px-6 py-2 sm:py-4 text-[9px] sm:text-[10px] font-bold text-slate-300 tracking-wide">${exId}</td>
+                            <td class="px-1 sm:px-6 py-2 sm:py-4 text-center font-black text-white text-[9px] sm:text-base">${studentScore}${isOverall ? '%' : ''}</td>
+                            <td class="px-1 sm:px-6 py-2 sm:py-4 text-center">
+                                <span class="px-2 py-0.5 rounded-md text-[8px] sm:text-[9px] font-black ${gradeStyle.weight}" style="color: ${gradeStyle.color}; border: 1px solid ${gradeStyle.color}20; background: ${gradeStyle.color}05">
                                     ${studentScore < 40 ? 'G' : studentScore < 50 ? 'E' : studentScore < 60 ? 'D' : studentScore < 70 ? 'C' : studentScore < 80 ? 'B' : 'A'}
                                 </span>
                             </td>
-                            <td class="px-6 py-4 text-center font-bold text-[9px] ${gap >= 0 ? 'text-emerald-400' : 'text-rose-400'}">
-                                ${gap >= 0 ? '+' : ''}${gap.toFixed(1)}
+                            <td class="px-1 sm:px-6 py-2 sm:py-4 text-center font-bold text-[8px] sm:text-[9px] ${gap >= 0 ? 'text-emerald-400' : 'text-rose-400'}">
+                                ${gap >= 0 ? '+' : ''}${gap.toFixed(1)}${isOverall ? '%' : ''}
                             </td>
                         </tr>
                     `);
@@ -1047,28 +1208,28 @@
             const growth = (latest !== null && previous !== null) ? (latest - previous).toFixed(1) : '-';
 
             document.getElementById('analysis-stats').innerHTML = `
-                <div class="glass-card p-4 rounded-2xl border-white/5">
-                    <p class="text-[9px] font-black text-slate-500 uppercase tracking-widest mb-1">Subject Average</p>
+                <div class="glass-card p-3 sm:p-4 rounded-2xl border-white/5">
+                    <p class="text-[8px] sm:text-[9px] font-black text-slate-500 uppercase tracking-widest mb-1">${isOverall ? 'Average %' : 'Subject Average'}</p>
                     <div class="flex items-baseline gap-2">
-                        <span class="text-xl font-black text-white">${avg}</span>
+                        <span class="text-lg sm:text-xl font-black text-white">${avg}${isOverall ? '%' : ''}</span>
                     </div>
                 </div>
-                <div class="glass-card p-4 rounded-2xl border-white/5">
-                    <p class="text-[9px] font-black text-slate-500 uppercase tracking-widest mb-1">Latest Score</p>
+                <div class="glass-card p-3 sm:p-4 rounded-2xl border-white/5">
+                    <p class="text-[8px] sm:text-[9px] font-black text-slate-500 uppercase tracking-widest mb-1">${isOverall ? 'Latest %' : 'Latest Score'}</p>
                     <div class="flex items-baseline gap-2">
-                        <span class="text-xl font-black text-indigo-400">${latest || '-'}</span>
+                        <span class="text-lg sm:text-xl font-black text-indigo-400">${latest || '-'}${isOverall && latest ? '%' : ''}</span>
                     </div>
                 </div>
-                <div class="glass-card p-4 rounded-2xl border-white/5">
-                    <p class="text-[9px] font-black text-slate-500 uppercase tracking-widest mb-1">Personal Best</p>
+                <div class="glass-card p-3 sm:p-4 rounded-2xl border-white/5">
+                    <p class="text-[8px] sm:text-[9px] font-black text-slate-500 uppercase tracking-widest mb-1">${isOverall ? 'Best %' : 'Personal Best'}</p>
                     <div class="flex items-baseline gap-2">
-                        <span class="text-xl font-black text-emerald-400">${highest || '-'}</span>
+                        <span class="text-lg sm:text-xl font-black text-emerald-400">${highest || '-'}${isOverall && highest ? '%' : ''}</span>
                     </div>
                 </div>
-                <div class="glass-card p-4 rounded-2xl border-white/5">
-                    <p class="text-[9px] font-black text-slate-500 uppercase tracking-widest mb-1">Cycle Growth</p>
+                <div class="glass-card p-3 sm:p-4 rounded-2xl border-white/5">
+                    <p class="text-[8px] sm:text-[9px] font-black text-slate-500 uppercase tracking-widest mb-1">Cycle Growth</p>
                     <div class="flex items-baseline gap-2">
-                        <span class="text-xl font-black ${parseFloat(growth) >= 0 ? 'text-emerald-400' : 'text-rose-400'}">${growth > 0 ? '+' : ''}${growth}</span>
+                        <span class="text-lg sm:text-xl font-black ${parseFloat(growth) >= 0 ? 'text-emerald-400' : 'text-rose-400'}">${growth > 0 ? '+' : ''}${growth}${isOverall && growth !== '-' ? '%' : ''}</span>
                     </div>
                 </div>
             `;
@@ -1145,8 +1306,8 @@
 
         function changeForm(form) {
             activeForm = form;
-            document.getElementById('btn-f1').className = form === 'F1' ? "px-8 py-2.5 text-sm font-bold rounded-xl transition-all duration-300 bg-indigo-600 text-white shadow-xl shadow-indigo-500/20" : "px-8 py-2.5 text-sm font-bold rounded-xl transition-all duration-300 text-slate-400 hover:text-slate-200";
-            document.getElementById('btn-f2').className = form === 'F2' ? "px-8 py-2.5 text-sm font-bold rounded-xl transition-all duration-300 bg-indigo-600 text-white shadow-xl shadow-indigo-500/20" : "px-8 py-2.5 text-sm font-bold rounded-xl transition-all duration-300 text-slate-400 hover:text-slate-200";
+            document.getElementById('btn-f1').className = form === 'F1' ? "px-3 py-1.5 text-[9px] font-bold rounded-md transition-all duration-300 bg-indigo-600 text-white shadow-lg" : "px-3 py-1.5 text-[9px] font-bold rounded-md transition-all duration-300 text-slate-400 hover:text-slate-200";
+            document.getElementById('btn-f2').className = form === 'F2' ? "px-3 py-1.5 text-[9px] font-bold rounded-md transition-all duration-300 bg-indigo-600 text-white shadow-lg" : "px-3 py-1.5 text-[9px] font-bold rounded-md transition-all duration-300 text-slate-400 hover:text-slate-200";
             render();
         }
 
@@ -1232,14 +1393,14 @@
 
             head.innerHTML = `
                 <tr class="bg-white/[0.02] text-[8px] font-bold uppercase tracking-widest text-slate-400">
-                    <th class="sticky-col-rank border-b border-white/5">BIL</th>
+                    <th class="px-1.5 sticky-col-rank border-b border-white/5">BIL</th>
                     <th class="sticky-col-name border-b border-white/5">
                         <div class="standard-name-col">NAMA</div>
                     </th>
                     ${allExams.map(exId => {
-                return '<th class="text-center border-b border-white/5 bg-amber-500/5 standard-mark-col">' + exId + '</th>';
+                return '<th class="px-0.5 text-center border-b border-white/5 bg-amber-500/5 standard-mark-col">' + exId + '</th>';
             }).join('')}
-                    <th class="text-center border-b border-white/5 bg-indigo-500/10 text-indigo-300 standard-mark-col">TOT</th>
+                    <th class="px-1 text-center border-b border-white/5 bg-indigo-500/10 text-indigo-300 standard-mark-col">TOT</th>
                 </tr>
             `;
 
@@ -1255,7 +1416,7 @@
 
                 return `
                     <tr class="hover:bg-white/5 transition-colors group">
-                        <td class="sticky-col-rank font-bold text-slate-500 group-hover:bg-[#1C2230] border-b border-white/5 standard-mark-col">${idx + 1}</td>
+                        <td class="px-1.5 sticky-col-rank font-bold text-slate-500 group-hover:bg-[#1C2230] border-b border-white/5 standard-mark-col">${idx + 1}</td>
                         <td class="font-medium uppercase text-slate-300 mate-sticky-name group-hover:bg-[#1C2230] border-b border-white/5 cursor-pointer" onclick="revealName('${canonicalName.replace(/'/g, "\\'")}')">
                             <div class="standard-name-col" title="${canonicalName}">
                                 <span class="inline lg:hidden">${formatName(canonicalName)}</span>
@@ -1451,14 +1612,14 @@
                                         const titleLines = tooltipModel.title || [];
                                         const bodyLines = tooltipModel.body.map(b => b.lines);
 
-                                        let innerHtml = '<div style="background: rgba(28, 34, 48, 0.95); border: 1px solid rgba(99, 102, 241, 0.3); border-radius: 12px; padding: 12px; box-shadow: 0 10px 40px rgba(0,0,0,0.5); min-width: 200px; position: relative;">';
+                                        let innerHtml = '<div style="background: rgba(28, 34, 48, 0.95); border: 1px solid rgba(99, 102, 241, 0.3); border-radius: 12px; padding: 10px; box-shadow: 0 10px 40px rgba(0,0,0,0.5); min-width: 150px; max-width: 250px; position: relative;">';
 
                                         // Close button (visible on mobile)
                                         innerHtml += '<button onclick="this.closest(' + "'" + '#chartjs-tooltip' + "'" + ').style.opacity=0" style="position: absolute; top: 8px; right: 8px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); border-radius: 6px; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; cursor: pointer; color: #e2e8f0; font-size: 16px; line-height: 1; padding: 0;" class="tooltip-close-btn">×</button>';
 
                                         // Title
                                         titleLines.forEach(title => {
-                                            innerHtml += '<div style="color: #e2e8f0; font-weight: bold; margin-bottom: 8px; font-size: 12px; padding-right: 20px;">' + title + '</div>';
+                                            innerHtml += '<div style="color: #e2e8f0; font-weight: bold; margin-bottom: 6px; font-size: 11px; padding-right: 20px;">' + title + '</div>';
                                         });
 
                                         // Body
@@ -1613,7 +1774,7 @@
                     pill.id = 'pill-' + item.datasetIndex;
 
                     // Style pill
-                    pill.className = `px-3 py-1 rounded-full text-[10px] font-bold border transition-all duration-300 flex items-center gap-2 hover:opacity-80`;
+                    pill.className = `px-2 py-1 rounded-full text-[9px] font-bold border transition-all duration-300 flex items-center gap-1.5 hover:opacity-80`;
                     pill.style.borderColor = item.borderColor;
                     pill.style.backgroundColor = 'rgba(255,255,255,0.05)';
                     pill.style.color = '#e2e8f0';
@@ -1925,6 +2086,7 @@
 
 
         // ===== PERFORMANCE OPTIMIZATION: Debounced Render Functions =====
+        const debouncedRender = debounce(render, 150);
         const debouncedRenderStudentTrend = debounce(renderStudentTrendAnalysis, 150);
         const debouncedRenderStudentLine = debounce(renderStudentLineAnalysis, 150);
 

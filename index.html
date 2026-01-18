@@ -71,6 +71,8 @@
 
         .standard-name-col {
             white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
             font-size: 9.5px;
         }
 
@@ -84,6 +86,7 @@
         @media (max-width: 639px) {
             .standard-name-col {
                 font-size: 8.5px !important;
+                max-width: 80px;
             }
 
             .standard-mark-col {
@@ -106,6 +109,12 @@
             .mate-sticky-name {
                 position: static;
                 background-color: transparent !important;
+            }
+        }
+
+        @media (min-width: 1400px) {
+            .standard-name-col {
+                max-width: none;
             }
         }
     </style>
@@ -422,6 +431,16 @@
             ['F1', 'F2'].forEach(form => getFormData(form));
         }
 
+        // Priority: First Name (Part before BIN)
+        function formatName(name) {
+            if (!name) return '';
+            const idx = name.toUpperCase().indexOf(' BIN ');
+            if (idx !== -1) {
+                return name.substring(0, idx);
+            }
+            return name;
+        }
+
         // ===== PERFORMANCE OPTIMIZATION: Grade Style Memoization =====
         const gradeStyleCache = new Map();
         const subjectGradeStyleCache = new Map();
@@ -565,7 +584,10 @@
                 <tr class="hover:bg-white/5 transition-colors group">
                     <td class="px-2 py-1.5 font-bold text-slate-500 sticky-col-rank group-hover:bg-[#1C2230] border-b border-white/5 standard-mark-col">${row.BIL}</td>
                     <td class="font-medium uppercase text-slate-300 sticky-col-name group-hover:bg-[#1C2230] border-b border-white/5">
-                        <div class="standard-name-col">${row.NAMA}</div>
+                        <div class="standard-name-col" title="${row.NAMA}">
+                            <span class="inline lg:hidden">${formatName(row.NAMA)}</span>
+                            <span class="hidden lg:inline">${row.NAMA}</span>
+                        </div>
                     </td>
                     ${subjects.map(s => {
                 const val = row[s] || '-';
@@ -694,7 +716,10 @@
                     <tr class="hover:bg-white/5 transition-colors group">
                         <td class="sticky-col-rank font-bold text-slate-500 group-hover:bg-[#1C2230] border-b border-white/5 standard-mark-col">${idx + 1}</td>
                         <td class="font-medium uppercase text-slate-300 mate-sticky-name group-hover:bg-[#1C2230] border-b border-white/5">
-                            <div class="standard-name-col">${canonicalName}</div>
+                            <div class="standard-name-col" title="${canonicalName}">
+                                <span class="inline lg:hidden">${formatName(canonicalName)}</span>
+                                <span class="hidden lg:inline">${canonicalName}</span>
+                            </div>
                         </td>
                         ${results}
                         <td class="font-bold text-indigo-300 bg-indigo-500/5 border-b border-white/5 standard-mark-col">${student.totalScore.toLocaleString()}</td>
@@ -732,10 +757,12 @@
                     countDisplay.textContent = below.length;
 
                     list.innerHTML = below.map((s, idx) => `
-                        <div class="flex items-center justify-between py-1 border-b border-red-500/5 hover:bg-red-500/10 transition-colors group px-2">
+                        <div class="flex items-center justify-between py-1 border-b border-red-500/5 hover:bg-red-500/10 transition-colors group px-2" title="${s.cName}">
                             <div class="flex items-center gap-4">
                                 <span class="text-[9px] font-bold text-red-500/30 w-5">${idx + 1}</span>
-                                <span class="text-[9px] font-bold text-red-100 uppercase tracking-wide standard-name-col">${s.cName}</span>
+                                <div class="text-[9px] font-bold text-red-100 uppercase tracking-wide standard-name-col" style="max-width: none">
+                                    ${s.cName}
+                                </div>
                             </div>
                             <div class="flex items-center gap-2">
                                 <span class="text-[9px] font-black text-red-400 group-hover:text-red-300 transition-colors">${s.total.toFixed(0)}</span>

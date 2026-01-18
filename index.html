@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,7 +8,8 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
     <script>
         tailwind.config = {
             theme: {
@@ -33,23 +35,55 @@
             backdrop-filter: blur(12px);
             border: 1px solid rgba(255, 255, 255, 0.1);
         }
-        .custom-scroll::-webkit-scrollbar { height: 4px; width: 4px; }
-        .custom-scroll::-webkit-scrollbar-track { background: transparent; }
-        .custom-scroll::-webkit-scrollbar-thumb { background: rgba(99, 102, 241, 0.2); border-radius: 10px; }
-        
-        .sticky-col-rank { position: sticky; left: 0; z-index: 20; background-color: #161B26; width: 28px; min-width: 28px; text-align: center; }
-        .sticky-col-name { position: sticky; left: 28px; z-index: 20; background-color: #161B26; padding: 6px 8px; }
-        .mate-sticky-name { position: sticky; left: 28px; z-index: 20; background-color: #161B26; padding: 6px 8px; }
+
+        .custom-scroll::-webkit-scrollbar {
+            height: 4px;
+            width: 4px;
+        }
+
+        .custom-scroll::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .custom-scroll::-webkit-scrollbar-thumb {
+            background: rgba(99, 102, 241, 0.2);
+            border-radius: 10px;
+        }
+
+        .sticky-col-rank {
+            position: sticky;
+            left: 0;
+            z-index: 20;
+            background-color: #161B26;
+            width: 28px;
+            min-width: 28px;
+            text-align: center;
+        }
+
+        .sticky-col-name {
+            position: sticky;
+            left: 28px;
+            z-index: 20;
+            background-color: #161B26;
+            padding: 6px 8px;
+        }
+
+        .mate-sticky-name {
+            position: sticky;
+            left: 28px;
+            z-index: 20;
+            background-color: #161B26;
+            padding: 6px 8px;
+        }
 
         .standard-name-col {
             white-space: nowrap;
+            font-size: 9.5px;
         }
 
         .ultra-truncate-name {
-            max-width: 90px;
-            overflow: hidden;
-            text-overflow: ellipsis;
             white-space: nowrap;
+            font-size: 9.5px;
         }
 
         .standard-mark-col {
@@ -59,18 +93,34 @@
         }
 
         @media (max-width: 639px) {
-            .standard-name-col { max-width: 60px !important; overflow: hidden; text-overflow: ellipsis; }
-            .ultra-truncate-name { max-width: 45px !important; }
-            .standard-mark-col { font-size: 8.5px !important; padding: 2px 1px !important; }
-            .mate-sticky-name { padding: 2px 4px !important; }
+            .standard-name-col {
+                font-size: 8px !important;
+            }
+
+            .ultra-truncate-name {
+                font-size: 8px !important;
+            }
+
+            .standard-mark-col {
+                font-size: 8.5px !important;
+                padding: 2px 1px !important;
+            }
+
+            .mate-sticky-name {
+                padding: 2px 4px !important;
+            }
         }
 
         @media (min-width: 640px) {
-            .sticky-col-rank, .sticky-col-name, .mate-sticky-name {
+
+            .sticky-col-rank,
+            .sticky-col-name,
+            .mate-sticky-name {
                 position: static;
                 background-color: transparent;
             }
         }
+
         /* Name Reveal Toast */
         #name-reveal-toast {
             position: fixed;
@@ -82,14 +132,17 @@
             opacity: 0;
             pointer-events: none;
         }
+
         #name-reveal-toast.show {
             transform: translateX(-50%) translateY(0);
             opacity: 1;
         }
     </style>
 </head>
+
 <body class="bg-mtsd-bg text-slate-100 font-sans min-h-screen pb-12">
-    <div id="loader" class="fixed inset-0 z-50 flex items-center justify-center bg-mtsd-bg transition-opacity duration-300">
+    <div id="loader"
+        class="fixed inset-0 z-50 flex items-center justify-center bg-mtsd-bg transition-opacity duration-300">
         <div class="flex flex-col items-center">
             <div class="w-12 h-12 border-4 border-indigo-500/20 border-t-indigo-500 rounded-full animate-spin"></div>
             <p class="mt-4 text-slate-400 text-sm font-medium tracking-wide">Synthesizing Analytics...</p>
@@ -109,17 +162,20 @@
     <div class="max-w-7xl mx-auto px-4 py-8 sm:py-12">
         <header class="mb-10 text-center sm:text-left flex flex-col sm:flex-row sm:items-end justify-between gap-6">
             <div>
-                <div class="inline-flex items-center px-3 py-1 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 text-[10px] font-bold uppercase tracking-wider mb-3">
+                <div
+                    class="inline-flex items-center px-3 py-1 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 text-[10px] font-bold uppercase tracking-wider mb-3">
                     Maahad Tahfiz Sains Darul Aman
                 </div>
                 <p id="data-meta" class="text-slate-400 mt-2 text-sm italic">Loading data...</p>
             </div>
-            
+
             <div class="inline-flex p-1 bg-white/5 rounded-2xl overflow-hidden self-center sm:self-auto">
-                <button onclick="changeForm('F1')" id="btn-f1" class="px-8 py-2.5 text-sm font-bold rounded-xl transition-all duration-300 bg-indigo-600 text-white shadow-xl shadow-indigo-500/20">
+                <button onclick="changeForm('F1')" id="btn-f1"
+                    class="px-8 py-2.5 text-sm font-bold rounded-xl transition-all duration-300 bg-indigo-600 text-white shadow-xl shadow-indigo-500/20">
                     Form 1
                 </button>
-                <button onclick="changeForm('F2')" id="btn-f2" class="px-8 py-2.5 text-sm font-bold rounded-xl transition-all duration-300 text-slate-400 hover:text-slate-200">
+                <button onclick="changeForm('F2')" id="btn-f2"
+                    class="px-8 py-2.5 text-sm font-bold rounded-xl transition-all duration-300 text-slate-400 hover:text-slate-200">
                     Form 2
                 </button>
             </div>
@@ -127,15 +183,24 @@
 
         <main id="main-content" class="space-y-8 opacity-0 transition-opacity duration-500">
             <!-- View Selector (Report Switcher) -->
-            <div class="flex flex-wrap justify-center gap-2 mb-8 p-1 bg-white/5 rounded-2xl w-full max-w-3xl mx-auto">
-                <button onclick="changeView('results')" id="view-results" class="flex-1 px-3 py-2.5 text-[10px] sm:text-xs font-bold uppercase tracking-wider rounded-xl transition-all duration-300 bg-indigo-600 text-white shadow-lg">Class Results</button>
-                <button onclick="changeView('mate')" id="view-mate" class="flex-1 px-3 py-2.5 text-[10px] sm:text-xs font-bold uppercase tracking-wider rounded-xl transition-all duration-300 text-slate-400 hover:text-slate-200">Student Trends</button>
-                <button onclick="changeView('subjects')" id="view-subjects" class="flex-1 px-3 py-2.5 text-[10px] sm:text-xs font-bold uppercase tracking-wider rounded-xl transition-all duration-300 text-slate-400 hover:text-slate-200">Subject Analysis</button>
+            <div class="flex flex-wrap justify-center gap-2 p-1 bg-white/5 rounded-2xl w-full max-w-3xl mx-auto">
+                <button onclick="changeView('results')" id="view-results"
+                    class="flex-1 px-3 py-2.5 text-[10px] sm:text-xs font-bold uppercase tracking-wider rounded-xl transition-all duration-300 bg-indigo-600 text-white shadow-lg">Class
+                    Results</button>
+                <button onclick="changeView('mate')" id="view-mate"
+                    class="flex-1 px-3 py-2.5 text-[10px] sm:text-xs font-bold uppercase tracking-wider rounded-xl transition-all duration-300 text-slate-400 hover:text-slate-200">Student
+                    Trends</button>
+                <button onclick="changeView('subjects')" id="view-subjects"
+                    class="flex-1 px-3 py-2.5 text-[10px] sm:text-xs font-bold uppercase tracking-wider rounded-xl transition-all duration-300 text-slate-400 hover:text-slate-200">Subject
+                    Analysis</button>
             </div>
 
             <!-- Session Navigation (Tab Selector) -->
-            <div id="session-selector-container" class="flex flex-wrap items-center justify-center sm:justify-start gap-4 mb-8">
-                <span class="text-[10px] font-bold uppercase tracking-widest text-slate-500 w-full sm:w-auto text-center sm:text-left text-xs">Select Exam:</span>
+            <div id="session-selector-container"
+                class="flex flex-wrap items-center justify-center sm:justify-start gap-4 mb-8">
+                <span
+                    class="text-[10px] font-bold uppercase tracking-widest text-slate-500 w-full sm:w-auto text-center sm:text-left text-xs">Select
+                    Exam:</span>
                 <div id="session-buttons" class="flex bg-white/5 p-1 rounded-xl">
                     <!-- Buttons injected by JS -->
                 </div>
@@ -144,9 +209,10 @@
             <section id="section-results">
                 <div class="flex items-center gap-3 mb-6">
                     <div class="w-1.5 h-6 bg-emerald-500 rounded-full"></div>
-                    <h2 id="table-title" class="text-sm font-bold uppercase tracking-widest text-slate-400">Class results table</h2>
+                    <h2 id="table-title" class="text-sm font-bold uppercase tracking-widest text-slate-400">Class
+                        results table</h2>
                 </div>
-                
+
                 <div class="glass-card rounded-2xl overflow-hidden">
                     <div class="overflow-x-auto overflow-y-auto custom-scroll pb-1 max-h-[600px]">
                         <table class="w-full text-left border-collapse">
@@ -161,14 +227,19 @@
                 <div class="flex flex-col sm:flex-row sm:items-center gap-4 mb-6 justify-between">
                     <div class="flex items-center gap-3">
                         <div class="w-1.5 h-6 bg-amber-500 rounded-full"></div>
-                        <h2 class="text-sm font-bold uppercase tracking-widest text-slate-400">Student Performance Trends</h2>
+                        <h2 class="text-sm font-bold uppercase tracking-widest text-slate-400">Student Performance
+                            Trends</h2>
                     </div>
                     <div class="relative">
-                        <select id="trend-subject-select" onchange="debouncedRenderStudentTrend()" class="appearance-none bg-[#161B26] border border-white/10 text-indigo-300 text-xs font-bold rounded-xl px-4 py-2 pr-8 focus:outline-none focus:border-indigo-500 transition-colors uppercase tracking-wide">
+                        <select id="trend-subject-select" onchange="debouncedRenderStudentTrend()"
+                            class="appearance-none bg-[#161B26] border border-white/10 text-indigo-300 text-xs font-bold rounded-xl px-4 py-2 pr-8 focus:outline-none focus:border-indigo-500 transition-colors uppercase tracking-wide">
                             <!-- Options injected by JS -->
                         </select>
-                        <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-slate-400">
-                            <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
+                        <div
+                            class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-slate-400">
+                            <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                                <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
+                            </svg>
                         </div>
                     </div>
                 </div>
@@ -182,17 +253,62 @@
                     </div>
                 </div>
 
+                <!-- Below Average Section -->
+                <div id="below-avg-container" class="mb-12 hidden">
+                    <div class="flex items-center gap-3 mb-6">
+                        <div class="w-1.5 h-6 bg-red-500 rounded-full"></div>
+                        <h2 class="text-sm font-bold uppercase tracking-widest text-slate-400">Subject Performance
+                            Warning</h2>
+                    </div>
+                    <div class="glass-card rounded-2xl p-6 border-red-500/20 bg-red-500/5">
+                        <div
+                            class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6 border-b border-white/5 pb-4">
+                            <div>
+                                <h3 id="below-avg-title"
+                                    class="text-xs font-black text-red-400 uppercase tracking-widest leading-relaxed">
+                                </h3>
+                                <p id="below-avg-meta"
+                                    class="text-[10px] text-slate-400 uppercase tracking-wider font-bold mt-1"></p>
+                            </div>
+                            <div class="px-4 py-2 bg-red-500/10 rounded-xl border border-red-500/20">
+                                <span id="below-avg-count" class="text-lg font-black text-red-500"></span>
+                                <span class="text-[9px] text-red-400 uppercase font-black ml-1">Critical Cases</span>
+                            </div>
+                        </div>
+                        <div id="below-avg-list-new" class="flex flex-wrap gap-2">
+                            <!-- Student individual tags injected here -->
+                        </div>
+                    </div>
+                </div>
+
                 <div class="flex flex-col sm:flex-row sm:items-center gap-4 mb-6 justify-between">
                     <div class="flex items-center gap-3">
                         <div class="w-1.5 h-6 bg-teal-500 rounded-full"></div>
-                        <h2 class="text-sm font-bold uppercase tracking-widest text-slate-400">Individual Student Analysis</h2>
+                        <h2 class="text-sm font-bold uppercase tracking-widest text-slate-400">Individual Student
+                            Analysis</h2>
                     </div>
-                    <div class="relative w-full sm:w-auto">
-                        <select id="student-select" onchange="debouncedRenderStudentLine()" class="appearance-none bg-[#161B26] border border-white/10 text-indigo-300 text-xs font-bold rounded-xl px-4 py-2 pr-8 focus:outline-none focus:border-indigo-500 transition-colors uppercase tracking-wide w-full sm:w-auto min-w-[250px]">
-                            <!-- Options injected by JS -->
-                        </select>
-                        <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-slate-400">
-                            <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
+
+                    <div class="flex flex-wrap items-center gap-3">
+                        <!-- Toggle for Marks in this section only -->
+                        <button onclick="toggleDataLabels()" id="btn-toggle-labels"
+                            class="px-4 py-2 text-[9px] font-bold rounded-xl transition-all duration-300 border border-white/10 text-slate-400 hover:text-indigo-300 hover:border-indigo-500/30 hover:bg-indigo-500/5 uppercase tracking-widest flex items-center gap-2">
+                            <span id="label-toggle-icon" class="w-1.5 h-1.5 rounded-full bg-slate-500"></span>
+                            Show Marks
+                        </button>
+
+                        <div class="relative w-full sm:w-auto">
+                            <select id="student-select" onchange="debouncedRenderStudentLine()"
+                                class="appearance-none bg-[#161B26] border border-white/10 text-indigo-300 text-xs font-bold rounded-xl px-4 py-2 pr-8 focus:outline-none focus:border-indigo-500 transition-colors uppercase tracking-wide w-full sm:w-auto min-w-[250px]">
+                                <!-- Options injected by JS -->
+                            </select>
+                            <div
+                                class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-slate-400">
+                                <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg"
+                                    viewBox="0 0 20 20">
+                                    <path
+                                        d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
+                                </svg>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -202,14 +318,16 @@
                         <canvas id="studentLineChart"></canvas>
                     </div>
                     <!-- Custom Legend Container -->
-                    <div id="custom-legend-container" class="border-t border-white/10 pt-4 px-3 flex flex-col gap-4"></div>
+                    <div id="custom-legend-container" class="border-t border-white/10 pt-4 px-3 flex flex-col gap-4">
+                    </div>
                 </div>
             </section>
             <!-- Subject Performance Analysis Section -->
             <section id="section-subjects" class="pb-12 hidden">
                 <div class="flex items-center gap-3 mb-6">
                     <div class="w-1.5 h-6 bg-indigo-500 rounded-full"></div>
-                    <h2 class="text-sm font-bold uppercase tracking-widest text-slate-400">Subject Performance Analysis: Average Scores Across Exams</h2>
+                    <h2 class="text-sm font-bold uppercase tracking-widest text-slate-400">Subject Performance Analysis:
+                        Average Scores Across Exams</h2>
                 </div>
 
                 <div class="glass-card rounded-2xl p-4 sm:p-6 shadow-2xl mb-12">
@@ -223,18 +341,21 @@
 
                 <div class="flex items-center gap-3 mb-6">
                     <div class="w-1.5 h-6 bg-blue-500 rounded-full"></div>
-                    <h2 class="text-sm font-bold uppercase tracking-widest text-slate-400">Form Performance Breakdown</h2>
+                    <h2 class="text-sm font-bold uppercase tracking-widest text-slate-400">Form Performance Breakdown
+                    </h2>
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
                     <div class="glass-card rounded-2xl p-4 sm:p-6 shadow-2xl">
-                        <h3 class="text-xs font-bold uppercase tracking-widest text-slate-300 mb-4 text-center">Form 1 Average</h3>
+                        <h3 class="text-xs font-bold uppercase tracking-widest text-slate-300 mb-4 text-center">Form 1
+                            Average</h3>
                         <div class="relative h-[350px] w-full">
                             <canvas id="f1Chart"></canvas>
                         </div>
                     </div>
                     <div class="glass-card rounded-2xl p-4 sm:p-6 shadow-2xl">
-                        <h3 class="text-xs font-bold uppercase tracking-widest text-slate-300 mb-4 text-center">Form 2 Average</h3>
+                        <h3 class="text-xs font-bold uppercase tracking-widest text-slate-300 mb-4 text-center">Form 2
+                            Average</h3>
                         <div class="relative h-[350px] w-full">
                             <canvas id="f2Chart"></canvas>
                         </div>
@@ -243,7 +364,8 @@
 
                 <div class="flex items-center gap-3 mb-6">
                     <div class="w-1.5 h-6 bg-purple-500 rounded-full"></div>
-                    <h2 class="text-sm font-bold uppercase tracking-widest text-slate-400">Detailed Subject Trends (Line Analysis)</h2>
+                    <h2 class="text-sm font-bold uppercase tracking-widest text-slate-400">Detailed Subject Trends (Line
+                        Analysis)</h2>
                 </div>
 
                 <div id="subject-charts-container" class="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -261,18 +383,53 @@
         let activeForm = 'F1';
         let activeSession = 1;
         let activeView = 'results';
+        let showDataLabels = false;
+
+        function toggleDataLabels() {
+            showDataLabels = !showDataLabels;
+
+            // Update Toggle Button UI
+            const btn = document.getElementById('btn-toggle-labels');
+            const icon = document.getElementById('label-toggle-icon');
+
+            if (showDataLabels) {
+                btn.classList.add('border-indigo-500/50', 'text-indigo-300', 'bg-indigo-500/10');
+                btn.classList.remove('text-slate-400');
+                icon.classList.add('bg-indigo-500', 'animate-pulse');
+                icon.classList.remove('bg-slate-500');
+                btn.lastChild.textContent = ' Hide Marks';
+            } else {
+                btn.classList.remove('border-indigo-500/50', 'text-indigo-300', 'bg-indigo-500/10');
+                btn.classList.add('text-slate-400');
+                icon.classList.remove('bg-indigo-500', 'animate-pulse');
+                icon.classList.add('bg-slate-500');
+                btn.lastChild.textContent = ' Show Marks';
+            }
+
+            // Refresh Charts
+            chartsRendered.subjects = false;
+            chartsRendered.studentLine = false;
+            chartsRendered.studentTrend = false;
+
+            // Re-render based on active view
+            if (activeView === 'subjects') renderSubjectAnalysis();
+            if (activeView === 'mate') {
+                renderStudentLineAnalysis();
+                renderStudentTrendAnalysis();
+            }
+        }
 
         // ===== PERFORMANCE OPTIMIZATION: Data Caching System =====
         // Cache for O(1) lookup: scoreLookup[CanonicalName][ExamID] = Score
         const scoreLookup = {};
-        
+
         // Data cache to avoid redundant filtering
         const dataCache = {
             byExam: {},
             byForm: {},
             byStudent: {}
         };
-        
+
         // Helper functions for cached data access
         function getExamData(examId) {
             if (!dataCache.byExam[examId]) {
@@ -280,28 +437,28 @@
             }
             return dataCache.byExam[examId];
         }
-        
+
         function getFormData(form) {
             if (!dataCache.byForm[form]) {
                 dataCache.byForm[form] = rawData.filter(d => d.EXAM && d.EXAM.startsWith(form));
             }
             return dataCache.byForm[form];
         }
-        
+
         function getStudentData(studentName) {
             if (!dataCache.byStudent[studentName]) {
                 dataCache.byStudent[studentName] = rawData.filter(d => d.NAMA.trim() === studentName);
             }
             return dataCache.byStudent[studentName];
         }
-        
+
         // Initialize cache on page load
         function initializeCache() {
             const exams = [...new Set(rawData.map(d => d.EXAM))];
             exams.forEach(exam => getExamData(exam));
             ['F1', 'F2'].forEach(form => getFormData(form));
         }
-        
+
         // ===== PERFORMANCE OPTIMIZATION: Grade Style Memoization =====
         const gradeStyleCache = new Map();
         const subjectGradeStyleCache = new Map();
@@ -312,15 +469,15 @@
             studentLine: false,
             studentTrend: false
         };
-        
+
         function changeView(view) {
             activeView = view;
-            
+
             // Toggle Sections
             document.getElementById('section-results').classList.toggle('hidden', view !== 'results');
             document.getElementById('section-mate').classList.toggle('hidden', view !== 'mate');
             document.getElementById('section-subjects').classList.toggle('hidden', view !== 'subjects');
-            
+
             // Toggle Session Selector (only for results)
             document.getElementById('session-selector-container').classList.toggle('hidden', view !== 'results');
 
@@ -336,7 +493,7 @@
                     }
                 }
             });
-            
+
             // ===== LAZY LOAD CHARTS =====
             if (view === 'subjects' && !chartsRendered.subjects) {
                 requestAnimationFrame(() => {
@@ -344,7 +501,7 @@
                     chartsRendered.subjects = true;
                 });
             }
-            
+
             if (view === 'mate' && !chartsRendered.studentLine) {
                 requestAnimationFrame(() => {
                     renderStudentLineAnalysis();
@@ -365,13 +522,13 @@
                 timeout = setTimeout(later, wait);
             };
         }
-        
+
         function getGradeStyle(score) {
             // Check cache first
             if (gradeStyleCache.has(score)) {
                 return gradeStyleCache.get(score);
             }
-            
+
             let result;
             if (score === 'TH' || score === '-') {
                 result = { color: '#64748b', weight: 'font-normal' };
@@ -394,7 +551,7 @@
                     result = { color: `hsl(${hue}, 90%, 60%)`, weight };
                 }
             }
-            
+
             // Cache the result
             gradeStyleCache.set(score, result);
             return result;
@@ -406,7 +563,7 @@
             const sessIds = Object.keys(examMap).sort();
             sessBtnContainer.innerHTML = sessIds.map(id => {
                 const isActive = parseInt(id) === activeSession;
-                const cls = isActive 
+                const cls = isActive
                     ? "px-6 py-2 text-xs font-bold rounded-lg transition-all bg-indigo-500/20 text-indigo-300"
                     : "px-6 py-2 text-xs font-bold rounded-lg transition-all text-slate-400 hover:text-slate-200";
                 return `<button onclick="changeSession(${id})" id="btn-sess-${id}" class="${cls}">${examMap[id]}</button>`;
@@ -414,7 +571,7 @@
 
             const fileId = activeForm + '-' + activeSession;
             const sessionData = getExamData(fileId); // Use cached data
-            
+
             document.getElementById('data-meta').textContent = sessionData.length + ' student records for ' + fileId;
             document.getElementById('table-title').textContent = 'Class results table (' + fileId + ')';
 
@@ -448,15 +605,15 @@
                         <div class="standard-name-col">${row.NAMA}</div>
                     </td>
                     ${subjects.map(s => {
-                        const val = row[s] || '-';
-                        const styleObj = getGradeStyle(val);
-                        return '<td class="border-b border-white/5 standard-mark-col ' + styleObj.weight + '" style="color: ' + styleObj.color + '">' + val + '</td>';
-                    }).join('')}
+                const val = row[s] || '-';
+                const styleObj = getGradeStyle(val);
+                return '<td class="border-b border-white/5 standard-mark-col ' + styleObj.weight + '" style="color: ' + styleObj.color + '">' + val + '</td>';
+            }).join('')}
                     <td class="font-bold text-indigo-300 bg-indigo-500/5 group-hover:bg-indigo-500/10 border-b border-white/5 standard-mark-col">${Number(row.JUMLAH).toLocaleString()}</td>
                     <td class="font-black text-indigo-400 bg-indigo-500/5 group-hover:bg-indigo-500/10 border-b border-white/5 standard-mark-col">${parseFloat(row.PURATA).toFixed(1)}%</td>
                 </tr>
             `).join('');
-            
+
             // Optimization: Static tables are now rendered once on init
         }
 
@@ -476,13 +633,13 @@
             const head = document.getElementById('mate-head');
             const body = document.getElementById('mate-body');
             const subjectSelect = document.getElementById('trend-subject-select');
-            
+
             // Populate Dropdown if empty
             if (subjectSelect.options.length === 0) {
                 const academicSubjects = ['BM', 'BI', 'SEJ', 'GEO', 'BA', 'PI', 'MATE', 'SNS', 'RBT', 'HQ', 'MQ', 'FEQ', 'HAD', 'TAU', 'TAF'];
                 // Sort dropdown alphabetically by mapped name
-                academicSubjects.sort((a,b) => (subjectMap[a] || a).localeCompare(subjectMap[b] || b));
-                
+                academicSubjects.sort((a, b) => (subjectMap[a] || a).localeCompare(subjectMap[b] || b));
+
                 academicSubjects.forEach(sub => {
                     const opt = document.createElement('option');
                     opt.value = sub;
@@ -493,16 +650,16 @@
             }
 
             const activeSubject = subjectSelect.value || 'MATE';
-            
+
             // SIMPLIFIED LINEAR CANONICAL MAPPING (O(N))
             const uniqueRawNames = [...new Set(rawData.map(d => d.NAMA.trim()))].sort();
             const canonicalMap = {};
-            
+
             if (uniqueRawNames.length > 0) {
                 // Initialize first
                 let root = uniqueRawNames[0];
                 canonicalMap[root] = root;
-                
+
                 for (let i = 1; i < uniqueRawNames.length; i++) {
                     const current = uniqueRawNames[i];
                     // Logic: If current starts with root (and root is long enough to be significant), group it.
@@ -516,7 +673,7 @@
                     }
                 }
             }
-            
+
             // Populate Score Lookup Map (O(N)) - Run once effectively
             if (Object.keys(scoreLookup).length === 0) {
                 rawData.forEach(d => {
@@ -524,7 +681,7 @@
                     const cName = canonicalMap[rowName];
                     if (cName) {
                         if (!scoreLookup[cName]) scoreLookup[cName] = {};
-                        scoreLookup[cName][d.EXAM] = d; 
+                        scoreLookup[cName][d.EXAM] = d;
                     }
                 });
             }
@@ -554,8 +711,8 @@
                         <div class="standard-name-col">NAMA</div>
                     </th>
                     ${allExams.map(exId => {
-                        return '<th class="text-center border-b border-white/5 bg-amber-500/5 standard-mark-col">' + exId + '</th>';
-                    }).join('')}
+                return '<th class="text-center border-b border-white/5 bg-amber-500/5 standard-mark-col">' + exId + '</th>';
+            }).join('')}
                     <th class="text-center border-b border-white/5 bg-indigo-500/10 text-indigo-300 standard-mark-col">TOT</th>
                 </tr>
             `;
@@ -581,6 +738,49 @@
                     </tr>
                 `;
             }).join('');
+
+            // NEW: Identify Below Average Students for the SELECTED ACTIVE SUBJECT
+            const container = document.getElementById('below-avg-container');
+            const list = document.getElementById('below-avg-list-new');
+            const title = document.getElementById('below-avg-title');
+            const meta = document.getElementById('below-avg-meta');
+            const countDisplay = document.getElementById('below-avg-count');
+
+            // Calculate totals for active subject ONLY
+            const studentTotalsForSub = allStudents.map(cName => {
+                let total = 0;
+                allExams.forEach(exId => {
+                    const found = scoreLookup[cName]?.[exId];
+                    const val = found ? (found[activeSubject] || '-') : '-';
+                    const score = parseFloat(val);
+                    if (!isNaN(score)) total += score;
+                });
+                return { cName, total };
+            }).filter(s => s.total > 0);
+
+            if (studentTotalsForSub.length > 0) {
+                const subAvg = studentTotalsForSub.reduce((a, b) => a + b.total, 0) / studentTotalsForSub.length;
+                const below = studentTotalsForSub.filter(s => s.total < subAvg).sort((a, b) => a.total - b.total);
+
+                if (below.length > 0) {
+                    container.classList.remove('hidden');
+                    title.textContent = `Students needing attention for ${subjectMap[activeSubject] || activeSubject}`;
+                    meta.textContent = `Scoring below subject total average of ${subAvg.toFixed(1)}`;
+                    countDisplay.textContent = below.length;
+
+                    list.innerHTML = below.map(s => `
+                        <div class="px-3 py-1.5 rounded-lg bg-red-500/10 border border-red-500/10 flex items-center gap-3 group cursor-pointer hover:bg-red-500/20 transition-all" onclick="revealName('${s.cName}')">
+                            <span class="text-[9px] font-black text-red-100 uppercase tracking-widest">${s.cName}</span>
+                            <div class="w-px h-3 bg-red-500/20"></div>
+                            <span class="text-[9px] font-black text-red-500">${s.total.toFixed(0)}</span>
+                        </div>
+                    `).join('');
+                } else {
+                    container.classList.add('hidden');
+                }
+            } else {
+                container.classList.add('hidden');
+            }
         }
 
         function getSubjectGradeStyle(score) {
@@ -588,7 +788,7 @@
             if (subjectGradeStyleCache.has(score)) {
                 return subjectGradeStyleCache.get(score);
             }
-            
+
             let result;
             if (score === '-') {
                 result = { color: '#64748b', weight: 'font-normal' };
@@ -604,7 +804,7 @@
                     result = { color: '#f87171', weight: 'font-black' }; // Red
                 }
             }
-            
+
             // Cache the result
             subjectGradeStyleCache.set(score, result);
             return result;
@@ -612,7 +812,7 @@
 
         function renderStudentLineAnalysis() {
             const studentSelect = document.getElementById('student-select');
-            
+
             // 1. Populate Dropdown if empty
             if (studentSelect.options.length === 0) {
                 const names = [...new Set(rawData.map(d => d.NAMA.trim()))].sort();
@@ -633,7 +833,7 @@
 
             // OPTIMIZATION: Pre-fetch student records to avoid O(N) scanner in nested loops
             const studentRecords = getStudentData(activeStudent); // Use cached data
-            
+
             // Generate Colors using HSL for distinctness across many subjects
             const getSubjectColor = (index, total) => {
                 const hue = (index * 360 / total) % 360;
@@ -641,7 +841,7 @@
             };
 
             const relevantSubjects = subjectsData.filter(s => s.SINGKATAN);
-            
+
             relevantSubjects.forEach((subObj, index) => {
                 const subCode = subObj.SINGKATAN;
                 const dataPoints = allExams.map(exId => {
@@ -691,39 +891,41 @@
                         plugins: {
                             legend: { display: false }, // Custom Legend
                             tooltip: {
-                                enabled: false,  // Disable default tooltip, use custom
-                                external: function(context) {
+                                enabled: false,  // Disable default tooltip
+                                external: function (context) {
+                                    if (!showDataLabels) return; // STRICTLY HIDE IF NOT TOGGLED
+
                                     // Custom tooltip with close button for mobile
                                     let tooltipEl = document.getElementById('chartjs-tooltip');
-                                    
+
                                     if (!tooltipEl) {
                                         tooltipEl = document.createElement('div');
                                         tooltipEl.id = 'chartjs-tooltip';
                                         tooltipEl.innerHTML = '<div class="tooltip-content"></div>';
                                         document.body.appendChild(tooltipEl);
                                     }
-                                    
+
                                     const tooltipModel = context.tooltip;
                                     if (tooltipModel.opacity === 0) {
                                         tooltipEl.style.opacity = 0;
                                         return;
                                     }
-                                    
+
                                     // Build tooltip content
                                     if (tooltipModel.body) {
                                         const titleLines = tooltipModel.title || [];
                                         const bodyLines = tooltipModel.body.map(b => b.lines);
-                                        
+
                                         let innerHtml = '<div style="background: rgba(28, 34, 48, 0.95); border: 1px solid rgba(99, 102, 241, 0.3); border-radius: 12px; padding: 12px; box-shadow: 0 10px 40px rgba(0,0,0,0.5); min-width: 200px; position: relative;">';
-                                        
+
                                         // Close button (visible on mobile)
                                         innerHtml += '<button onclick="this.closest(' + "'" + '#chartjs-tooltip' + "'" + ').style.opacity=0" style="position: absolute; top: 8px; right: 8px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); border-radius: 6px; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; cursor: pointer; color: #e2e8f0; font-size: 16px; line-height: 1; padding: 0;" class="tooltip-close-btn">×</button>';
-                                        
+
                                         // Title
                                         titleLines.forEach(title => {
                                             innerHtml += '<div style="color: #e2e8f0; font-weight: bold; margin-bottom: 8px; font-size: 12px; padding-right: 20px;">' + title + '</div>';
                                         });
-                                        
+
                                         // Body
                                         bodyLines.forEach((body, i) => {
                                             const colors = tooltipModel.labelColors[i];
@@ -732,13 +934,13 @@
                                             innerHtml += '<span style="color: #cbd5e1; font-size: 11px;">' + body + '</span>';
                                             innerHtml += '</div>';
                                         });
-                                        
+
                                         innerHtml += '</div>';
                                         tooltipEl.querySelector('.tooltip-content').innerHTML = innerHtml;
                                     }
-                                    
+
                                     const position = context.chart.canvas.getBoundingClientRect();
-                                    
+
                                     // Position tooltip
                                     tooltipEl.style.opacity = 1;
                                     tooltipEl.style.position = 'absolute';
@@ -750,14 +952,20 @@
                                 }
                             },
                             datalabels: {
-                                display: (ctx) => ctx.dataIndex === ctx.dataset.data.length - 1,
-                                align: 'right',
-                                anchor: 'end',
+                                display: (ctx) => showDataLabels || ctx.dataIndex === ctx.dataset.data.length - 1,
+                                align: (ctx) => showDataLabels ? 'top' : 'right',
+                                anchor: (ctx) => showDataLabels ? 'center' : 'end',
                                 color: (ctx) => ctx.dataset.borderColor,
-                                formatter: (val, ctx) => ctx.dataset.label,
+                                formatter: (val, ctx) => {
+                                    if (showDataLabels) return val;
+                                    return ctx.dataIndex === ctx.dataset.data.length - 1 ? ctx.dataset.label : '';
+                                },
                                 font: { size: 9, weight: 'bold', family: "'Plus Jakarta Sans', sans-serif" },
-                                offset: 0,
-                                clip: false
+                                offset: 4,
+                                clip: false,
+                                backgroundColor: (ctx) => showDataLabels ? 'rgba(28, 34, 48, 0.9)' : null,
+                                borderRadius: 4,
+                                padding: showDataLabels ? 4 : 0
                             }
                         },
                         scales: {
@@ -780,7 +988,7 @@
                     }
                 }
             );
-            
+
             // Save instance for destruction later
             chartInstances['studentLineChart'] = newChart;
 
@@ -792,7 +1000,7 @@
             const groups = {};
             // Define preferred order
             const order = ['Subjek Teras', 'Subjek Agama', 'Lain-lain'];
-            
+
             datasets.forEach((ds, i) => {
                 const cat = ds.category;
                 if (!groups[cat]) groups[cat] = [];
@@ -808,10 +1016,10 @@
 
                 const groupDiv = document.createElement('div');
                 groupDiv.className = 'flex flex-col gap-2';
-                
+
                 const headerDiv = document.createElement('div');
                 headerDiv.className = 'flex items-center gap-3 mb-1';
-                
+
                 const title = document.createElement('h4');
                 title.className = 'text-[10px] font-bold uppercase tracking-widest text-slate-500';
                 title.textContent = cat;
@@ -819,52 +1027,44 @@
 
                 // Toggle All Button
                 const toggleBtn = document.createElement('button');
-                toggleBtn.className = "text-[9px] px-2 py-0.5 rounded border border-white/10 text-slate-400 hover:text-white hover:bg-white/10 transition-colors uppercase tracking-wider";
-                toggleBtn.innerHTML = 'Toggle';
+                toggleBtn.className = "text-[9px] px-2 py-0.5 rounded border border-white/10 text-slate-400 hover:text-white hover:bg-white/10 transition-colors uppercase tracking-wider min-w-[50px]";
+
+                const updateToggleAllText = () => {
+                    const anyHidden = groups[cat].some(item => {
+                        const meta = newChart.getDatasetMeta(item.datasetIndex);
+                        return meta && meta.hidden;
+                    });
+                    // User requested: Default is 'Show' (when enabled/visible), when hidden show 'Hide'
+                    // Wait, standard toggle text is usually action-based, but following user phrasing:
+                    toggleBtn.innerHTML = anyHidden ? 'SHOW' : 'HIDE';
+                };
+
+                updateToggleAllText();
+
                 toggleBtn.onclick = () => {
-                   // Determine state: If any in group is hidden, show all. If all visible, hide all.
-                   const anyHidden = groups[cat].some(item => {
-                       const meta = newChart.getDatasetMeta(item.datasetIndex);
-                       return meta.hidden; // hidden=true means hidden
-                   });
-                   const shouldShow = anyHidden;
-                   
-                   groups[cat].forEach(item => {
-                       newChart.setDatasetVisibility(item.datasetIndex, shouldShow);
-                       // Update Pill UI manually since we don't have refs to them here easily? 
-                       // Actually we generate pills below. We need to update them.
-                       // Let's rely on class lookups or re-render? Re-render is expensive.
-                       // Better: Trigger a click on the pill? No, circular.
-                       // Best: Select pills by data attribute?
-                       const pillBtn = document.getElementById('pill-' + item.datasetIndex);
-                       if (pillBtn) {
-                           const dot = pillBtn.querySelector('div');
-                           if (!shouldShow) {
-                               pillBtn.style.opacity = '0.5';
-                               dot.style.backgroundColor = '#475569';
-                           } else {
-                               pillBtn.style.opacity = '1';
-                               dot.style.backgroundColor = item.borderColor;
-                           }
-                           // Update implicit state if we were tracking it elsewhere? 
-                           // The onclick handler below tracks 'isHidden' via closure. 
-                           // This external update won't update that closure variable!
-                           // We need a robust way. 
-                           // Hack: Trigger click?
-                           // Better: Make the pill rendering function accept an external state update or just re-render the legend?
-                       }
-                   });
-                   newChart.update();
-                   
-                   // Re-render legend/pills to sync closure states? 
-                   // Or just mutate the pills directly and ensure the closure reads from chart state?
-                   // The closure below uses `let isHidden = false`. This is fragile.
-                   // Let's make the pill update logic read from `newChart.isDatasetVisible` instead of local var.
-                   // But `newChart.setDatasetVisibility` takes `!isHidden`.
-                   // Let's re-trigger the pill rendering logic? No.
-                   // Let's just create the pills using Chart state, AND update the pill UI here.
-                   // SEE BELOW: I will update the pill creation in next chunk to support this ID and state check.
-                   // For now, let's just assume we can find them by ID.
+                    const anyHidden = groups[cat].some(item => {
+                        const meta = newChart.getDatasetMeta(item.datasetIndex);
+                        return meta && meta.hidden;
+                    });
+                    const shouldShow = anyHidden; // If any hidden, show all. If none hidden, hide all.
+
+                    groups[cat].forEach(item => {
+                        newChart.setDatasetVisibility(item.datasetIndex, shouldShow);
+                        // Update Pill UI
+                        const pillBtn = document.getElementById('pill-' + item.datasetIndex);
+                        if (pillBtn) {
+                            const dot = pillBtn.querySelector('div');
+                            if (!shouldShow) {
+                                pillBtn.style.opacity = '0.5';
+                                dot.style.backgroundColor = '#475569';
+                            } else {
+                                pillBtn.style.opacity = '1';
+                                dot.style.backgroundColor = item.borderColor;
+                            }
+                        }
+                    });
+                    newChart.update();
+                    updateToggleAllText();
                 };
                 headerDiv.appendChild(toggleBtn);
                 groupDiv.appendChild(headerDiv);
@@ -876,32 +1076,30 @@
                     const pill = document.createElement('button');
                     // Add ID for external access
                     pill.id = 'pill-' + item.datasetIndex;
-                    
+
                     // Style pill
                     pill.className = `px-3 py-1 rounded-full text-[10px] font-bold border transition-all duration-300 flex items-center gap-2 hover:opacity-80`;
                     pill.style.borderColor = item.borderColor;
                     pill.style.backgroundColor = 'rgba(255,255,255,0.05)';
                     pill.style.color = '#e2e8f0';
-                    
+
                     // Indicator Dot
                     const dot = document.createElement('div');
                     dot.className = 'w-2 h-2 rounded-full';
                     dot.style.backgroundColor = item.borderColor;
-                    
+
                     pill.appendChild(dot);
                     pill.appendChild(document.createTextNode(item.label));
 
                     // Click Handler - Read state from Chart to handle external updates
                     pill.onclick = () => {
                         const meta = newChart.getDatasetMeta(item.datasetIndex);
-                        // meta.hidden might be null (initially visible) or boolean. 
-                        // If null/false, it is visible. Toggle to hidden=true.
                         const currentlyHidden = (meta.hidden === true);
                         const newHidden = !currentlyHidden;
-                        
+
                         newChart.setDatasetVisibility(item.datasetIndex, !newHidden); // setVisibility takes 'isVisible' boolean
                         newChart.update();
-                        
+
                         // Update UI
                         if (newHidden) {
                             pill.style.opacity = '0.5';
@@ -910,6 +1108,7 @@
                             pill.style.opacity = '1';
                             dot.style.backgroundColor = item.borderColor;
                         }
+                        updateToggleAllText();
                     };
 
                     pillsDiv.appendChild(pill);
@@ -948,9 +1147,18 @@
                     responsive: true,
                     maintainAspectRatio: false,
                     layout: { padding: { top: 25 } },
+                    interaction: {
+                        mode: 'index',
+                        intersect: false,
+                    },
+                    hover: {
+                        mode: 'index',
+                        intersect: false
+                    },
                     plugins: {
                         legend: { display: false },
                         tooltip: {
+                            enabled: showDataLabels,
                             backgroundColor: 'rgba(28, 34, 48, 0.9)',
                             titleColor: '#e2e8f0',
                             bodyColor: '#cbd5e1',
@@ -961,12 +1169,16 @@
                             callbacks: { title: (context) => context[0].label }
                         },
                         datalabels: {
-                            color: '#e2e8f0',
+                            display: () => showDataLabels,
+                            color: '#fff',
                             anchor: 'end',
                             align: 'top',
                             offset: 4,
                             font: { family: "'Plus Jakarta Sans', sans-serif", weight: 'bold', size: 10 },
-                            formatter: (value) => value
+                            formatter: (value) => value,
+                            backgroundColor: 'rgba(99, 102, 241, 0.9)',
+                            borderRadius: 4,
+                            padding: 4
                         }
                     },
                     scales: {
@@ -983,7 +1195,7 @@
                                 font: { family: "'Plus Jakarta Sans', sans-serif", size: 8 },
                                 maxRotation: 45,
                                 minRotation: 0,
-                                autoSkip: false 
+                                autoSkip: false
                             }
                         }
                     },
@@ -1008,9 +1220,18 @@
                         mode: 'index',
                         intersect: false,
                     },
+                    interaction: {
+                        mode: 'index',
+                        intersect: false,
+                    },
+                    hover: {
+                        mode: 'index',
+                        intersect: false
+                    },
                     plugins: {
                         legend: { display: false }, // Single line, no legend needed
                         tooltip: {
+                            enabled: showDataLabels,
                             backgroundColor: 'rgba(28, 34, 48, 0.9)',
                             titleColor: '#e2e8f0',
                             bodyColor: '#cbd5e1',
@@ -1021,11 +1242,13 @@
                             usePointStyle: true,
                         },
                         datalabels: {
-                            backgroundColor: 'rgba(28, 34, 48, 0.7)',
+                            display: () => showDataLabels,
+                            backgroundColor: 'rgba(99, 102, 241, 0.9)',
                             borderRadius: 4,
-                            color: '#e2e8f0',
+                            color: '#fff',
                             align: 'top',
-                            offset: 4,
+                            anchor: 'center',
+                            offset: 8,
                             font: { family: "'Plus Jakarta Sans', sans-serif", weight: 'bold', size: 9 },
                             formatter: (value) => value
                         }
@@ -1066,7 +1289,7 @@
                     const avg = scores.reduce((a, b) => a + b, 0) / count;
                     labels.push(sub);
                     values.push(avg.toFixed(1));
-                    
+
                     if (avg >= 80) colors.push('#4ade80');
                     else if (avg >= 70) colors.push('#fbbf24');
                     else colors.push('#f87171');
@@ -1114,7 +1337,6 @@
 
             allSubjects.forEach(sub => {
                 // Calculate average for this subject across all exams
-                const trendData = [];
                 const trendPoints = [];
 
                 allExams.forEach(exId => {
@@ -1127,14 +1349,14 @@
                         trendPoints.push(null); // No data for this exam
                     }
                 });
-                
+
                 // If subject has completely no data, skip
                 if (trendPoints.every(p => p === null)) return;
 
                 // Create DOM Elements
                 const wrapper = document.createElement('div');
                 wrapper.className = "glass-card rounded-2xl p-4 shadow-xl";
-                
+
                 const title = document.createElement('h4');
                 title.className = "text-xs font-bold uppercase tracking-widest text-indigo-300 mb-4 text-center";
                 title.textContent = (subjectMap[sub] || sub) + ' (' + sub + ')';
@@ -1147,7 +1369,7 @@
                 canvas.id = canvasId;
                 canvasContainer.appendChild(canvas);
                 wrapper.appendChild(canvasContainer);
-                
+
                 container.appendChild(wrapper);
 
                 // Render Chart
@@ -1169,10 +1391,10 @@
         function revealName(name) {
             const toast = document.getElementById('name-reveal-toast');
             const content = document.getElementById('name-reveal-content');
-            
+
             content.textContent = name;
             toast.classList.add('show');
-            
+
             clearTimeout(nameToastTimeout);
             nameToastTimeout = setTimeout(() => {
                 toast.classList.remove('show');
@@ -1182,48 +1404,42 @@
         // ===== PERFORMANCE OPTIMIZATION: Debounced Render Functions =====
         const debouncedRenderStudentTrend = debounce(renderStudentTrendAnalysis, 150);
         const debouncedRenderStudentLine = debounce(renderStudentLineAnalysis, 150);
-        
+
         document.addEventListener('DOMContentLoaded', () => {
             // ===== PERFORMANCE: Initialize cache first =====
             const perfStart = performance.now();
-            
+
             try {
                 initializeCache();
                 console.log(`Cache initialized in ${(performance.now() - perfStart).toFixed(2)}ms`);
-            } catch(e) { console.error('Cache init error:', e); }
-            
+            } catch (e) { console.error('Cache init error:', e); }
+
             // Step-by-step render to prevent UI thread freeze
             setTimeout(() => {
                 const renderStart = performance.now();
                 try {
                     render();
                     console.log(`Initial render: ${(performance.now() - renderStart).toFixed(2)}ms`);
-                } catch(e) { console.error(e); }
-                
+                } catch (e) { console.error(e); }
+
                 setTimeout(() => {
                     const trendStart = performance.now();
-                    try { 
+                    try {
                         renderStudentTrendAnalysis();
                         chartsRendered.studentTrend = true;
                         console.log(`Student trend: ${(performance.now() - trendStart).toFixed(2)}ms`);
-                    } catch(e) { console.error(e); }
-                    
+                    } catch (e) { console.error(e); }
+
                     setTimeout(() => {
-                        // DON'T render student line chart yet - lazy load it
-                        // It will render when user switches to 'mate' view
-                        
                         setTimeout(() => {
-                            // DON'T render subject analysis yet - lazy load it
-                            // It will render when user switches to 'subjects' view
-                            
                             // Fade in after essential renders done
                             document.getElementById('loader').classList.add('opacity-0');
                             document.getElementById('main-content').classList.remove('opacity-0');
                             setTimeout(() => document.getElementById('loader').classList.add('hidden'), 300);
-                            
+
                             const totalTime = performance.now() - perfStart;
                             console.log(`✅ Dashboard loaded in ${totalTime.toFixed(2)}ms`);
-                            
+
                         }, 50);
                     }, 50);
                 }, 50);
@@ -1231,4 +1447,5 @@
         });
     </script>
 </body>
+
 </html>

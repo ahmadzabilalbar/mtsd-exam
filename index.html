@@ -191,12 +191,73 @@
             -ms-overflow-style: none;
             scrollbar-width: none;
         }
+
+        /* Password Overlay Styles */
+        #password-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 9999;
+            background: #0B0F19;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(20px);
+        }
+
+        .password-container {
+            width: 100%;
+            max-width: 320px;
+            padding: 2rem;
+            text-align: center;
+        }
+
+        .password-input {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: white;
+            padding: 0.75rem 1rem;
+            border-radius: 12px;
+            width: 100%;
+            text-align: center;
+            font-weight: bold;
+            letter-spacing: 0.2em;
+            outline: none;
+            transition: all 0.3s;
+        }
+
+        .password-input:focus {
+            border-color: #6366f1;
+            background: rgba(99, 102, 241, 0.05);
+            box-shadow: 0 0 20px rgba(99, 102, 241, 0.1);
+        }
     </style>
 </head>
 
 <body class="bg-mtsd-bg text-slate-100 font-sans min-h-screen pb-12">
+    <!-- Password Protection Overlay -->
+    <div id="password-overlay">
+        <div class="password-container space-y-6">
+            <div class="space-y-2">
+                <div class="w-12 h-12 bg-indigo-500/10 rounded-2xl flex items-center justify-center mx-auto mb-4">
+                    <svg class="w-6 h-6 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                    </svg>
+                </div>
+                <h2 class="text-xl font-black text-white tracking-tight">Access Restricted</h2>
+                <p class="text-[10px] text-slate-500 uppercase tracking-widest font-bold">Secure Analytics Gateway</p>
+            </div>
+
+            <input type="password" id="page-password" placeholder="••••••••" class="password-input">
+
+            <p id="password-error" class="text-[9px] font-black text-rose-500 uppercase tracking-wider hidden">Incorrect
+                Password. Please try again.</p>
+
+        </div>
+    </div>
+
     <div id="loader"
-        class="fixed inset-0 z-50 flex items-center justify-center bg-mtsd-bg transition-opacity duration-300">
+        class="fixed inset-0 z-50 flex items-center justify-center bg-mtsd-bg transition-opacity duration-300 hidden">
         <div class="flex flex-col items-center">
             <div class="w-12 h-12 border-4 border-indigo-500/20 border-t-indigo-500 rounded-full animate-spin"></div>
             <p class="mt-4 text-slate-400 text-sm font-medium tracking-wide">Synthesizing Analytics...</p>
@@ -1130,7 +1191,9 @@
             if (vaFromTov !== null) {
                 const vaColor = vaFromTov >= 0 ? 'emerald' : 'rose';
                 vaCardHtml = `
-                    <div class="glass-card p-2 sm:p-2.5 rounded-xl border-${vaColor}-500/20 bg-${vaColor}-500/5 group cursor-help transition-all hover:bg-${vaColor}-500/10" title="Overall progress measured against the Take-Off Value (TOV/Baseline). Indicates total improvement since the start of the form. / Kemajuan keseluruhan yang diukur berbanding Nilai Lepas Tanding (TOV/Baseline). Menunjukkan jumlah penambahbaikan sejak permulaan tingkatan.">
+                    <div class="glass-card p-2 sm:p-2.5 rounded-xl border-${vaColor}-500/20 bg-${vaColor}-500/5 group cursor-help transition-all hover:bg-${vaColor}-500/10" 
+                         onclick="showToast(this.title)"
+                         title="Overall progress measured against the Take-Off Value (TOV/Baseline). Indicates total improvement since the start of the form. / Kemajuan keseluruhan yang diukur berbanding Nilai Lepas Tanding (TOV/Baseline). Menunjukkan jumlah penambahbaikan sejak permulaan tingkatan.">
                         <div class="flex items-center justify-between gap-2">
                             <div class="flex items-center gap-1.5 min-w-0">
                                 <p class="text-[7.5px] sm:text-[8px] font-black text-slate-500 uppercase tracking-widest truncate">Value-Added</p>
@@ -1142,7 +1205,9 @@
             }
 
             document.getElementById('analysis-stats').innerHTML = `
-                <div class="glass-card p-2 sm:p-2.5 rounded-xl border-white/5 group cursor-help transition-all hover:bg-white/5 ${parseFloat(avgVal) === 100 ? 'full-mark-subtle' : ''}" title="The arithmetic mean of all scores recorded for this student in this subject. Provides a view of consistent performance over time. / Min aritmetik bagi semua markah yang direkodkan untuk murid ini. Memberikan gambaran prestasi konsisten sepanjang masa.">
+                <div class="glass-card p-2 sm:p-2.5 rounded-xl border-white/5 group cursor-help transition-all hover:bg-white/5 ${parseFloat(avgVal) === 100 ? 'full-mark-subtle' : ''}" 
+                     onclick="showToast(this.title)"
+                     title="The arithmetic mean of all scores recorded for this student in this subject. Provides a view of consistent performance over time. / Min aritmetik bagi semua markah yang direkodkan untuk murid ini. Memberikan gambaran prestasi konsisten sepanjang masa.">
                     <div class="flex items-center justify-between gap-2">
                         <div class="flex items-center gap-1.5 min-w-0">
                             <p class="text-[7.5px] sm:text-[8px] font-black text-slate-500 uppercase tracking-widest truncate">${isOverall ? 'Average %' : 'Avg'}</p>
@@ -1151,7 +1216,9 @@
                         <span class="text-xs sm:text-sm font-black text-white shrink-0">${avgVal}${isOverall ? '%' : ''}</span>
                     </div>
                 </div>
-                <div class="glass-card p-2 sm:p-2.5 rounded-xl border-white/5 group cursor-help transition-all hover:bg-white/5 ${parseFloat(latest) === 100 ? 'full-mark-subtle' : ''}" title="The result achieved in the most recent assessment session. Reflects the current academic standing. / Keputusan yang dicapai dalam sesi penilaian yang paling terkini. Mencerminkan tahap akademik semasa.">
+                <div class="glass-card p-2 sm:p-2.5 rounded-xl border-white/5 group cursor-help transition-all hover:bg-white/5 ${parseFloat(latest) === 100 ? 'full-mark-subtle' : ''}" 
+                     onclick="showToast(this.title)"
+                     title="The result achieved in the most recent assessment session. Reflects the current academic standing. / Keputusan yang dicapai dalam sesi penilaian yang paling terkini. Mencerminkan tahap akademik semasa.">
                     <div class="flex items-center justify-between gap-2">
                         <div class="flex items-center gap-1.5 min-w-0">
                             <p class="text-[7.5px] sm:text-[8px] font-black text-slate-500 uppercase tracking-widest truncate">${isOverall ? 'Latest %' : 'Latest'}</p>
@@ -1160,7 +1227,9 @@
                         <span class="text-xs sm:text-sm font-black text-indigo-400 shrink-0">${latest || '-'}${isOverall && latest ? '%' : ''}</span>
                     </div>
                 </div>
-                <div class="glass-card p-2 sm:p-2.5 rounded-xl border-white/5 group cursor-help transition-all hover:bg-white/5 ${parseFloat(highest) === 100 ? 'full-mark-subtle' : ''}" title="The highest achievement level reached since tracking began for this subject. Represents the student's peak potential. / Tahap pencapaian tertinggi yang dicapai sejak pengesan dimulakan. Mewakili potensi kemuncak murid.">
+                <div class="glass-card p-2 sm:p-2.5 rounded-xl border-white/5 group cursor-help transition-all hover:bg-white/5 ${parseFloat(highest) === 100 ? 'full-mark-subtle' : ''}" 
+                     onclick="showToast(this.title)"
+                     title="The highest achievement level reached since tracking began for this subject. Represents the student's peak potential. / Tahap pencapaian tertinggi yang dicapai sejak pengesan dimulakan. Mewakili potensi kemuncak murid.">
                     <div class="flex items-center justify-between gap-2">
                         <div class="flex items-center gap-1.5 min-w-0">
                             <p class="text-[7.5px] sm:text-[8px] font-black text-slate-500 uppercase tracking-widest truncate">${isOverall ? 'Best %' : 'Best'}</p>
@@ -1169,7 +1238,9 @@
                         <span class="text-xs sm:text-sm font-black text-emerald-400 shrink-0">${highest || '-'}${isOverall && highest ? '%' : ''}</span>
                     </div>
                 </div>
-                <div class="glass-card p-2 sm:p-2.5 rounded-xl border-white/5 group cursor-help transition-all hover:bg-white/5" title="Performance progress or decline compared specifically to the preceding session. Measures short-term momentum. / Kemajuan atau penurunan prestasi berbanding secara khusus dengan sesi sebelumnya. Mengukur momentum jangka pendek.">
+                <div class="glass-card p-2 sm:p-2.5 rounded-xl border-white/5 group cursor-help transition-all hover:bg-white/5" 
+                     onclick="showToast(this.title)"
+                     title="Performance progress or decline compared specifically to the preceding session. Measures short-term momentum. / Kemajuan atau penurunan prestasi berbanding secara khusus dengan sesi sebelumnya. Mengukur momentum jangka pendek.">
                     <div class="flex items-center justify-between gap-2">
                         <div class="flex items-center gap-1.5 min-w-0">
                             <p class="text-[7.5px] sm:text-[8px] font-black text-slate-500 uppercase tracking-widest truncate">Growth</p>
@@ -1228,10 +1299,18 @@
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
+                    events: ['touchstart', 'touchmove', 'mousemove', 'mouseout', 'click'],
                     interaction: { mode: 'index', intersect: false },
                     plugins: {
                         legend: { display: false },
-                        tooltip: { enabled: true, backgroundColor: 'rgba(28, 34, 48, 0.98)', titleColor: '#fff', bodyColor: '#cbd5e1' },
+                        tooltip: {
+                            enabled: true,
+                            backgroundColor: 'rgba(28, 34, 48, 0.98)',
+                            titleColor: '#fff',
+                            bodyColor: '#cbd5e1',
+                            padding: 10,
+                            displayColors: false
+                        },
                         datalabels: {
                             display: (ctx) => showDataLabels && ctx.datasetIndex === 0,
                             color: '#fff',
@@ -1946,6 +2025,34 @@
         }
 
 
+        // Helper for Mobile Tooltips (Stats Cards)
+        function showToast(text) {
+            if (window.innerWidth >= 1024) return; // Desktop uses native hover
+            let toast = document.getElementById('custom-toast');
+            if (!toast) {
+                toast = document.createElement('div');
+                toast.id = 'custom-toast';
+                toast.className = 'fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 px-6 py-4 bg-slate-900/95 text-white text-[11px] leading-relaxed rounded-2xl shadow-2xl border border-white/10 z-[200] transition-all duration-300 pointer-events-auto opacity-0 scale-90 text-center max-w-[80%]';
+                toast.onclick = () => {
+                    toast.classList.add('opacity-0', 'scale-90');
+                    setTimeout(() => toast.classList.add('hidden'), 300);
+                };
+                document.body.appendChild(toast);
+            }
+            toast.innerHTML = text + '<div class="mt-3 pt-2 border-t border-white/10 text-[8px] font-bold uppercase tracking-widest text-indigo-400">Tap to close</div>';
+            toast.classList.remove('hidden');
+            setTimeout(() => {
+                toast.classList.remove('opacity-0', 'scale-90');
+                toast.classList.add('opacity-100', 'scale-100');
+            }, 10);
+
+            clearTimeout(window.toastTimer);
+            window.toastTimer = setTimeout(() => {
+                toast.classList.add('opacity-0', 'scale-90');
+                setTimeout(() => toast.classList.add('hidden'), 300);
+            }, 6000);
+        }
+
         const chartInstances = {};
 
         function destroyChart(id) {
@@ -2115,44 +2222,84 @@
         const debouncedRenderStudentLine = debounce(renderStudentLineAnalysis, 150);
 
         document.addEventListener('DOMContentLoaded', () => {
-            // ===== PERFORMANCE: Initialize cache first =====
-            const perfStart = performance.now();
+            // Password Protection Logic
+            const overlay = document.getElementById('password-overlay');
+            const passInput = document.getElementById('page-password');
+            const errorMsg = document.getElementById('password-error');
+            const loader = document.getElementById('loader');
+            const mainContent = document.getElementById('main-content');
 
-            try {
-                initializeCache();
-                console.log(`Cache initialized in ${(performance.now() - perfStart).toFixed(2)} ms`);
-            } catch (e) { console.error('Cache init error:', e); }
+            const SESSION_KEY = 'mtsd_authenticated';
+            const MASTER_PASS = 'mtsd@2024';
 
-            // Step-by-step render to prevent UI thread freeze
-            setTimeout(() => {
-                const renderStart = performance.now();
-                try {
-                    render();
-                    console.log(`Initial render: ${(performance.now() - renderStart).toFixed(2)} ms`);
-                } catch (e) { console.error(e); }
+            // Check if already authenticated
+            if (sessionStorage.getItem(SESSION_KEY) === 'true') {
+                proceedToLoad();
+            }
 
+            passInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    if (passInput.value === MASTER_PASS) {
+                        sessionStorage.setItem(SESSION_KEY, 'true');
+                        proceedToLoad();
+                    } else {
+                        errorMsg.classList.remove('hidden');
+                        passInput.value = '';
+                        passInput.classList.add('ring-2', 'ring-rose-500/50');
+                        setTimeout(() => passInput.classList.remove('ring-2', 'ring-rose-500/50'), 1000);
+                    }
+                }
+            });
+
+            function proceedToLoad() {
+                overlay.classList.add('opacity-0', 'pointer-events-none', 'transition-all', 'duration-500');
+                loader.classList.remove('hidden');
                 setTimeout(() => {
-                    const trendStart = performance.now();
+                    overlay.classList.add('hidden');
+                    startInitialization();
+                }, 500);
+            }
+
+            function startInitialization() {
+                // ===== PERFORMANCE: Initialize cache first =====
+                const perfStart = performance.now();
+
+                try {
+                    initializeCache();
+                    console.log(`Cache initialized in ${(performance.now() - perfStart).toFixed(2)} ms`);
+                } catch (e) { console.error('Cache init error:', e); }
+
+                // Step-by-step render to prevent UI thread freeze
+                setTimeout(() => {
+                    const renderStart = performance.now();
                     try {
-                        renderStudentTrendAnalysis();
-                        chartsRendered.studentTrend = true;
-                        console.log(`Student trend: ${(performance.now() - trendStart).toFixed(2)} ms`);
+                        render();
+                        console.log(`Initial render: ${(performance.now() - renderStart).toFixed(2)} ms`);
                     } catch (e) { console.error(e); }
 
                     setTimeout(() => {
+                        const trendStart = performance.now();
+                        try {
+                            renderStudentTrendAnalysis();
+                            chartsRendered.studentTrend = true;
+                            console.log(`Student trend: ${(performance.now() - trendStart).toFixed(2)} ms`);
+                        } catch (e) { console.error(e); }
+
                         setTimeout(() => {
-                            // Fade in after essential renders done
-                            document.getElementById('loader').classList.add('opacity-0');
-                            document.getElementById('main-content').classList.remove('opacity-0');
-                            setTimeout(() => document.getElementById('loader').classList.add('hidden'), 300);
+                            setTimeout(() => {
+                                // Fade in after essential renders done
+                                document.getElementById('loader').classList.add('opacity-0');
+                                document.getElementById('main-content').classList.remove('opacity-0');
+                                setTimeout(() => document.getElementById('loader').classList.add('hidden'), 300);
 
-                            const totalTime = performance.now() - perfStart;
-                            console.log(`✅ Dashboard loaded in ${totalTime.toFixed(2)} ms`);
+                                const totalTime = performance.now() - perfStart;
+                                console.log(`✅ Dashboard loaded in ${totalTime.toFixed(2)} ms`);
 
+                            }, 50);
                         }, 50);
                     }, 50);
-                }, 50);
-            }, 100);
+                }, 100);
+            }
         });
     </script>
 </body>
